@@ -1,32 +1,32 @@
 class DeleteCustomer {
 
-    private _apellido1:string;
-    private _email:number;
+    private _Apellidos:string;
+    private _Email:string;
 
     constructor(
-        apellido1:string,
-        email:number
+        Apellidos:string,
+        Email:string
     )
     {
-        this._apellido1 = apellido1;
-        this._email= email;
+        this._Apellidos = Apellidos;
+        this._Email = Email;
     }
 
-    get apellido1():string{
-        return this._apellido1;
+    get Apellidos():string{
+        return this._Apellidos;
     }
 
-    get email():number{
-        return this._email;
+    get Email():string{
+        return this._Email;
     }
 
 
-    set apellido1(apellido1:string) {
-        this._apellido1 = apellido1;
+    set Apellidos(Apellidos:string) {
+        this._Apellidos = Apellidos;
     }
 
-    set email(email:number) {
-        this._email = email;
+    set Email(Email:string) {
+        this._Email = Email;
     }
 
 

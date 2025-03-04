@@ -6,10 +6,10 @@ import DeleteAdmin from "../../Dto/Admin-Dto/DeleteAdminDto"
 const delete_admin = async (req: Request, res: Response) => {
     try {
         const {
-            apellido,
-            email
+            Apellidos,
+            Email
         } = req.body;
-        const delteAdmin = await AdminRepository.deleteAdmin(new DeleteAdmin(apellido, email))
+        const delteAdmin = await AdminRepository.deleteAdmin(new DeleteAdmin(Apellidos, Email))
         return res.status(200).json(
             { message: 'Administrador eliminado con éxito' }
         );

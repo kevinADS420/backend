@@ -2,9 +2,9 @@ import { check, validationResult } from 'express-validator';
 import { NextFunction, Request, Response } from "express";
 
 let validatorParams = [
-    check('nombre').isLength({ min: 1, max: 50}),
-    check('apellido').isLength({ min: 1, max: 50}),
-    check('email').isEmail(),
+    check('Nombres').isLength({ min: 1, max: 50}),
+    check('Apellidos').isLength({ min: 1, max: 50}),
+    check('Email').isEmail(),
     check('contraseña').isLength({ min: 8, max: 500})
 ]
 

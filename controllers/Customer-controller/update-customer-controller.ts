@@ -5,16 +5,12 @@ import CustomerService from '../../services/CustomerServices';
 let update_customer= async(req:Request, res:Response)=>{
     try{
         const {
-            nombre,
-            apellido1,
-            apellido2,
-            direccion,
-            calle,
-            carrera,
-            email,
+            Nombres,
+            Apellidos,
+            Email,
             contraseña
         } = req.body;
-        const update=await CustomerService.UpdateCustomer(new Customer(nombre, apellido1, apellido2, direccion,calle, carrera, email, contraseña))
+        const update=await CustomerService.UpdateCustomer(new Customer(Nombres, Apellidos, Email, contraseña))
 
 
         return res.status(201).json(

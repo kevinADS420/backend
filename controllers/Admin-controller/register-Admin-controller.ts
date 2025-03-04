@@ -6,12 +6,12 @@ import AdminSercives from "../../services/AdminServices";
 let register = async (req: Request, res: Response) => {
     try {
         const {
-            nombre,
-            apellido,
-            email,
+            Nombres,
+            Apellidos,
+            Email,
             contraseña
         } = req.body;
-        const registerAdmin = await AdminSercives.register(new Admin( nombre, apellido, email, contraseña ))
+        const registerAdmin = await AdminSercives.register(new Admin( Nombres, Apellidos, Email, contraseña ))
         return res.status(201).json(
             {  status: '!Admin registrado correctamente¡' }
         );

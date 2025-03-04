@@ -1,23 +1,23 @@
 class Admin {
 
-    private _nombre: string;
-    private _apellido: string;
-    private _email: string;
+    private _Nombre: string;
+    private _Apellido: string;
+    private _Email: string;
     private _contraseña: string;
 
 
     constructor (
 
-        nombre: string,
-        apellido: string,
-        email: string,
+        Nombre: string,
+        Apellido: string,
+        Email: string,
         contraseña: string
 
     ) {
 
-        this._nombre = nombre;
-        this._apellido = apellido;
-        this._email = email;
+        this._Nombre = Nombre;
+        this._Apellido = Apellido;
+        this._Email = Email;
         this._contraseña = contraseña
 
     }
@@ -25,16 +25,16 @@ class Admin {
     // Geters 
 
 
-    get nombre(): string {
-        return this._nombre;
+    get Nombre(): string {
+        return this._Nombre;
     }
 
-    get apellido(): string {
-        return this._apellido;
+    get Apellido(): string {
+        return this._Apellido;
     }
 
-    get email(): string {
-        return this._email;
+    get Email(): string {
+        return this._Email;
     }
 
     get contraseña(): string {
@@ -43,16 +43,16 @@ class Admin {
 
     //Setters
 
-    set nombre(nombre: string) {
-        this._nombre = nombre;
+    set Nombre(Nombre: string) {
+        this._Nombre = Nombre;
     }
 
-    set apellido(apellido: string) {
-        this._apellido = apellido;
+    set Apellido(Apellido: string) {
+        this._Apellido = Apellido;
     }
 
-    set email(email: string) {
-        this._email = email;
+    set Email(Email: string) {
+        this._Email = Email;
     }
 
     set contraseña(contraseña: string) {

@@ -7,10 +7,10 @@ import DeleteCustomer from "../../Dto/Customer-Dto/DeleteCustomersDto";
 const delete_customer = async (req: Request, res: Response) => {
     try {
         const { 
-            apellido1, 
-            email 
+            Apellidos, 
+            Email 
         } = req.body;
-        const deleteCustomer = await CostomerService.deleteCustomer(new DeleteCustomer(apellido1, email));
+        const deleteCustomer = await CostomerService.deleteCustomer(new DeleteCustomer(Apellidos, Email));
 
 
         return res.status(200).json(

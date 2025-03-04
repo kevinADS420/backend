@@ -14,21 +14,21 @@ class ProductRepository {
     }
 
     static async registerProduct (product: Product){
-        const sql = 'INSERT INTO Producto ( nombre, precio, caracteristicas ) VALUES (?, ?, ?)';
-        const values = [ product.nombre, product.precio, product.caracteristicas ];
+        const sql = 'INSERT INTO Producto (nombreP, tipo, Precio, imagen ) VALUES (?, ?, ?, ?)';
+        const values = [ product.nombreP, product.tipo, product.Precio, product.imagen ];
         return db.execute(sql, values);
     }
 
 
     static async deleteProduct(deleteProduct: DeleteProduct){
-        const sql = 'DELETE FROM Producto WHERE nombre = ?';
+        const sql = 'DELETE FROM Producto WHERE nombreP = ?';
         const values = [deleteProduct.nombre ];
         return db.execute(sql,values);
     }
 
     static async UpdateProduct(product: Product){
-        const sql = 'UPDATE Producto SET nombre = ?, precio = ?, caracteristicas = ? WHERE id = ?'
-        const values = [product.nombre, product.precio, product.caracteristicas, product.id];
+        const sql = 'UPDATE Producto SET nombreP = ?, tipo = ?, Precio = ?, imagen = ? WHERE id_producto = ?'
+        const values = [product.nombreP, product.tipo, product.Precio, product.imagen];
         return db.execute(sql, values);
     }
 

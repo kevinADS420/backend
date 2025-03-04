@@ -8,8 +8,8 @@ dotenv.config();
 
 let auth = async (req: Request, res: Response) => {
   try {
-    const { email, contraseña } = req.body;
-    const login = await AdminSercives.login(new Auth(email, contraseña));
+    const { Email, contraseña } = req.body;
+    const login = await AdminSercives.login(new Auth(Email, contraseña));
     if (login.logged) {
       return res.status(200).json({
         status: login.status,

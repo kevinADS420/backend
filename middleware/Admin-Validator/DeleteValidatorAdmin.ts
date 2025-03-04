@@ -3,8 +3,8 @@ import { Request, Response, NextFunction } from 'express'
 
 
 let validatorParams=[
-    check('apellido').isLength({ min: 4, max:60}),
-    check('email').isEmail()
+    check('Apellidos').isLength({ min: 4, max:60}),
+    check('Email').isEmail()
 ];
 
 function validator( req:Request, res:Response, next: NextFunction){

@@ -6,21 +6,21 @@ import DeleteCustomer from '../Dto/Customer-Dto/DeleteCustomersDto';
 class CustomerRepository {
 
     static async add(customer: Customer){
-        const sql = 'INSERT INTO Cliente (nombre, apellido1, apellido2, direccion, calle, carrera, email, contraseña) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
-        const values = [ customer.nombre, customer.apellido1, customer.apellido2, customer.direccion, customer.calle, customer.carrera, customer.email, customer.contraseña];        
+        const sql = 'INSERT INTO Cliente (Nombres, Apellidos, Email, contraseña) VALUES (?, ?, ?, ?)';
+        const values = [ customer.Nombres, customer.Apellidos, customer.Email, customer.contraseña];        
         return db.execute(sql, values);
     }
 
     static async deleteCustomer(deleteCustomer : DeleteCustomer){
-      const sql = 'DELETE FROM Cliente WHERE apellido1 = ? AND email = ?';
-      const values = [deleteCustomer.apellido1, deleteCustomer.email];
+      const sql = 'DELETE FROM Cliente WHERE Apellidos = ? AND Email = ?';
+      const values = [deleteCustomer.Apellidos, deleteCustomer.Email];
       return db.execute(sql,values);
       }
 
 
       static async UpdateCustomer(customer: Customer){
-        const sql = 'UPDATE Cliente SET nombre = ?, apellido1 = ?, apellido2 = ?, direccion = ?, calle = ?, carrera = ?, contraseña = ? WHERE email = ?';
-        const values = [customer.nombre, customer.apellido1, customer.apellido2, customer.direccion, customer.calle, customer.carrera, customer.contraseña, customer.email];
+        const sql = 'UPDATE Cliente SET Nombres = ?, Apellidos = ?, contraseña = ? WHERE Email = ?';
+        const values = [customer.Nombres, customer.Apellidos, customer.contraseña, customer.Email];
         return db.execute(sql, values);
       }
   

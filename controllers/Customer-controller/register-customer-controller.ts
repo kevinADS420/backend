@@ -6,16 +6,12 @@ import CustomerService from '../../services/CustomerServices';
 let register = async (req: Request, res: Response) => {  
   try {
     const {
-      nombre,
-      apellido1,
-      apellido2,
-      direccion,
-      calle,
-      carrera,
-      email,
+      Nombres,
+      Apellidos,
+      Email,
       contraseña
     } = req.body;
-    const registerCustomer = await CustomerService.register(new Customer(nombre, apellido1, apellido2, direccion,calle, carrera, email, contraseña))
+    const registerCustomer = await CustomerService.register(new Customer(Nombres, Apellidos, Email, contraseña))
 
 
     return res.status(201).json(

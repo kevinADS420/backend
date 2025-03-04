@@ -1,57 +1,57 @@
 class Product {
-    private _id: number;
-    private _nombre: string;
-    private _precio: number;
-    private _caracteristicas: string;
+    private _nombreP: string;
+    private _tipo: string;
+    private _Precio: number;
+    private _imagen: Buffer;
 
 
     constructor(
 
-        id: number,
-        nombre: string,
-        precio: number,
-        caracteristicas: string
+        nombreP: string,
+        tipo: string,
+        Precio: number,
+        imagen: Buffer
     ) {
-        this._id= id;
-        this._nombre = nombre;
-        this._precio = precio;
-        this._caracteristicas = caracteristicas
+        this._nombreP = nombreP;
+        this._tipo = tipo;
+        this._Precio = Precio;
+        this._imagen = imagen
     }
 
     // Geters
 
-    get id(): number {
-        return this._id;
+    get nombreP(): string {
+        return this._nombreP;
     }
 
-    get nombre(): string {
-        return this._nombre;
+    get tipo(): string {
+        return this._tipo;
     }
 
-    get precio(): number {
-        return this._precio;
+    get Precio(): number {
+        return this._Precio;
     }
 
-    get caracteristicas(): string {
-        return this._caracteristicas;
+    get imagen(): Buffer {
+        return this._imagen;
     }
 
     // Seters
 
-    set id(id:number) {
-        this._id = id
+    set nombreP(nombreP: string) {
+        this._nombreP = nombreP;
     }
 
-    set nombre(nombre: string) {
-        this._nombre = nombre;
+    set tipo(tipo: string) {
+        this._tipo = tipo;
     }
 
-    set precio(precio:number) {
-        this._precio = precio;
+    set Precio(Precio:number) {
+        this._Precio = Precio;
     }
 
-    set caracteristicas(caracteristicas: string) {
-        this._caracteristicas = caracteristicas;
+    set imagen(imagen: Buffer) {
+        this._imagen = imagen;
     }
 
 }

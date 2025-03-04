@@ -6,12 +6,12 @@ import ProductService from "../../services/ProductServices";
 let update_Product = async(req:Request, res: Response) => {
     try{
         const {
-            id,
-            nombre,
-            precio,
-            caracteristicas
+            nombreP,
+            tipo,
+            Precio,
+            imagen
         } = req.body;
-        const updateProduct = await ProductService.UpdateProduct(new Product(id, nombre, precio, caracteristicas))
+        const updateProduct = await ProductService.UpdateProduct(new Product(nombreP, tipo, Precio, imagen))
 
 
         return res.status(201).json(

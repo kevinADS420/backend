@@ -1,11 +1,13 @@
 import express from "express";
 import bodyParser from 'body-parser';
+import cors = require('cors'); // Importa cors
 
 import auth from './routes/auth';
 import dotenv from "dotenv";
 
 
-// Rutas de Administradores 
+
+// Rutas de Administrador 
 import register_Admin from "./routes/Admin-Routes/Register_Admin"
 import delete_Admin from "./routes/Admin-Routes/Delete_Admin"
 import profiles from "./routes//profile"
@@ -27,9 +29,14 @@ import delete_product from "./routes/Product-Product/Delete_Product";
 
 dotenv.config();
 
+
 const app = express().use(bodyParser.json());
 
-
+app.use(cors({
+  origin: 'http://localhost:5173', // Permite solicitudes desde tu frontend
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type']
+}));
 
 app.use('/register/customer', register_customer);
 app.use('/Update/customer', update_customer);
@@ -37,7 +44,7 @@ app.use('/Delete/customer', delete_customer);
 
 
 app.use('/register/product', register_product);
-// app.use('/get/product', get_product)
+// app.use('/get/product', get_product
 app.use('/Update/product/:id', update_Product);
 app.use('/delete/product', delete_product);
 
