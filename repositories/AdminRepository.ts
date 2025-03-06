@@ -14,7 +14,7 @@ class AdminRepository {
         if (result[0].length > 0){
           const isPasswordValid = await bcrypt.compare(auth.contraseña, result[0][0].contraseña);
           if (isPasswordValid){
-            return {logged: true, status: "Successful authentication", id: result[0][0].id}
+            return {logged: true, status: "Successful authentication", id: result[0][0].id, role: "admin"}
           }
           return {logged: false, status: "1.0 Invalid username or password" };
         }

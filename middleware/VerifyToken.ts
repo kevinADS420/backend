@@ -18,10 +18,17 @@ const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
         }
         try {
             let decoded = jwt.verify(token, process.env.KEY_TOKEN as string) as JwtPayload;
-            if (decoded.data.role !== 'admin') {
-                return res.status(403).json({ status: 'Acceso denegado. Solo administradores.' });
+            // Verificamos si el token contiene información del rol
+            if (decoded.data && 'role' in decoded.data) {
+                // Si el endpoint requiere permisos específicos, podemos verificar el rol aquí
+                // Por ejemplo, para endpoints que solo son para administradores
+                if (req.path.includes('/admin') && decoded.data.role !== 'admin') {
+                    return res.status(403).json({ status: 'Acceso denegado. Solo administradores.' });
+                }
             }
+            
             req.body.id = decoded.data.id;
+            req.body.role = decoded.data.role;
             next();
         } catch (error) {
             return res.status(403).json({ status: 'Unauthorized' });
