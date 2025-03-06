@@ -7,13 +7,13 @@ import bcrypt from 'bcryptjs';
 class CustomerRepository {
 
     static async login(auth: Auth) {
-        const sql = 'SELECT id_cliente, contraseña FROM Cliente WHERE Email=?';
+        const sql = 'SELECT id, contraseña FROM Cliente WHERE Email=?';
         const values = [auth.email];
         const result: any = await db.execute(sql, values);
         if (result[0].length > 0) {
             const isPasswordValid = await bcrypt.compare(auth.contraseña, result[0][0].contraseña);
             if (isPasswordValid) {
-                return { logged: true, status: "Successful authentication", id: result[0][0].id_cliente, role: "customer" }
+                return { logged: true, status: "Successful authentication", id: result[0][0].id, role: "customer" }
             }
             return { logged: false, status: "1.0 Invalid username or password" };
         }
