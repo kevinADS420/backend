@@ -13,6 +13,7 @@ import profiles from "./routes//profile"
 
 
 // Rutas de clientes 
+import get_customer_by_email from "./routes/Customer-Routes/Get_Customer_By_Email";
 import register_customer from './routes/Customer-Routes/Register_Customer';
 import update_customer from "./routes/Customer-Routes/Update_Customer";
 import delete_customer from "./routes/Customer-Routes/Delete_Customer";
@@ -46,6 +47,7 @@ app.use('/login', unifiedAuth);
 app.use('/login/admin', auth);
 app.use('/login/customer', auth_customer);
 
+app.use('/customer', get_customer_by_email);
 app.use('/register/customer', register_customer);
 app.use('/Update/customer', update_customer);
 app.use('/Delete/customer', delete_customer);

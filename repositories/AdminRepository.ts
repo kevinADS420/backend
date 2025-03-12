@@ -8,13 +8,13 @@ import DeleteAdmin from '../Dto/Admin-Dto/DeleteAdminDto'
 class AdminRepository {
 
     static async login(auth: Auth){
-        const sql = 'SELECT id, contraseña FROM Administrador WHERE email=?';
-        const values = [auth.email];
+        const sql = 'SELECT id_administrador, contraseña FROM Administrador WHERE Email=?';
+        const values = [auth.Email];
         const result: any = await db.execute(sql, values);
         if (result[0].length > 0){
           const isPasswordValid = await bcrypt.compare(auth.contraseña, result[0][0].contraseña);
           if (isPasswordValid){
-            return {logged: true, status: "Successful authentication", id: result[0][0].id, role: "admin"}
+            return {logged: true, status: "Successful authentication", id: result[0][0].id_administrador, role: "admin"}
           }
           return {logged: false, status: "1.0 Invalid username or password" };
         }

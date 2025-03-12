@@ -1,16 +1,16 @@
 class Auth {
-    private _email: string;
+    private _Email: string;
     private _contraseña: string
     constructor(
         email: string,
         contraseña: string
     ) {
-        this._email = email;
+        this._Email = email;
         this._contraseña = contraseña;
     }
     // Getters
-    get email(): string {
-        return this._email;
+    get Email(): string {
+        return this._Email;
     }
 
 
@@ -23,8 +23,8 @@ class Auth {
     // Setters
 
         
-    set email(email: string) {
-        this._email = email;
+    set Email(email: string) {
+        this._Email = email;
     }
     
     set contraseña(contraseña: string) {

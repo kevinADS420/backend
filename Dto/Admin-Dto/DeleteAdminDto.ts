@@ -1,11 +1,11 @@
 class DeleteCustomer {
 
     private _Apellidos:string;
-    private _Email:number;
+    private _Email:string;
 
     constructor(
         Apellidos:string,
-        Email:number
+        Email:string
     )
     {
         this._Apellidos = Apellidos;
@@ -16,7 +16,7 @@ class DeleteCustomer {
         return this._Apellidos;
     }
 
-    get Email():number{
+    get Email():string{
         return this._Email;
     }
 
@@ -25,7 +25,7 @@ class DeleteCustomer {
         this._Apellidos = Apellido;
     }
 
-    set Email(Email:number) {
+    set Email(Email:string) {
         this._Email = Email;
     }
 
