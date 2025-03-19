@@ -5,14 +5,14 @@ class UpdateCustomer {
     private _Email: string;
     private _contraseña?: string;
     private _numeroTelefono?: string;
-    private _tipoTelefono?: string;
+    private _tipo?: string;
 
     constructor(
         Nombres: string,
         Apellidos: string,
         Email: string,
         numeroTelefono?: string,
-        tipoTelefono?: string,
+        tipo?: string,
         contraseña?: string,
         id_cliente?: number
     ) {
@@ -20,7 +20,7 @@ class UpdateCustomer {
         this._Apellidos = Apellidos;
         this._Email = Email;
         this._numeroTelefono = numeroTelefono;
-        this._tipoTelefono = tipoTelefono;
+        this._tipo = tipo;
         this._contraseña = contraseña;
         this._id_cliente = id_cliente || 0;
     }
@@ -53,8 +53,8 @@ class UpdateCustomer {
         return this._numeroTelefono;
     }
 
-    get tipoTelefono(): string | undefined {
-        return this._tipoTelefono;
+    get tipo(): string | undefined {
+        return this._tipo;
     }
 
     set Nombres(Nombres: string) {
@@ -77,8 +77,8 @@ class UpdateCustomer {
         this._numeroTelefono = numeroTelefono;
     }
 
-    set tipoTelefono(tipoTelefono: string | undefined) {
-        this._tipoTelefono = tipoTelefono;
+    set tipo(tipo: string | undefined) {
+        this._tipo = tipo;
     }
 }
 

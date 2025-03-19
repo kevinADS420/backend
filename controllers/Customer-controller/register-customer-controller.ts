@@ -4,7 +4,9 @@ import CustomerService from '../../services/CustomerServices';
 
 
 let register = async (req: Request, res: Response) => {  
+
   try {
+    
     const {
       Nombres,
       Apellidos,
@@ -19,8 +21,7 @@ let register = async (req: Request, res: Response) => {
     );
   } catch (error: any) {    
     if (error && error.code == "ER_DUP_ENTRY") {
-      return res.status(500).json({ errorInfo: error.sqlMessage }
-      );
+        return res.status(500).json({ errorInfo: error.sqlMessage });
     }
   }
 }

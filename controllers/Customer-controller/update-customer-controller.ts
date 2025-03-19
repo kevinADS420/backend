@@ -2,33 +2,36 @@ import { Request, Response } from "express";
 import UpdateCustomer from '../../Dto/Customer-Dto/UpdateCustomerDto';
 import CustomerService from '../../services/CustomerServices';
 
-let update_customer = async(req:Request, res:Response) => {
+let update_customer = async(req: Request, res: Response) => {
     try {
+        console.log('Params recibidos:', req.params);
         console.log('Body recibido:', req.body);
         
+        // Capturar el id de la URL, no del body
+        const id_cliente = parseInt(req.params.id);
+        
         const {
-            id_cliente,
             Nombres,
             Apellidos,
             Email,
-            Telefono,
-            tipoTelefono = 'movil'
+            numeroTelefono,       // Cambiado de Telefono a numeroTelefono para que coincida con DTO
+            tipo = 'movil'
         } = req.body;
 
-        if (!id_cliente) {
-            return res.status(400).json({ error: 'id_cliente es requerido' });
+        if (!id_cliente || isNaN(id_cliente)) {
+            return res.status(400).json({ error: 'ID de cliente inválido' });
         }
 
         console.log('Creando objeto UpdateCustomer con:', {
-            Nombres, Apellidos, Email, Telefono, tipoTelefono, id_cliente
+            Nombres, Apellidos, Email, numeroTelefono, tipo, id_cliente
         });
 
         const customerData = new UpdateCustomer(
             Nombres, 
             Apellidos, 
             Email, 
-            Telefono, 
-            tipoTelefono,
+            numeroTelefono,       // Corregido para coincidir con el DTO
+            tipo,
             undefined,
             id_cliente
         );
@@ -45,7 +48,7 @@ let update_customer = async(req:Request, res:Response) => {
             status: 'Cliente actualizado con éxito',
             data: update
         });
-    } catch(error:any) {
+    } catch(error: any) {
         console.error('Error completo:', error);
         
         if(error && error.code === "ER_DUP_ENTRY") {

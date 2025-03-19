@@ -41,53 +41,56 @@ class CustomerRepository {
         const connection = await db.getConnection();
         try {
             await connection.beginTransaction();
-
+            
+            console.log('Actualizando cliente con ID:', customer.id_cliente);
+    
             // Update customer basic info
             let sql = 'UPDATE Cliente SET Nombres = ?, Apellidos = ?, Email = ? WHERE id_cliente = ?';
             let values = [customer.Nombres, customer.Apellidos, customer.Email, customer.id_cliente];
-
+    
             // If password is provided, update it
             if (customer.contraseña) {
                 sql = 'UPDATE Cliente SET Nombres = ?, Apellidos = ?, Email = ?, contraseña = ? WHERE id_cliente = ?';
                 values = [customer.Nombres, customer.Apellidos, customer.Email, customer.contraseña, customer.id_cliente];
             }
-
+    
             const [updateResult]: any = await connection.execute(sql, values);
-
+            console.log('Resultado de la actualización:', updateResult);
+    
             if (updateResult.affectedRows === 0) {
                 throw new Error('Cliente no encontrado');
             }
-
+    
             // Update or insert phone number if provided
-            if (customer.numeroTelefono && customer.tipoTelefono) {
+            if (customer.numeroTelefono && customer.tipo) {
                 const [phoneResult]: any = await connection.execute(
                     'SELECT id_telefono FROM Telefono WHERE id_cliente = ?',
                     [customer.id_cliente]
                 );
-
+    
                 if (phoneResult.length > 0) {
                     // Update existing phone
                     await connection.execute(
                         'UPDATE Telefono SET númeroTelefono = ?, tipo = ? WHERE id_cliente = ?',
-                        [customer.numeroTelefono, customer.tipoTelefono, customer.id_cliente]
+                        [customer.numeroTelefono, customer.tipo, customer.id_cliente]
                     );
                 } else {
                     // Insert new phone
                     await connection.execute(
                         'INSERT INTO Telefono (númeroTelefono, tipo, id_cliente) VALUES (?, ?, ?)',
-                        [customer.numeroTelefono, customer.tipoTelefono, customer.id_cliente]
+                        [customer.numeroTelefono, customer.tipo, customer.id_cliente]
                     );
                 }
             }
-
+    
             await connection.commit();
             
             // Get updated customer data
             const [customerData]: any = await connection.execute(
-                'SELECT c.*, t.númeroTelefono as Telefono, t.tipo as tipoTelefono FROM Cliente c LEFT JOIN Telefono t ON c.id_cliente = t.id_cliente WHERE c.id_cliente = ?',
+                'SELECT c.*, t.númeroTelefono as numeroTelefono, t.tipo as tipoTelefono FROM Cliente c LEFT JOIN Telefono t ON c.id_cliente = t.id_cliente WHERE c.id_cliente = ?',
                 [customer.id_cliente]
             );
-
+    
             return customerData[0];
         } catch (error) {
             await connection.rollback();

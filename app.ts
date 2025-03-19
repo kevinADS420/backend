@@ -20,10 +20,14 @@ import delete_customer from "./routes/Customer-Routes/Delete_Customer";
 import auth_customer from "./routes/Customer-Routes/Auth_Customer";
 import profile_customer from "./routes/Customer-Routes/Profile_Customer";
 
+// Rutas de Proveedor
+
+import register_Proveedor from "./routes/Proveedor-Routes/Register_Proveedor";
+
+
 
 // rutas de productos 
 import register_product from "./routes/Product-Product/Register_Product"
-// import get_product from "./routes/Get_Products"
 import update_Product from "./routes/Product-Product/Update_Product";
 import delete_product from "./routes/Product-Product/Delete_Product";
 
@@ -35,35 +39,38 @@ dotenv.config();
 const app = express().use(bodyParser.json());
 
 app.use(cors({
-  origin: 'http://localhost:5173', // Permite solicitudes desde tu frontend
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'] // Añadido Authorization para permitir el token
+  origin: 'http://localhost:5173', // -> Permite solicitudes desde tu frontend
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+  allowedHeaders: ['Content-Type', 'Authorization'] //-> Añadido Authorization para permitir el token
 }));
 
-// Nueva ruta unificada de autenticación
+// Rutas Unificadas clientes,proveedor
 app.use('/login', unifiedAuth);
-
-// Mantenemos las rutas antiguas para compatibilidad (puedes eliminarlas más tarde)
 app.use('/login/admin', auth);
 app.use('/login/customer', auth_customer);
 
+// Rutas cliente
 app.use('/customer', get_customer_by_email);
 app.use('/register/customer', register_customer);
 app.use('/Update/customer', update_customer);
 app.use('/Delete/customer', delete_customer);
 app.use('/profile/customer', profile_customer);
 
+// Rutas Proveedor
+app.use('/register/Proveedor', register_Proveedor)
 
-app.use('/register/product', register_product);
-// app.use('/get/product', get_product
-app.use('/Update/product/:id', update_Product);
-app.use('/delete/product', delete_product);
-
-
+// Rutas admin
 app.use('/register/admin', register_Admin);
 app.use('/delete/admin', delete_Admin);
 app.use('/profile', profiles)
 
+// Rutas produtos
+app.use('/register/product', register_product);
+app.use('/Update/product/:id', update_Product);
+app.use('/delete/product', delete_product);
+
+
+// Puerto 
 
 const PORT = process.env.PORT || 10101;
 
