@@ -4,7 +4,8 @@ import cors = require('cors'); // Importa cors
 
 import auth from './routes/auth';
 import dotenv from "dotenv";
-import unifiedAuth from './routes/unified-auth'; // Nueva ruta de autenticación unificada
+import unifiedAuth from './routes/unified-auth'; // Ruta de autenticación unificada
+import authProveedor from './routes/Proveedor-Routes/Auth_Proveedor'; // Nueva importación
 
 // Rutas de Administrador 
 import register_Admin from "./routes/Admin-Routes/Register_Admin"
@@ -21,9 +22,8 @@ import auth_customer from "./routes/Customer-Routes/Auth_Customer";
 import profile_customer from "./routes/Customer-Routes/Profile_Customer";
 
 // Rutas de Proveedor
-
 import register_Proveedor from "./routes/Proveedor-Routes/Register_Proveedor";
-
+import get_Proveedor_by_email from "./routes/Proveedor-Routes/Get_Proveedor_By_Email"
 
 
 // rutas de productos 
@@ -44,10 +44,11 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'] //-> Añadido Authorization para permitir el token
 }));
 
-// Rutas Unificadas clientes,proveedor
+// Rutas Unificadas clientes, proveedor, admin
 app.use('/login', unifiedAuth);
 app.use('/login/admin', auth);
 app.use('/login/customer', auth_customer);
+app.use('/login/proveedor', authProveedor); // Nueva ruta específica para proveedores
 
 // Rutas cliente
 app.use('/customer', get_customer_by_email);
