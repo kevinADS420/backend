@@ -2,19 +2,19 @@ class proveedor {
 
     private _nombres: string;
     private _apellidos: string;
-    private _email: string;
+    private _Email: string;
     private _contraseña: string;
 
 
     constructor(
         nombres: string,
         apellidos:string,
-        email: string,
+        Email: string,
         contraseña: string
     ) {
         this._nombres = nombres;
         this._apellidos = apellidos;
-        this._email = email;
+        this._Email = Email;
         this._contraseña = contraseña;
 
     }
@@ -29,8 +29,8 @@ class proveedor {
         return this._apellidos;
     }
 
-    get email(): string {
-        return this._email;
+    get Email(): string {
+        return this._Email;
     }
 
     get contraseña(): string {
@@ -47,8 +47,8 @@ class proveedor {
         this._apellidos = apellidos;
     }
 
-    set email(email: string) {
-        this._email = email;
+    set Email(Email: string) {
+        this._Email = Email;
     }
 
     set contraseña(contraseña: string) {

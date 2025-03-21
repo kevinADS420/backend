@@ -9,10 +9,10 @@ let register = async (req: Request, res: Response) => {
         const {
             nombres,
             apellidos,
-            email,
+            Email,
             contraseña
         }   = req.body;
-        const registerProveedor = await ProveedorService.register(new Proveedor(nombres, apellidos, email, contraseña))
+        const registerProveedor = await ProveedorService.register(new Proveedor(nombres, apellidos, Email, contraseña))
 
 
         return res.status(201).json(

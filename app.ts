@@ -24,7 +24,7 @@ import profile_customer from "./routes/Customer-Routes/Profile_Customer";
 // Rutas de Proveedor
 import register_Proveedor from "./routes/Proveedor-Routes/Register_Proveedor";
 import get_Proveedor_by_email from "./routes/Proveedor-Routes/Get_Proveedor_By_Email"
-
+import profile_proveedor from "./routes/Proveedor-Routes/Profile_proveedor";
 
 // rutas de productos 
 import register_product from "./routes/Product-Product/Register_Product"
@@ -58,12 +58,15 @@ app.use('/Delete/customer', delete_customer);
 app.use('/profile/customer', profile_customer);
 
 // Rutas Proveedor
-app.use('/register/Proveedor', register_Proveedor)
+app.use('/proveedor/login', get_Proveedor_by_email);
+app.use('/register/Proveedor', register_Proveedor);
+app.use('/profile/Proveedor', profile_proveedor)
+
 
 // Rutas admin
 app.use('/register/admin', register_Admin);
 app.use('/delete/admin', delete_Admin);
-app.use('/profile', profiles)
+app.use('/profile', profiles);
 
 // Rutas produtos
 app.use('/register/product', register_product);

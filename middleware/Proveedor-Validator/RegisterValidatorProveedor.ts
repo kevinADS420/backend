@@ -4,7 +4,7 @@ import { NextFunction, Request, Response } from "express";
 let validatorParams = [
     check('nombres').isLength({ min: 1, max: 50}),
     check('apellidos').isLength({ min: 1, max: 50}),
-    check('email').isLength({ min: 1, max: 50}),
+    check('Email').isLength({ min: 1, max: 50}),
     check('contraseña').isLength({ min: 8, max: 500})
   ];
      
