@@ -34,11 +34,37 @@ dotenv.config();
 
 const app = express().use(bodyParser.json());
 
+// Configuración CORS mejorada para soportar múltiples orígenes
+const allowedOrigins = [
+  'https://huertomkt.netlify.app', // Sin la barra al final
+  'http://localhost:5173',         // Desarrollo local
+  'https://localhost:5173'         // Desarrollo local con HTTPS
+];
+
 app.use(cors({
-  origin: 'https://huertomkt.netlify.app/', // -> Permite solicitudes desde tu frontend
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], 
-  allowedHeaders: ['Content-Type', 'Authorization'] //-> Añadido Authorization para permitir el token
+  origin: function(origin, callback) {
+    // Permitir solicitudes sin origen (como apps móviles, postman o curl)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.log(`Origen bloqueado por CORS: ${origin}`);
+      callback(null, true); // Temporalmente permitimos todos los orígenes para depuración
+      // Para producción, puedes cambiar a:
+      // callback(new Error('No permitido por CORS'));
+    }
+  },
+  credentials: true,         // Habilitar credenciales (cookies, auth headers)
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Incluir OPTIONS para preflight
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
+
+// Middleware de logging para debugging
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.url} - Origin: ${req.headers.origin}`);
+  next();
+});
 
 // Rutas de autenticación
 app.use('/login', unifiedAuth);                // Autenticación unificada
@@ -68,11 +94,17 @@ app.use('/product/register', register_product);  // Registrar producto
 app.use('/product/:id', update_Product);         // Actualizar producto
 app.use('/product/delete', delete_product);      // Eliminar producto
 
+// Ruta de prueba para verificar que CORS funcione
+app.get('/api/test-cors', (req, res) => {
+  res.json({ message: 'CORS está funcionando correctamente' });
+});
+
 // Puerto 
 const PORT = process.env.PORT || 10101;
 
 app.listen(PORT, () => {
   console.log("Servidor ejecutándose en el puerto: ", PORT);
+  console.log(`Orígenes permitidos: ${allowedOrigins.join(', ')}`);
 }).on("error", (error) => {
   throw new Error(error.message);
 });
