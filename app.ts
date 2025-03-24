@@ -35,7 +35,7 @@ dotenv.config();
 const app = express().use(bodyParser.json());
 
 app.use(cors({
-  origin: 'http://localhost:5173', // -> Permite solicitudes desde tu frontend
+  origin: 'https://huertomkt.netlify.app/', // -> Permite solicitudes desde tu frontend
   methods: ['GET', 'POST', 'PUT', 'DELETE'], 
   allowedHeaders: ['Content-Type', 'Authorization'] //-> Añadido Authorization para permitir el token
 }));
