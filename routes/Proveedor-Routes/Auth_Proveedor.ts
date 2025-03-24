@@ -1,6 +1,5 @@
 import express from "express";
-import proveedorAuthController from '../../controllers/Proveedor-controller/get-Proveedor-controller';
-
+import proveedorAuthController from '../../controllers/Proveedor-controller/auth-proveedor-controller';
 
 const router = express.Router();
 

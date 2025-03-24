@@ -5,13 +5,12 @@ import cors = require('cors'); // Importa cors
 import auth from './routes/auth';
 import dotenv from "dotenv";
 import unifiedAuth from './routes/unified-auth'; // Ruta de autenticación unificada
-import authProveedor from './routes/Proveedor-Routes/Auth_Proveedor'; // Nueva importación
+import authProveedor from './routes/Proveedor-Routes/Auth_Proveedor'; // Ruta para autenticación de proveedores
 
 // Rutas de Administrador 
 import register_Admin from "./routes/Admin-Routes/Register_Admin"
 import delete_Admin from "./routes/Admin-Routes/Delete_Admin"
-import profiles from "./routes//profile"
-
+import profiles from "./routes/profile"
 
 // Rutas de clientes 
 import get_customer_by_email from "./routes/Customer-Routes/Get_Customer_By_Email";
@@ -31,10 +30,7 @@ import register_product from "./routes/Product-Product/Register_Product"
 import update_Product from "./routes/Product-Product/Update_Product";
 import delete_product from "./routes/Product-Product/Delete_Product";
 
-
-
 dotenv.config();
-
 
 const app = express().use(bodyParser.json());
 
@@ -44,38 +40,35 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'] //-> Añadido Authorization para permitir el token
 }));
 
-// Rutas Unificadas clientes, proveedor, admin
-app.use('/login', unifiedAuth);
-app.use('/login/admin', auth);
-app.use('/login/customer', auth_customer);
-app.use('/login/proveedor', authProveedor); // Nueva ruta específica para proveedores
+// Rutas de autenticación
+app.use('/login', unifiedAuth);                // Autenticación unificada
+app.use('/login/admin', auth);                 // Autenticación específica de admin
+app.use('/login/customer', auth_customer);     // Autenticación específica de cliente
+app.use('/login/proveedor', authProveedor);    // Autenticación específica de proveedor
 
-// Rutas cliente
-app.use('/customer', get_customer_by_email);
-app.use('/register/customer', register_customer);
-app.use('/Update/customer', update_customer);
-app.use('/Delete/customer', delete_customer);
-app.use('/profile/customer', profile_customer);
+// Rutas de cliente
+app.use('/customer/email', get_customer_by_email);  // Obtener cliente por email
+app.use('/customer', update_customer);              // Actualizar cliente (PUT /customer/:id)
+app.use('/customer/register', register_customer);   // Registrar cliente
+app.use('/customer/delete', delete_customer);       // Eliminar cliente
+app.use('/customer/profile', profile_customer);     // Perfil de cliente
 
 // Rutas Proveedor
-app.use('/proveedor/login', get_Proveedor_by_email);
-app.use('/register/Proveedor', register_Proveedor);
-app.use('/profile/Proveedor', profile_proveedor)
-
+app.use('/proveedor/email', get_Proveedor_by_email);  // Obtener proveedor por email
+app.use('/proveedor/register', register_Proveedor);   // Registrar proveedor
+app.use('/proveedor/profile', profile_proveedor);     // Perfil de proveedor
 
 // Rutas admin
-app.use('/register/admin', register_Admin);
-app.use('/delete/admin', delete_Admin);
-app.use('/profile', profiles);
+app.use('/admin/register', register_Admin);      // Registrar admin
+app.use('/admin/delete', delete_Admin);          // Eliminar admin
+app.use('/admin/profile', profiles);             // Perfil de admin
 
-// Rutas produtos
-app.use('/register/product', register_product);
-app.use('/Update/product/:id', update_Product);
-app.use('/delete/product', delete_product);
-
+// Rutas productos
+app.use('/product/register', register_product);  // Registrar producto
+app.use('/product/:id', update_Product);         // Actualizar producto
+app.use('/product/delete', delete_product);      // Eliminar producto
 
 // Puerto 
-
 const PORT = process.env.PORT || 10101;
 
 app.listen(PORT, () => {
