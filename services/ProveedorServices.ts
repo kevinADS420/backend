@@ -4,6 +4,7 @@ import ProveedorRepository from '../repositories/ProveedorRepository';
 import Auth from '../Dto/AuthDto';
 
 class ProveedorService {
+    
     static async login(auth: Auth) {
         return await ProveedorRepository.login(auth);
     }

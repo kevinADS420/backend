@@ -16,13 +16,20 @@ const RegisterProveedorDto_1 = __importDefault(require("../../Dto/Proveedor-Dto/
 const ProveedorServices_1 = __importDefault(require("../../services/ProveedorServices"));
 let register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        console.log('Solicitud recibida:', req.body); // Añade esto para depuración
         const { nombres, apellidos, Email, contraseña } = req.body;
+        console.log('Datos extraídos:', { nombres, apellidos, Email }); // Añade esto
         const registerProveedor = yield ProveedorServices_1.default.register(new RegisterProveedorDto_1.default(nombres, apellidos, Email, contraseña));
-        return res.status(201).json({ status: 'Registro con exsito' });
+        console.log('Registro exitoso'); // Añade esto
+        return res.status(201).json({ status: 'Registro con éxito' });
     }
     catch (error) {
+        console.error('Error al registrar proveedor:', error); // Añade esto
         if (error && error.code == "ER_DUP_ENTRY") {
-            res.status(600).json({ errorInfo: error.sqlMessage });
+            return res.status(409).json({ errorInfo: error.sqlMessage });
+        }
+        else {
+            return res.status(500).json({ error: "Error interno del servidor", details: error.message });
         }
     }
 });

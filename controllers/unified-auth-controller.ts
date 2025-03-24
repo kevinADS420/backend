@@ -11,7 +11,7 @@ let secureAuth = async (req: Request, res: Response) => {
     const { Email, contraseña } = req.body;
     
     // Queries para buscar en las tres tablas
-    const adminQuery = 'SELECT id_admin, contraseña FROM Administrador WHERE Email=?';
+    const adminQuery = 'SELECT id_administrador, contraseña FROM Administrador WHERE Email=?';
     const customerQuery = 'SELECT id_cliente, contraseña FROM Cliente WHERE Email=?';
     const proveedorQuery = 'SELECT id_proveedor, contraseña FROM Proveedor WHERE email=?';
     
@@ -28,7 +28,7 @@ let secureAuth = async (req: Request, res: Response) => {
         return res.status(200).json({
           status: "Successful authentication",
           userType: "admin",
-          token: generateToken({id: adminResult[0].id_admin, role: "admin"}, process.env.KEY_TOKEN, 60)
+          token: generateToken({id: adminResult[0].id_administrador, role: "admin"}, process.env.KEY_TOKEN, 60)
         });
       }
     }
