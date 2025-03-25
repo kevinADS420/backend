@@ -38,7 +38,7 @@ const app = express().use(bodyParser.json());
 const allowedOrigins = [
   'https://huertomkt.netlify.app', // Sin la barra al final
   'http://localhost:5173',         // Desarrollo local
-  'https://localhost:5173'         // Desarrollo local con HTTPS
+  'https://localhost:10101'         // Desarrollo local con HTTPS
 ];
 
 app.use(cors({
