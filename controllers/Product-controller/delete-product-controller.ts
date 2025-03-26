@@ -5,9 +5,9 @@ import productService from "../../services/ProductServices";
 const delete_product = async (req: Request, res: Response) => {
     try {
         const {
-            nombre
+            nombreP
         } = req.body;
-        const deleteProduct = await productService.deleteProduct(new DeleteProduct(nombre));
+        const deleteProduct = await productService.deleteProduct(new DeleteProduct(nombreP));
 
 
         return res.status(200).json(

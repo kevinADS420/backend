@@ -1,25 +1,25 @@
 class DeleteProduct {
 
-    private _nombre: string;
+    private _nombrePP: string;
 
     constructor(
-        nombre: string
+        nombreP: string
 
     )
     {
-        this._nombre = nombre
+        this._nombrePP = nombreP
     }
 
     //Geters
 
-    get nombre():string{
-        return this._nombre;
+    get nombreP():string{
+        return this._nombrePP;
     }
 
     //seters
 
-    set nombre(nombre: string) {
-        this._nombre = nombre;
+    set nombreP(nombreP: string) {
+        this._nombrePP = nombreP;
     }
 
 }

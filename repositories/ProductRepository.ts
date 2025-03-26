@@ -97,7 +97,7 @@ class ProductRepository {
 
     static async deleteProduct(deleteProduct: DeleteProduct) {
         const sql = 'DELETE FROM Producto WHERE nombreP = ?';
-        const values = [deleteProduct.nombre];
+        const values = [deleteProduct.nombreP];
         return db.execute(sql, values);
     }
 

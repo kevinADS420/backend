@@ -2,7 +2,7 @@ import {check, validationResult} from 'express-validator'
 import { Request, Response, NextFunction } from 'express'
 
 let validatorParams=[
-    check('nombre').isLength({ min: 1, max:60})
+    check('nombreP').isLength({ min: 1, max:60})
 ]
 
 function validator( req:Request, res:Response, next: NextFunction){
