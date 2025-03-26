@@ -1,9 +1,8 @@
 import express from "express";
-import getproductcontriller from "../../controllers/Product-controller/get-product-controller";
-import GetValidatorProduct from "../../middleware/Product-Validator/GetValidatorProduct";
+import getAllProductsController from "../../controllers/Product-controller/get-product-controller";
 
 const router = express.Router();
 
-router.get('/', GetValidatorProduct.validatorParams,GetValidatorProduct.validator,getproductcontriller)
+router.get('/', getAllProductsController);
 
 export default router;

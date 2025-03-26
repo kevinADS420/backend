@@ -17,8 +17,8 @@ class ProductService {
         return await ProductRepository.registerProductWithInventoryId(product, id_inventario);
     }
 
-    static async Getproduct(getproduct: GetProduct) {
-        return await ProductRepository.getProduct(getproduct);
+    static async getAllProducts() {
+        return await ProductRepository.getAllProducts();
     }
 
     static async UpdateProduct(product: Product) {

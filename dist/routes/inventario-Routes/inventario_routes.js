@@ -6,5 +6,5 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const controller_inventario_1 = __importDefault(require("../../controllers/Inventario-controller/controller-inventario"));
 const router = express_1.default.Router();
-router.post('/create', controller_inventario_1.default);
+router.post('/', controller_inventario_1.default);
 exports.default = router;

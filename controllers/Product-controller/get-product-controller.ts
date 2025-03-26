@@ -1,24 +1,37 @@
 import { Request, Response } from "express";
-import GetProduct from "../../Dto/Product-Dto/getProductDto";
 import ProductService from "../../services/ProductServices";
 
-
-let get_product = async (req: Request, res: Response) => {
+const getAllProducts = async (req: Request, res: Response) => {
     try {
-        const {
-            nombre
-        } = req.query;
-        const product = await ProductService.Getproduct(new GetProduct(nombre as string));
-
-
-        return res.status(200).json(product);
-    } catch (error:any){
-        if(error && error.code == "ER_DUP_ENTRY"){
-            return res.status(500).json({errorInfo: error.sqlMessage});
-    }else {
-        return res.status(500).json({error: "Internal Server Error", details: error.message});
+        const products = await ProductService.getAllProducts();
+        
+        // Verificar que products es un array
+        if (!Array.isArray(products)) {
+            return res.status(200).json([]);
+        }
+        
+        // Process products to convert LONGBLOB to base64 for each product
+        const processedProducts = products.map((product: any) => {
+            // Clone the product to avoid modifying the original
+            const processedProduct = {...product};
+            
+            // If there's an image, convert the Buffer to base64
+            if (processedProduct.imagen) {
+                // Convert Buffer to Base64 string
+                processedProduct.imagen = processedProduct.imagen.toString('base64');
+            }
+            
+            return processedProduct;
+        });
+        
+        return res.status(200).json(processedProducts);
+    } catch (error: any) {
+        console.error("Error fetching products:", error);
+        return res.status(500).json({ 
+            error: "Error al obtener productos", 
+            details: error.message 
+        });
     }
-    }   
-}
+};
 
-export default get_product
+export default getAllProducts;

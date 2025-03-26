@@ -14,11 +14,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const config_db_1 = __importDefault(require("../config/config-db"));
 class ProductRepository {
-    static getProduct(getproduct) {
+    static getAllProducts() {
         return __awaiter(this, void 0, void 0, function* () {
-            const sql = 'SELECT nombre, precio, caracteristicas FROM Producto WHERE nombre = ?';
-            const values = [getproduct.nombre];
-            const [rows] = yield config_db_1.default.execute(sql, values);
+            const sql = 'SELECT id_producto, nombreP, tipo, Precio, imagen FROM Producto';
+            const [rows] = yield config_db_1.default.execute(sql);
             return rows;
         });
     }

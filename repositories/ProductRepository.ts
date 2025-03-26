@@ -5,12 +5,12 @@ import DeleteProduct from '../Dto/Product-Dto/DeleteProductDts';
 import Inventory from '../Dto/Product-Dto/InventoryDto';
 
 class ProductRepository {
-    static async getProduct(getproduct: GetProduct) {
-        const sql = 'SELECT nombre, precio, caracteristicas FROM Producto WHERE nombre = ?';
-        const values = [getproduct.nombre];
-        const [rows] = await db.execute(sql, values);
-        return rows;
-    }
+
+   static async getAllProducts() {
+    const sql = 'SELECT id_producto, nombreP, tipo, Precio, imagen FROM Producto';
+    const [rows] = await db.execute(sql);
+    return rows as any[];
+}
 
     static async registerProduct(product: Product) {
         const sql = 'INSERT INTO Producto (nombreP, tipo, Precio, imagen) VALUES (?, ?, ?, ?)';

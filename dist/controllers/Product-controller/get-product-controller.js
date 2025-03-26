@@ -12,21 +12,33 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const getProductDto_1 = __importDefault(require("../../Dto/Product-Dto/getProductDto"));
 const ProductServices_1 = __importDefault(require("../../services/ProductServices"));
-let get_product = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const getAllProducts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { nombre } = req.query;
-        const product = yield ProductServices_1.default.Getproduct(new getProductDto_1.default(nombre));
-        return res.status(200).json(product);
+        const products = yield ProductServices_1.default.getAllProducts();
+        // Verificar que products es un array
+        if (!Array.isArray(products)) {
+            return res.status(200).json([]);
+        }
+        // Process products to convert LONGBLOB to base64 for each product
+        const processedProducts = products.map((product) => {
+            // Clone the product to avoid modifying the original
+            const processedProduct = Object.assign({}, product);
+            // If there's an image, convert the Buffer to base64
+            if (processedProduct.imagen) {
+                // Convert Buffer to Base64 string
+                processedProduct.imagen = processedProduct.imagen.toString('base64');
+            }
+            return processedProduct;
+        });
+        return res.status(200).json(processedProducts);
     }
     catch (error) {
-        if (error && error.code == "ER_DUP_ENTRY") {
-            return res.status(500).json({ errorInfo: error.sqlMessage });
-        }
-        else {
-            return res.status(500).json({ error: "Internal Server Error", details: error.message });
-        }
+        console.error("Error fetching products:", error);
+        return res.status(500).json({
+            error: "Error al obtener productos",
+            details: error.message
+        });
     }
 });
-exports.default = get_product;
+exports.default = getAllProducts;

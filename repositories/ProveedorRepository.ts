@@ -25,6 +25,7 @@ class ProveedorRepository {
         return db.execute(sql, values);
     }
 
+
 }
 
 export default ProveedorRepository;

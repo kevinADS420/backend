@@ -3,6 +3,6 @@ import createInventoryController from '../../controllers/Inventario-controller/c
 
 const router = express.Router();
 
-router.post('/create', createInventoryController);
+router.post('/', createInventoryController);
 
 export default router;

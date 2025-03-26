@@ -26,6 +26,7 @@ const Register_Proveedor_1 = __importDefault(require("./routes/Proveedor-Routes/
 const Get_Proveedor_By_Email_1 = __importDefault(require("./routes/Proveedor-Routes/Get_Proveedor_By_Email"));
 const Profile_proveedor_1 = __importDefault(require("./routes/Proveedor-Routes/Profile_proveedor"));
 // rutas de productos 
+const Get_Products_1 = __importDefault(require("./routes/Product-Product/Get_Products"));
 const Register_Product_1 = __importDefault(require("./routes/Product-Product/Register_Product"));
 const Update_Product_1 = __importDefault(require("./routes/Product-Product/Update_Product"));
 const Delete_Product_1 = __importDefault(require("./routes/Product-Product/Delete_Product"));
@@ -83,11 +84,12 @@ app.use('/admin/register', Register_Admin_1.default); // Registrar admin
 app.use('/admin/delete', Delete_Admin_1.default); // Eliminar admin
 app.use('/admin/profile', profile_1.default); // Perfil de admin
 // Rutas productos
+app.use('/products', Get_Products_1.default); // consultar productos 
 app.use('/product/register', Register_Product_1.default); // Registrar producto
 app.use('/product/:id', Update_Product_1.default); // Actualizar producto
 app.use('/product/delete', Delete_Product_1.default); // Eliminar producto
 // Ruta de inventario (NUEVA)
-app.use('/inventario', inventario_routes_1.default); // Crear inventario
+app.use('/inventario/create', inventario_routes_1.default); // Crear inventario
 // Ruta de prueba para verificar que CORS funcione
 app.get('/api/test-cors', (req, res) => {
     res.json({ message: 'CORS está funcionando correctamente' });
