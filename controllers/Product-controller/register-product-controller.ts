@@ -1,6 +1,5 @@
 import { Request, Response } from "express"; 
 import Product from "../../Dto/Product-Dto/RegisterProductDto";
-import Inventory from "../../Dto/Product-Dto/InventoryDto";
 import ProductService from "../../services/ProductServices";
 
 let register = async (req: Request, res: Response) => {
@@ -9,10 +8,7 @@ let register = async (req: Request, res: Response) => {
             nombreP,
             tipo,
             Precio,
-            cantidad, // Nuevo campo para la cantidad del inventario
-            fechaIngreso, // Fecha de ingreso 
-            fechaSalida, // Fecha de salida
-            fechaRealización // Fecha de realización
+            id_inventario  // Ahora recibimos el ID del inventario
         } = req.body;
 
         if (!req.file) {
@@ -21,55 +17,31 @@ let register = async (req: Request, res: Response) => {
 
         const imagen = req.file.buffer; // Imagen en formato binario
 
-        // Convertir las fechas si están en formato string
-        const parsedFechaIngreso = fechaIngreso ? new Date(fechaIngreso) : new Date();
-        const parsedFechaSalida = fechaSalida ? new Date(fechaSalida) : new Date();
-        const parsedFechaRealización = fechaRealización ? new Date(fechaRealización) : new Date();
-
-        // Validar que las fechas sean válidas
-        if (isNaN(parsedFechaIngreso.getTime()) || isNaN(parsedFechaSalida.getTime()) || isNaN(parsedFechaRealización.getTime())) {
-            return res.status(400).json({ error: "Formato de fecha inválido" });
-        }
-
-        // Validar cantidad
-        const cantidadInventario = cantidad ? parseInt(cantidad) : 0;
-        if (isNaN(cantidadInventario) || cantidadInventario < 0) {
-            return res.status(400).json({ error: "La cantidad debe ser un número positivo" });
+        // Validar id_inventario
+        if (!id_inventario) {
+            return res.status(400).json({ error: "Se requiere un ID de inventario válido" });
         }
 
         // Crear objeto de producto
         const productData = new Product(nombreP, tipo, Precio, imagen);
         
-        // Crear objeto de inventario
-        const inventoryData = new Inventory(
-            cantidadInventario,
-            parsedFechaIngreso,
-            parsedFechaSalida,
-            parsedFechaRealización
-        );
-
-        // Registrar producto e inventario en una transacción
-        const result = await ProductService.registerWithInventory(productData, inventoryData);
+        // Registrar el producto y asociarlo con el inventario existente
+        const result = await ProductService.registerProductWithInventoryId(productData, id_inventario);
 
         return res.status(201).json({ 
             status: "Producto Registrado",
-            message: "Producto e inventario registrados correctamente",
+            message: "Producto registrado y asociado con inventario correctamente",
             data: {
                 producto: nombreP,
                 productId: result.productId,
-                inventario: {
-                    cantidad: cantidadInventario,
-                    fechaIngreso: parsedFechaIngreso,
-                    fechaSalida: parsedFechaSalida,
-                    fechaRealización: parsedFechaRealización
-                }
+                id_inventario: id_inventario
             }
         });
     } catch (error: any) {
         if (error?.code === "ER_DUP_ENTRY") {
             return res.status(500).json({ errorInfo: error.sqlMessage });
         }
-        console.error("Error al registrar producto:", error); // Mejorar el logging
+        console.error("Error al registrar producto:", error);
         res.status(500).json({ error: error.message || "Error interno del servidor" });
     }
 };

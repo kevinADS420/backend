@@ -24,6 +24,11 @@ class ProductService {
             return yield ProductRepository_1.default.registerProductWithInventory(product, inventory);
         });
     }
+    static registerProductWithInventoryId(product, id_inventario) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield ProductRepository_1.default.registerProductWithInventoryId(product, id_inventario);
+        });
+    }
     static Getproduct(getproduct) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield ProductRepository_1.default.getProduct(getproduct);

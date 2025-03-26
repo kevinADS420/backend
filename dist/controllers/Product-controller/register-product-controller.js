@@ -13,50 +13,30 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const RegisterProductDto_1 = __importDefault(require("../../Dto/Product-Dto/RegisterProductDto"));
-const InventoryDto_1 = __importDefault(require("../../Dto/Product-Dto/InventoryDto"));
 const ProductServices_1 = __importDefault(require("../../services/ProductServices"));
 let register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { nombreP, tipo, Precio, cantidad, // Nuevo campo para la cantidad del inventario
-        fechaIngreso, // Fecha de ingreso 
-        fechaSalida, // Fecha de salida
-        fechaRealización // Fecha de realización
+        const { nombreP, tipo, Precio, id_inventario // Ahora recibimos el ID del inventario
          } = req.body;
         if (!req.file) {
             return res.status(400).json({ error: "Se requiere una imagen" });
         }
         const imagen = req.file.buffer; // Imagen en formato binario
-        // Convertir las fechas si están en formato string
-        const parsedFechaIngreso = fechaIngreso ? new Date(fechaIngreso) : new Date();
-        const parsedFechaSalida = fechaSalida ? new Date(fechaSalida) : new Date();
-        const parsedFechaRealización = fechaRealización ? new Date(fechaRealización) : new Date();
-        // Validar que las fechas sean válidas
-        if (isNaN(parsedFechaIngreso.getTime()) || isNaN(parsedFechaSalida.getTime()) || isNaN(parsedFechaRealización.getTime())) {
-            return res.status(400).json({ error: "Formato de fecha inválido" });
-        }
-        // Validar cantidad
-        const cantidadInventario = cantidad ? parseInt(cantidad) : 0;
-        if (isNaN(cantidadInventario) || cantidadInventario < 0) {
-            return res.status(400).json({ error: "La cantidad debe ser un número positivo" });
+        // Validar id_inventario
+        if (!id_inventario) {
+            return res.status(400).json({ error: "Se requiere un ID de inventario válido" });
         }
         // Crear objeto de producto
         const productData = new RegisterProductDto_1.default(nombreP, tipo, Precio, imagen);
-        // Crear objeto de inventario
-        const inventoryData = new InventoryDto_1.default(cantidadInventario, parsedFechaIngreso, parsedFechaSalida, parsedFechaRealización);
-        // Registrar producto e inventario en una transacción
-        const result = yield ProductServices_1.default.registerWithInventory(productData, inventoryData);
+        // Registrar el producto y asociarlo con el inventario existente
+        const result = yield ProductServices_1.default.registerProductWithInventoryId(productData, id_inventario);
         return res.status(201).json({
             status: "Producto Registrado",
-            message: "Producto e inventario registrados correctamente",
+            message: "Producto registrado y asociado con inventario correctamente",
             data: {
                 producto: nombreP,
                 productId: result.productId,
-                inventario: {
-                    cantidad: cantidadInventario,
-                    fechaIngreso: parsedFechaIngreso,
-                    fechaSalida: parsedFechaSalida,
-                    fechaRealización: parsedFechaRealización
-                }
+                id_inventario: id_inventario
             }
         });
     }
@@ -64,7 +44,7 @@ let register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         if ((error === null || error === void 0 ? void 0 : error.code) === "ER_DUP_ENTRY") {
             return res.status(500).json({ errorInfo: error.sqlMessage });
         }
-        console.error("Error al registrar producto:", error); // Mejorar el logging
+        console.error("Error al registrar producto:", error);
         res.status(500).json({ error: error.message || "Error interno del servidor" });
     }
 });

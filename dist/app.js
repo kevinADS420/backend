@@ -29,6 +29,8 @@ const Profile_proveedor_1 = __importDefault(require("./routes/Proveedor-Routes/P
 const Register_Product_1 = __importDefault(require("./routes/Product-Product/Register_Product"));
 const Update_Product_1 = __importDefault(require("./routes/Product-Product/Update_Product"));
 const Delete_Product_1 = __importDefault(require("./routes/Product-Product/Delete_Product"));
+// Ruta de inventario (NUEVA)
+const inventario_routes_1 = __importDefault(require("./routes/inventario-Routes/inventario_routes"));
 dotenv_1.default.config();
 const app = (0, express_1.default)().use(body_parser_1.default.json());
 // Configuración CORS mejorada para soportar múltiples orígenes
@@ -84,6 +86,8 @@ app.use('/admin/profile', profile_1.default); // Perfil de admin
 app.use('/product/register', Register_Product_1.default); // Registrar producto
 app.use('/product/:id', Update_Product_1.default); // Actualizar producto
 app.use('/product/delete', Delete_Product_1.default); // Eliminar producto
+// Ruta de inventario (NUEVA)
+app.use('/inventario', inventario_routes_1.default); // Crear inventario
 // Ruta de prueba para verificar que CORS funcione
 app.get('/api/test-cors', (req, res) => {
     res.json({ message: 'CORS está funcionando correctamente' });

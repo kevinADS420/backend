@@ -66,6 +66,35 @@ class ProductRepository {
         }
     }
 
+    static async registerProductWithInventoryId(product: Product, id_inventario: number) {
+        const connection = await db.getConnection();
+        try {
+            await connection.beginTransaction();
+
+            // Registrar el producto
+            const [productResult]: any = await connection.execute(
+                'INSERT INTO Producto (nombreP, tipo, Precio, imagen) VALUES (?, ?, ?, ?)',
+                [product.nombreP, product.tipo, product.Precio, product.imagen]
+            );
+
+            const productId = productResult.insertId;
+
+            // Actualizar el registro de inventario con el id_producto
+            await connection.execute(
+                'UPDATE Inventario SET id_producto = ? WHERE id_inventario = ?',
+                [productId, id_inventario]
+            );
+
+            await connection.commit();
+            return { productId, success: true };
+        } catch (error) {
+            await connection.rollback();
+            throw error;
+        } finally {
+            connection.release();
+        }
+    }
+
     static async deleteProduct(deleteProduct: DeleteProduct) {
         const sql = 'DELETE FROM Producto WHERE nombreP = ?';
         const values = [deleteProduct.nombre];

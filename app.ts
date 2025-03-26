@@ -30,6 +30,9 @@ import register_product from "./routes/Product-Product/Register_Product"
 import update_Product from "./routes/Product-Product/Update_Product";
 import delete_product from "./routes/Product-Product/Delete_Product";
 
+// Ruta de inventario (NUEVA)
+import create_inventory from "./routes/inventario-Routes/inventario_routes";
+
 dotenv.config();
 
 const app = express().use(bodyParser.json());
@@ -93,6 +96,9 @@ app.use('/admin/profile', profiles);             // Perfil de admin
 app.use('/product/register', register_product);  // Registrar producto
 app.use('/product/:id', update_Product);         // Actualizar producto
 app.use('/product/delete', delete_product);      // Eliminar producto
+
+// Ruta de inventario (NUEVA)
+app.use('/inventario', create_inventory);        // Crear inventario
 
 // Ruta de prueba para verificar que CORS funcione
 app.get('/api/test-cors', (req, res) => {

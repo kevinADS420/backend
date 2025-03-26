@@ -13,6 +13,10 @@ class ProductService {
         return await ProductRepository.registerProductWithInventory(product, inventory);
     }
 
+    static async registerProductWithInventoryId(product: Product, id_inventario: number) {
+        return await ProductRepository.registerProductWithInventoryId(product, id_inventario);
+    }
+
     static async Getproduct(getproduct: GetProduct) {
         return await ProductRepository.getProduct(getproduct);
     }

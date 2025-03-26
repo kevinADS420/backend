@@ -71,6 +71,28 @@ class ProductRepository {
             }
         });
     }
+    static registerProductWithInventoryId(product, id_inventario) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const connection = yield config_db_1.default.getConnection();
+            try {
+                yield connection.beginTransaction();
+                // Registrar el producto
+                const [productResult] = yield connection.execute('INSERT INTO Producto (nombreP, tipo, Precio, imagen) VALUES (?, ?, ?, ?)', [product.nombreP, product.tipo, product.Precio, product.imagen]);
+                const productId = productResult.insertId;
+                // Actualizar el registro de inventario con el id_producto
+                yield connection.execute('UPDATE Inventario SET id_producto = ? WHERE id_inventario = ?', [productId, id_inventario]);
+                yield connection.commit();
+                return { productId, success: true };
+            }
+            catch (error) {
+                yield connection.rollback();
+                throw error;
+            }
+            finally {
+                connection.release();
+            }
+        });
+    }
     static deleteProduct(deleteProduct) {
         return __awaiter(this, void 0, void 0, function* () {
             const sql = 'DELETE FROM Producto WHERE nombreP = ?';
