@@ -39,15 +39,18 @@ let register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         if (isNaN(cantidadInventario) || cantidadInventario < 0) {
             return res.status(400).json({ error: "La cantidad debe ser un número positivo" });
         }
+        // Crear objeto de producto
+        const productData = new RegisterProductDto_1.default(nombreP, tipo, Precio, imagen);
         // Crear objeto de inventario
         const inventoryData = new InventoryDto_1.default(cantidadInventario, parsedFechaIngreso, parsedFechaSalida, parsedFechaRealización);
         // Registrar producto e inventario en una transacción
-        const RegisterProduct = yield ProductServices_1.default.registerWithInventory(new RegisterProductDto_1.default(nombreP, tipo, Precio, imagen), inventoryData);
+        const result = yield ProductServices_1.default.registerWithInventory(productData, inventoryData);
         return res.status(201).json({
             status: "Producto Registrado",
             message: "Producto e inventario registrados correctamente",
             data: {
                 producto: nombreP,
+                productId: result.productId,
                 inventario: {
                     cantidad: cantidadInventario,
                     fechaIngreso: parsedFechaIngreso,
@@ -61,7 +64,7 @@ let register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         if ((error === null || error === void 0 ? void 0 : error.code) === "ER_DUP_ENTRY") {
             return res.status(500).json({ errorInfo: error.sqlMessage });
         }
-        console.error(error); // Agrega esto para ver el error en la terminal
+        console.error("Error al registrar producto:", error); // Mejorar el logging
         res.status(500).json({ error: error.message || "Error interno del servidor" });
     }
 });
