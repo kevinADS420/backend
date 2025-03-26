@@ -11,7 +11,12 @@ let validatorParams = [
         }
         return true;
     }),
-]
+    // Nuevos validadores para los campos de inventario
+    check('cantidad').optional().isInt({ min: 0 }).withMessage('La cantidad debe ser un número entero positivo'),
+    check('fechaIngreso').optional().isISO8601().withMessage('Formato de fecha inválido para fecha de ingreso'),
+    check('fechaSalida').optional().isISO8601().withMessage('Formato de fecha inválido para fecha de salida'),
+    check('fechaRealización').optional().isISO8601().withMessage('Formato de fecha inválido para fecha de realización'),
+];
 
 function validator(req: Request, res: Response, next: NextFunction) {
     const errors = validationResult(req);

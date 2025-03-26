@@ -19,6 +19,11 @@ class ProductService {
             return yield ProductRepository_1.default.registerProduct(Product);
         });
     }
+    static registerWithInventory(product, inventory) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield ProductRepository_1.default.registerProductWithInventory(product, inventory);
+        });
+    }
     static Getproduct(getproduct) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield ProductRepository_1.default.getProduct(getproduct);

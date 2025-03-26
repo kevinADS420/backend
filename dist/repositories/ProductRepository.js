@@ -24,9 +24,51 @@ class ProductRepository {
     }
     static registerProduct(product) {
         return __awaiter(this, void 0, void 0, function* () {
-            const sql = 'INSERT INTO Producto (nombreP, tipo, Precio, imagen ) VALUES (?, ?, ?, ?)';
+            const sql = 'INSERT INTO Producto (nombreP, tipo, Precio, imagen) VALUES (?, ?, ?, ?)';
             const values = [product.nombreP, product.tipo, product.Precio, product.imagen];
+            const result = yield config_db_1.default.execute(sql, values);
+            return result;
+        });
+    }
+    static registerInventory(inventory) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const sql = 'INSERT INTO Inventario (id_producto, cantidad, fechaIngreso, fechaSalida, fechaRealización) VALUES (?, ?, ?, ?, ?)';
+            const values = [
+                inventory.id_producto,
+                inventory.cantidad,
+                inventory.fechaIngreso,
+                inventory.fechaSalida,
+                inventory.fechaRealización
+            ];
             return config_db_1.default.execute(sql, values);
+        });
+    }
+    static registerProductWithInventory(product, inventory) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const connection = yield config_db_1.default.getConnection();
+            try {
+                yield connection.beginTransaction();
+                // Registrar el producto
+                const [productResult] = yield connection.execute('INSERT INTO Producto (nombreP, tipo, Precio, imagen) VALUES (?, ?, ?, ?)', [product.nombreP, product.tipo, product.Precio, product.imagen]);
+                const productId = productResult.insertId;
+                // Registrar en el inventario
+                yield connection.execute('INSERT INTO Inventario (id_producto, cantidad, fechaIngreso, fechaSalida, fechaRealización) VALUES (?, ?, ?, ?, ?)', [
+                    productId,
+                    inventory.cantidad,
+                    inventory.fechaIngreso,
+                    inventory.fechaSalida,
+                    inventory.fechaRealización
+                ]);
+                yield connection.commit();
+                return { productId, success: true };
+            }
+            catch (error) {
+                yield connection.rollback();
+                throw error;
+            }
+            finally {
+                connection.release();
+            }
         });
     }
     static deleteProduct(deleteProduct) {

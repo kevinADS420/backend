@@ -2,10 +2,9 @@ import db from '../config/config-db';
 import Product from '../Dto/Product-Dto/RegisterProductDto';
 import GetProduct from '../Dto/Product-Dto/getProductDto';
 import DeleteProduct from '../Dto/Product-Dto/DeleteProductDts';
+import Inventory from '../Dto/Product-Dto/InventoryDto';
 
 class ProductRepository {
-
-
     static async getProduct(getproduct: GetProduct) {
         const sql = 'SELECT nombre, precio, caracteristicas FROM Producto WHERE nombre = ?';
         const values = [getproduct.nombre];
@@ -13,26 +12,71 @@ class ProductRepository {
         return rows;
     }
 
-    static async registerProduct (product: Product){
-        const sql = 'INSERT INTO Producto (nombreP, tipo, Precio, imagen ) VALUES (?, ?, ?, ?)';
-        const values = [ product.nombreP, product.tipo, product.Precio, product.imagen ];
+    static async registerProduct(product: Product) {
+        const sql = 'INSERT INTO Producto (nombreP, tipo, Precio, imagen) VALUES (?, ?, ?, ?)';
+        const values = [product.nombreP, product.tipo, product.Precio, product.imagen];
+        const result = await db.execute(sql, values);
+        return result;
+    }
+
+    static async registerInventory(inventory: Inventory) {
+        const sql = 'INSERT INTO Inventario (id_producto, cantidad, fechaIngreso, fechaSalida, fechaRealización) VALUES (?, ?, ?, ?, ?)';
+        const values = [
+            inventory.id_producto,
+            inventory.cantidad, 
+            inventory.fechaIngreso, 
+            inventory.fechaSalida, 
+            inventory.fechaRealización
+        ];
         return db.execute(sql, values);
     }
 
+    static async registerProductWithInventory(product: Product, inventory: Inventory) {
+        const connection = await db.getConnection();
+        try {
+            await connection.beginTransaction();
 
-    static async deleteProduct(deleteProduct: DeleteProduct){
-        const sql = 'DELETE FROM Producto WHERE nombreP = ?';
-        const values = [deleteProduct.nombre ];
-        return db.execute(sql,values);
+            // Registrar el producto
+            const [productResult]: any = await connection.execute(
+                'INSERT INTO Producto (nombreP, tipo, Precio, imagen) VALUES (?, ?, ?, ?)',
+                [product.nombreP, product.tipo, product.Precio, product.imagen]
+            );
+
+            const productId = productResult.insertId;
+
+            // Registrar en el inventario
+            await connection.execute(
+                'INSERT INTO Inventario (id_producto, cantidad, fechaIngreso, fechaSalida, fechaRealización) VALUES (?, ?, ?, ?, ?)',
+                [
+                    productId,
+                    inventory.cantidad,
+                    inventory.fechaIngreso,
+                    inventory.fechaSalida,
+                    inventory.fechaRealización
+                ]
+            );
+
+            await connection.commit();
+            return { productId, success: true };
+        } catch (error) {
+            await connection.rollback();
+            throw error;
+        } finally {
+            connection.release();
+        }
     }
 
-    static async UpdateProduct(product: Product){
-        const sql = 'UPDATE Producto SET nombreP = ?, tipo = ?, Precio = ?, imagen = ? WHERE id_producto = ?'
+    static async deleteProduct(deleteProduct: DeleteProduct) {
+        const sql = 'DELETE FROM Producto WHERE nombreP = ?';
+        const values = [deleteProduct.nombre];
+        return db.execute(sql, values);
+    }
+
+    static async UpdateProduct(product: Product) {
+        const sql = 'UPDATE Producto SET nombreP = ?, tipo = ?, Precio = ?, imagen = ? WHERE id_producto = ?';
         const values = [product.nombreP, product.tipo, product.Precio, product.imagen];
         return db.execute(sql, values);
     }
-
 }
-
 
 export default ProductRepository;
