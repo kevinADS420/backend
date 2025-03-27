@@ -4,6 +4,6 @@ import deleteValidatorProduct from "../../middleware/Product-Validator/DeleteVal
 
 const router = express.Router();
 
-router.delete('/', deleteValidatorProduct.validatorParams, deleteValidatorProduct.validator, deleteProductController)
+router.delete('/', deleteProductController)
 
 export default router;
