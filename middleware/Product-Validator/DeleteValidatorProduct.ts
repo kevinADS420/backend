@@ -2,7 +2,9 @@ import {check, validationResult} from 'express-validator'
 import { Request, Response, NextFunction } from 'express'
 
 let validatorParams=[
-    check('id_producto').isInt({ min: 1, max:60})
+    check('id_producto')
+        .isInt({ min: 1 }) // Verifica que sea un número entero positivo
+        .withMessage('El id_productos debe ser un número entero positivo.')
 ]
 
 function validator( req:Request, res:Response, next: NextFunction){
