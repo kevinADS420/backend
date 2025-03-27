@@ -72,8 +72,8 @@ class ProductRepository {
 
             // Registrar el producto
             const [productResult]: any = await connection.execute(
-                'INSERT INTO Producto (nombreP, tipo, Precio, imagen) VALUES (?, ?, ?, ?)',
-                [product.nombreP, product.tipo, product.Precio, product.imagen]
+                'INSERT INTO Producto (nombreP, tipo, Precio, imagen, id_proveedor) VALUES (?, ?, ?, ?, ?)',
+                [product.nombreP, product.tipo, product.Precio, product.imagen, product.id_proveedor]
             );
 
             const productId = productResult.insertId;

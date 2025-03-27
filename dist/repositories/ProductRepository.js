@@ -76,7 +76,7 @@ class ProductRepository {
             try {
                 yield connection.beginTransaction();
                 // Registrar el producto
-                const [productResult] = yield connection.execute('INSERT INTO Producto (nombreP, tipo, Precio, imagen) VALUES (?, ?, ?, ?)', [product.nombreP, product.tipo, product.Precio, product.imagen]);
+                const [productResult] = yield connection.execute('INSERT INTO Producto (nombreP, tipo, Precio, imagen, id_proveedor) VALUES (?, ?, ?, ?, ?)', [product.nombreP, product.tipo, product.Precio, product.imagen, product.id_proveedor]);
                 const productId = productResult.insertId;
                 // Actualizar el registro de inventario con el id_producto
                 yield connection.execute('UPDATE Inventario SET id_producto = ? WHERE id_inventario = ?', [productId, id_inventario]);
