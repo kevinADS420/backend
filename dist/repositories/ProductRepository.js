@@ -14,13 +14,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const config_db_1 = __importDefault(require("../config/config-db"));
 class ProductRepository {
-    static getProductsByProveedor(id_proveedor) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const sql = 'SELECT id_producto, nombreP, tipo, Precio, imagen FROM Producto WHERE id_proveedor = ?';
-            const [rows] = yield config_db_1.default.execute(sql, [id_proveedor]);
-            return rows;
-        });
-    }
     static getAllProducts() {
         return __awaiter(this, void 0, void 0, function* () {
             const sql = 'SELECT id_producto, nombreP, tipo, Precio, imagen FROM Producto';
@@ -77,13 +70,13 @@ class ProductRepository {
             }
         });
     }
-    static registerProductWithInventoryAndProvider(product, id_inventario, id_proveedor) {
+    static registerProductWithInventoryId(product, id_inventario) {
         return __awaiter(this, void 0, void 0, function* () {
             const connection = yield config_db_1.default.getConnection();
             try {
                 yield connection.beginTransaction();
-                // Registrar el producto con id_proveedor si está disponible
-                const [productResult] = yield connection.execute('INSERT INTO Producto (nombreP, tipo, Precio, imagen, id_proveedor) VALUES (?, ?, ?, ?, ?)', [product.nombreP, product.tipo, product.Precio, product.imagen, id_proveedor || null]);
+                // Registrar el producto
+                const [productResult] = yield connection.execute('INSERT INTO Producto (nombreP, tipo, Precio, imagen) VALUES (?, ?, ?, ?)', [product.nombreP, product.tipo, product.Precio, product.imagen]);
                 const productId = productResult.insertId;
                 // Actualizar el registro de inventario con el id_producto
                 yield connection.execute('UPDATE Inventario SET id_producto = ? WHERE id_inventario = ?', [productId, id_inventario]);

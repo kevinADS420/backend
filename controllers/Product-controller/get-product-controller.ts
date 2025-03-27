@@ -3,16 +3,7 @@ import ProductService from "../../services/ProductServices";
 
 const getAllProducts = async (req: Request, res: Response) => {
     try {
-        let products;
-        const id_proveedor = req.query.id_proveedor || req.body.id_proveedor;
-        
-        if (id_proveedor) {
-            // Si hay un ID de proveedor, obtener solo productos de ese proveedor
-            products = await ProductService.getProductsByProveedor(id_proveedor as string);
-        } else {
-            // De lo contrario, obtener todos los productos
-            products = await ProductService.getAllProducts();
-        }
+        const products = await ProductService.getAllProducts();
         
         // Verificar que products es un array
         if (!Array.isArray(products)) {
