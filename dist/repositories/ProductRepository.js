@@ -16,7 +16,7 @@ const config_db_1 = __importDefault(require("../config/config-db"));
 class ProductRepository {
     static getAllProducts() {
         return __awaiter(this, void 0, void 0, function* () {
-            const sql = 'SELECT id_producto, nombreP, tipo, Precio, imagen, id_proveedor FROM Producto';
+            const sql = 'SELECT id_producto, nombreP, tipo, Precio, imagen, id_inventario, id_proveedor FROM Producto';
             const [rows] = yield config_db_1.default.execute(sql);
             return rows;
         });

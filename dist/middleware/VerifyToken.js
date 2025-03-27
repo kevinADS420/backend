@@ -30,6 +30,9 @@ const verifyToken = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
             if (req.path.includes('/product') && decoded.data.role === 'proveedor') {
                 req.body.id_proveedor = decoded.data.id;
             }
+            else if (req.path.includes('/product') && decoded.data.role === 'inventario') {
+                req.body.id_inventario = decoded.data.id;
+            }
             next();
         }
         catch (error) {

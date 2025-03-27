@@ -6,7 +6,7 @@ import Inventory from '../Dto/Product-Dto/InventoryDto';
 class ProductRepository {
 
    static async getAllProducts() {
-    const sql = 'SELECT id_producto, nombreP, tipo, Precio, imagen, id_proveedor FROM Producto';
+    const sql = 'SELECT id_producto, nombreP, tipo, Precio, imagen, id_inventario, id_proveedor FROM Producto';
     const [rows] = await db.execute(sql);
     return rows as any[];
 }

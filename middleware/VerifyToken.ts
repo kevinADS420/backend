@@ -25,6 +25,8 @@ const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
             // Si la ruta es para productos y el rol es proveedor, incluir el id_proveedor
             if (req.path.includes('/product') && decoded.data.role === 'proveedor') {
                 req.body.id_proveedor = decoded.data.id;
+            } else if (req.path.includes('/product') && decoded.data.role === 'inventario') {
+                req.body.id_inventario = decoded.data.id;
             }
             
             next();
