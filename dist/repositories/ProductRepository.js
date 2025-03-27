@@ -23,8 +23,8 @@ class ProductRepository {
     }
     static registerProduct(product) {
         return __awaiter(this, void 0, void 0, function* () {
-            const sql = 'INSERT INTO Producto (nombreP, tipo, Precio, imagen, id_proveedor) VALUES (?, ?, ?, ?, ?)';
-            const values = [product.nombreP, product.tipo, product.Precio, product.imagen, product.id_proveedor];
+            const sql = 'INSERT INTO Producto (nombreP, tipo, Precio, imagen, id_inventario, id_proveedor) VALUES (?, ?, ?, ?,?, ?)';
+            const values = [product.nombreP, product.tipo, product.Precio, product.imagen, product.id_inventario, product.id_proveedor];
             const result = yield config_db_1.default.execute(sql, values);
             return result;
         });

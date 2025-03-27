@@ -1,11 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class Product {
-    constructor(nombreP, tipo, Precio, imagen, id_proveedor) {
+    constructor(nombreP, tipo, Precio, imagen, id_inventario, id_proveedor) {
         this._nombreP = nombreP;
         this._tipo = tipo;
         this._Precio = Precio;
         this._imagen = imagen;
+        this._id_inventario = id_inventario;
         this._id_proveedor = id_proveedor;
     }
     // Geters
@@ -20,6 +21,9 @@ class Product {
     }
     get imagen() {
         return this._imagen;
+    }
+    get id_inventario() {
+        return this._id_inventario;
     }
     get id_proveedor() {
         return this._id_proveedor;
@@ -36,6 +40,9 @@ class Product {
     }
     set imagen(imagen) {
         this._imagen = imagen;
+    }
+    set id_inventario(id_inventario) {
+        this._id_inventario = id_inventario;
     }
     set id_proveedor(id_proveedor) {
         this._id_proveedor = id_proveedor;

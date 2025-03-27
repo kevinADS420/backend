@@ -12,8 +12,8 @@ class ProductRepository {
 }
 
     static async registerProduct(product: Product) {
-        const sql = 'INSERT INTO Producto (nombreP, tipo, Precio, imagen, id_proveedor) VALUES (?, ?, ?, ?, ?)';
-        const values = [product.nombreP, product.tipo, product.Precio, product.imagen, product.id_proveedor];
+        const sql = 'INSERT INTO Producto (nombreP, tipo, Precio, imagen, id_inventario, id_proveedor) VALUES (?, ?, ?, ?,?, ?)';
+        const values = [product.nombreP, product.tipo, product.Precio, product.imagen, product.id_inventario, product.id_proveedor];
         const result = await db.execute(sql, values);
         return result;
     }
