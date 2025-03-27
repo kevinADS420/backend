@@ -23,7 +23,7 @@ const getAllProducts = (req, res) => __awaiter(void 0, void 0, void 0, function*
         }
         else {
             // De lo contrario, obtener todos los productos
-            // products = await ProductService.getAllProducts();
+            products = yield ProductServices_1.default.getAllProducts();
         }
         // Verificar que products es un array
         if (!Array.isArray(products)) {

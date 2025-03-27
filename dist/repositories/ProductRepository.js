@@ -21,11 +21,13 @@ class ProductRepository {
             return rows;
         });
     }
-    // static async getAllProducts() {
-    //     const sql = 'SELECT id_producto, nombreP, tipo, Precio, imagen FROM Producto';
-    //     const [rows] = await db.execute(sql);
-    //     return rows as any[];
-    // }
+    static getAllProducts() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const sql = 'SELECT id_producto, nombreP, tipo, Precio, imagen FROM Producto';
+            const [rows] = yield config_db_1.default.execute(sql);
+            return rows;
+        });
+    }
     static registerProduct(product) {
         return __awaiter(this, void 0, void 0, function* () {
             const sql = 'INSERT INTO Producto (nombreP, tipo, Precio, imagen) VALUES (?, ?, ?, ?)';

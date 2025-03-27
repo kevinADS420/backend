@@ -29,9 +29,11 @@ class ProductService {
             return yield ProductRepository_1.default.registerProductWithInventoryAndProvider(product, id_inventario, id_proveedor);
         });
     }
-    // static async getAllProducts() {
-    //     return await ProductRepository.getAllProducts();
-    // }
+    static getAllProducts() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield ProductRepository_1.default.getAllProducts();
+        });
+    }
     static getProductsByProveedor(id_proveedor) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield ProductRepository_1.default.getProductsByProveedor(id_proveedor);

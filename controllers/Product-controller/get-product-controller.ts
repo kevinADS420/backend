@@ -11,7 +11,7 @@ const getAllProducts = async (req: Request, res: Response) => {
             products = await ProductService.getProductsByProveedor(id_proveedor as string);
         } else {
             // De lo contrario, obtener todos los productos
-            // products = await ProductService.getAllProducts();
+            products = await ProductService.getAllProducts();
         }
         
         // Verificar que products es un array

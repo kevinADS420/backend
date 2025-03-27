@@ -17,9 +17,9 @@ class ProductService {
         return await ProductRepository.registerProductWithInventoryAndProvider(product, id_inventario, id_proveedor);
     }
 
-    // static async getAllProducts() {
-    //     return await ProductRepository.getAllProducts();
-    // }
+    static async getAllProducts() {
+        return await ProductRepository.getAllProducts();
+    }
 
     static async getProductsByProveedor(id_proveedor: string | number) {
         return await ProductRepository.getProductsByProveedor(id_proveedor);

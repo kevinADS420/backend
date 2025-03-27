@@ -13,11 +13,11 @@ class ProductRepository {
     }
 
 
-    // static async getAllProducts() {
-    //     const sql = 'SELECT id_producto, nombreP, tipo, Precio, imagen FROM Producto';
-    //     const [rows] = await db.execute(sql);
-    //     return rows as any[];
-    // }
+    static async getAllProducts() {
+        const sql = 'SELECT id_producto, nombreP, tipo, Precio, imagen FROM Producto';
+        const [rows] = await db.execute(sql);
+        return rows as any[];
+    }
 
 
     static async registerProduct(product: Product) {
