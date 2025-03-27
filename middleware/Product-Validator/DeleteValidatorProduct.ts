@@ -13,7 +13,6 @@ function validator( req:Request, res:Response, next: NextFunction){
     next();
 }
 
-
 export default {
     validator, validatorParams
 }

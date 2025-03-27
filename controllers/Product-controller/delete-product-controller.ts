@@ -4,19 +4,32 @@ import productService from "../../services/ProductServices";
 
 const delete_product = async (req: Request, res: Response) => {
     try {
-        const { id_producto } = req.params; // Obtener el ID de los parámetros de la URL
+        const { id_producto } = req.body; // Obtener el ID del body en lugar de params
 
         if (!id_producto) {
-            return res.status(400).json({ error: "Se requiere el ID del producto" });
+            return res.status(400).json({ 
+                status: "Error",
+                message: "Se requiere el ID del producto" 
+            });
         }
 
-        const deleteProduct = await productService.deleteProduct(new DeleteProduct(parseInt(id_producto)));
+        // Convertir el ID a número
+        const productId = parseInt(id_producto);
+        
+        if (isNaN(productId)) {
+            return res.status(400).json({ 
+                status: "Error",
+                message: "El ID del producto debe ser un número válido" 
+            });
+        }
+
+        const deleteProduct = await productService.deleteProduct(new DeleteProduct(productId));
 
         return res.status(200).json({
             status: "Producto Eliminado",
             message: "Producto eliminado con éxito",
             data: {
-                id_producto: id_producto
+                id_producto: productId
             }
         });
     } catch (error: any) {
