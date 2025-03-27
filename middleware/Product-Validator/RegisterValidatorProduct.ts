@@ -11,6 +11,7 @@ let validatorParams = [
         }
         return true;
     }),
+    check('id_proveedor').isInt({ min: 0 }),
     check('id_proveedor').isInt({ min: 1 }).withMessage('El ID del proveedor debe ser un número entero positivo'),
     // Nuevos validadores para los campos de inventario
     check('cantidad').optional().isInt({ min: 0 }).withMessage('La cantidad debe ser un número entero positivo'),
