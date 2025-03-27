@@ -1,6 +1,5 @@
 import Product from "../Dto/Product-Dto/RegisterProductDto";
 import DeleteProduct from "../Dto/Product-Dto/DeleteProductDts";
-import GetProduct from "../Dto/Product-Dto/getProductDto";
 import Inventory from "../Dto/Product-Dto/InventoryDto";
 import ProductRepository from '../repositories/ProductRepository';
 

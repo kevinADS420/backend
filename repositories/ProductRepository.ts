@@ -1,20 +1,19 @@
 import db from '../config/config-db';
 import Product from '../Dto/Product-Dto/RegisterProductDto';
-import GetProduct from '../Dto/Product-Dto/getProductDto';
 import DeleteProduct from '../Dto/Product-Dto/DeleteProductDts';
 import Inventory from '../Dto/Product-Dto/InventoryDto';
 
 class ProductRepository {
 
    static async getAllProducts() {
-    const sql = 'SELECT id_producto, nombreP, tipo, Precio, imagen FROM Producto';
+    const sql = 'SELECT id_producto, nombreP, tipo, Precio, imagen, id_proveedor FROM Producto';
     const [rows] = await db.execute(sql);
     return rows as any[];
 }
 
     static async registerProduct(product: Product) {
-        const sql = 'INSERT INTO Producto (nombreP, tipo, Precio, imagen) VALUES (?, ?, ?, ?)';
-        const values = [product.nombreP, product.tipo, product.Precio, product.imagen];
+        const sql = 'INSERT INTO Producto (nombreP, tipo, Precio, imagen, id_proveedor) VALUES (?, ?, ?, ?, ?)';
+        const values = [product.nombreP, product.tipo, product.Precio, product.imagen, product.id_proveedor];
         const result = await db.execute(sql, values);
         return result;
     }

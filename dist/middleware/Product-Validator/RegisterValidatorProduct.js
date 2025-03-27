@@ -11,6 +11,7 @@ let validatorParams = [
         }
         return true;
     }),
+    (0, express_validator_1.check)('id_proveedor').isInt({ min: 1 }).withMessage('El ID del proveedor debe ser un número entero positivo'),
     // Nuevos validadores para los campos de inventario
     (0, express_validator_1.check)('cantidad').optional().isInt({ min: 0 }).withMessage('La cantidad debe ser un número entero positivo'),
     (0, express_validator_1.check)('fechaIngreso').optional().isISO8601().withMessage('Formato de fecha inválido para fecha de ingreso'),

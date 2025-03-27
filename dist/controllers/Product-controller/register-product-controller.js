@@ -16,18 +16,17 @@ const RegisterProductDto_1 = __importDefault(require("../../Dto/Product-Dto/Regi
 const ProductServices_1 = __importDefault(require("../../services/ProductServices"));
 let register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { nombreP, tipo, Precio, id_inventario // Ahora recibimos el ID del inventario
-         } = req.body;
+        const { nombreP, tipo, Precio, id_inventario, id_proveedor } = req.body;
         if (!req.file) {
             return res.status(400).json({ error: "Se requiere una imagen" });
         }
-        const imagen = req.file.buffer; // Imagen en formato binario
+        const imagen = req.file.buffer;
         // Validar id_inventario
         if (!id_inventario) {
             return res.status(400).json({ error: "Se requiere un ID de inventario válido" });
         }
         // Crear objeto de producto
-        const productData = new RegisterProductDto_1.default(nombreP, tipo, Precio, imagen);
+        const productData = new RegisterProductDto_1.default(nombreP, tipo, Precio, imagen, id_proveedor);
         // Registrar el producto y asociarlo con el inventario existente
         const result = yield ProductServices_1.default.registerProductWithInventoryId(productData, id_inventario);
         return res.status(201).json({

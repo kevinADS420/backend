@@ -8,14 +8,15 @@ let register = async (req: Request, res: Response) => {
             nombreP,
             tipo,
             Precio,
-            id_inventario  // Ahora recibimos el ID del inventario
+            id_inventario,  
+            id_proveedor
         } = req.body;
 
         if (!req.file) {
             return res.status(400).json({ error: "Se requiere una imagen" });
         }
 
-        const imagen = req.file.buffer; // Imagen en formato binario
+        const imagen = req.file.buffer; 
 
         // Validar id_inventario
         if (!id_inventario) {
@@ -23,7 +24,7 @@ let register = async (req: Request, res: Response) => {
         }
 
         // Crear objeto de producto
-        const productData = new Product(nombreP, tipo, Precio, imagen);
+        const productData = new Product(nombreP, tipo, Precio, imagen, id_proveedor);
         
         // Registrar el producto y asociarlo con el inventario existente
         const result = await ProductService.registerProductWithInventoryId(productData, id_inventario);

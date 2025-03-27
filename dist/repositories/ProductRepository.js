@@ -16,15 +16,15 @@ const config_db_1 = __importDefault(require("../config/config-db"));
 class ProductRepository {
     static getAllProducts() {
         return __awaiter(this, void 0, void 0, function* () {
-            const sql = 'SELECT id_producto, nombreP, tipo, Precio, imagen FROM Producto';
+            const sql = 'SELECT id_producto, nombreP, tipo, Precio, imagen, id_proveedor FROM Producto';
             const [rows] = yield config_db_1.default.execute(sql);
             return rows;
         });
     }
     static registerProduct(product) {
         return __awaiter(this, void 0, void 0, function* () {
-            const sql = 'INSERT INTO Producto (nombreP, tipo, Precio, imagen) VALUES (?, ?, ?, ?)';
-            const values = [product.nombreP, product.tipo, product.Precio, product.imagen];
+            const sql = 'INSERT INTO Producto (nombreP, tipo, Precio, imagen, id_proveedor) VALUES (?, ?, ?, ?, ?)';
+            const values = [product.nombreP, product.tipo, product.Precio, product.imagen, product.id_proveedor];
             const result = yield config_db_1.default.execute(sql, values);
             return result;
         });
