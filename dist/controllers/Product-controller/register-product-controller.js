@@ -25,8 +25,8 @@ let register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         if (!id_inventario) {
             return res.status(400).json({ error: "Se requiere un ID de inventario válido" });
         }
-        // Crear objeto de producto
-        const productData = new RegisterProductDto_1.default(nombreP, tipo, Precio, imagen, id_proveedor);
+        // Crear objeto de producto con el orden correcto de parámetros
+        const productData = new RegisterProductDto_1.default(nombreP, tipo, Precio, imagen, id_inventario, id_proveedor);
         // Registrar el producto y asociarlo con el inventario existente
         const result = yield ProductServices_1.default.registerProductWithInventoryId(productData, id_inventario);
         return res.status(201).json({
@@ -35,7 +35,8 @@ let register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             data: {
                 producto: nombreP,
                 productId: result.productId,
-                id_inventario: id_inventario
+                id_inventario: id_inventario,
+                id_proveedor: id_proveedor
             }
         });
     }
