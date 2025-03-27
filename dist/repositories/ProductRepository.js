@@ -95,7 +95,7 @@ class ProductRepository {
     static deleteProduct(deleteProduct) {
         return __awaiter(this, void 0, void 0, function* () {
             const sql = 'DELETE FROM Producto WHERE nombreP = ?';
-            const values = [deleteProduct.nombre];
+            const values = [deleteProduct.nombreP];
             return config_db_1.default.execute(sql, values);
         });
     }

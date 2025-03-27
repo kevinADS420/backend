@@ -16,8 +16,8 @@ const DeleteProductDts_1 = __importDefault(require("../../Dto/Product-Dto/Delete
 const ProductServices_1 = __importDefault(require("../../services/ProductServices"));
 const delete_product = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { nombre } = req.body;
-        const deleteProduct = yield ProductServices_1.default.deleteProduct(new DeleteProductDts_1.default(nombre));
+        const { nombreP } = req.body;
+        const deleteProduct = yield ProductServices_1.default.deleteProduct(new DeleteProductDts_1.default(nombreP));
         return res.status(200).json({ message: 'Priducto eliminado con éxito' });
     }
     catch (error) {
