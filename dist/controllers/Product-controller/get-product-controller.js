@@ -15,7 +15,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const ProductServices_1 = __importDefault(require("../../services/ProductServices"));
 const getAllProducts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const products = yield ProductServices_1.default.getAllProducts();
+        let products;
+        const id_proveedor = req.query.id_proveedor || req.body.id_proveedor;
+        if (id_proveedor) {
+            // Si hay un ID de proveedor, obtener solo productos de ese proveedor
+            products = yield ProductServices_1.default.getProductsByProveedor(id_proveedor);
+        }
+        else {
+            // De lo contrario, obtener todos los productos
+            // products = await ProductService.getAllProducts();
+        }
         // Verificar que products es un array
         if (!Array.isArray(products)) {
             return res.status(200).json([]);

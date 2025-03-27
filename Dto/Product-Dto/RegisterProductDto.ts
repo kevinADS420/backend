@@ -3,19 +3,21 @@ class Product {
     private _tipo: string;
     private _Precio: number;
     private _imagen: Buffer;
-
+    private _id_proveedor?: number;
 
     constructor(
 
         nombreP: string,
         tipo: string,
         Precio: number,
-        imagen: Buffer
+        imagen: Buffer,
+        id_proveedor?: number
     ) {
         this._nombreP = nombreP;
         this._tipo = tipo;
         this._Precio = Precio;
-        this._imagen = imagen
+        this._imagen = imagen;
+        this._id_proveedor = id_proveedor;
     }
 
     // Geters
@@ -36,6 +38,10 @@ class Product {
         return this._imagen;
     }
 
+    get id_proveedor(): number | undefined {
+        return this._id_proveedor;
+    }
+
     // Seters
 
     set nombreP(nombreP: string) {
@@ -52,6 +58,10 @@ class Product {
 
     set imagen(imagen: Buffer) {
         this._imagen = imagen;
+    }
+
+    set id_proveedor(id_proveedor: number | undefined) {
+        this._id_proveedor = id_proveedor;
     }
 
 }

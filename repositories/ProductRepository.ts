@@ -6,11 +6,19 @@ import Inventory from '../Dto/Product-Dto/InventoryDto';
 
 class ProductRepository {
 
-   static async getAllProducts() {
-    const sql = 'SELECT id_producto, nombreP, tipo, Precio, imagen FROM Producto';
-    const [rows] = await db.execute(sql);
-    return rows as any[];
-}
+    static async getProductsByProveedor(id_proveedor: string | number) {
+        const sql = 'SELECT id_producto, nombreP, tipo, Precio, imagen FROM Producto WHERE id_proveedor = ?';
+        const [rows] = await db.execute(sql, [id_proveedor]);
+        return rows as any[];
+    }
+
+
+    // static async getAllProducts() {
+    //     const sql = 'SELECT id_producto, nombreP, tipo, Precio, imagen FROM Producto';
+    //     const [rows] = await db.execute(sql);
+    //     return rows as any[];
+    // }
+
 
     static async registerProduct(product: Product) {
         const sql = 'INSERT INTO Producto (nombreP, tipo, Precio, imagen) VALUES (?, ?, ?, ?)';
@@ -66,25 +74,25 @@ class ProductRepository {
         }
     }
 
-    static async registerProductWithInventoryId(product: Product, id_inventario: number) {
+    static async registerProductWithInventoryAndProvider(product: Product, id_inventario: number, id_proveedor?: number) {
         const connection = await db.getConnection();
         try {
             await connection.beginTransaction();
-
-            // Registrar el producto
+    
+            // Registrar el producto con id_proveedor si está disponible
             const [productResult]: any = await connection.execute(
-                'INSERT INTO Producto (nombreP, tipo, Precio, imagen) VALUES (?, ?, ?, ?)',
-                [product.nombreP, product.tipo, product.Precio, product.imagen]
+                'INSERT INTO Producto (nombreP, tipo, Precio, imagen, id_proveedor) VALUES (?, ?, ?, ?, ?)',
+                [product.nombreP, product.tipo, product.Precio, product.imagen, id_proveedor || null]
             );
-
+    
             const productId = productResult.insertId;
-
+    
             // Actualizar el registro de inventario con el id_producto
             await connection.execute(
                 'UPDATE Inventario SET id_producto = ? WHERE id_inventario = ?',
                 [productId, id_inventario]
             );
-
+    
             await connection.commit();
             return { productId, success: true };
         } catch (error) {

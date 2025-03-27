@@ -13,12 +13,16 @@ class ProductService {
         return await ProductRepository.registerProductWithInventory(product, inventory);
     }
 
-    static async registerProductWithInventoryId(product: Product, id_inventario: number) {
-        return await ProductRepository.registerProductWithInventoryId(product, id_inventario);
+    static async registerProductWithInventoryAndProvider(product: Product, id_inventario: number, id_proveedor?: number) {
+        return await ProductRepository.registerProductWithInventoryAndProvider(product, id_inventario, id_proveedor);
     }
 
-    static async getAllProducts() {
-        return await ProductRepository.getAllProducts();
+    // static async getAllProducts() {
+    //     return await ProductRepository.getAllProducts();
+    // }
+
+    static async getProductsByProveedor(id_proveedor: string | number) {
+        return await ProductRepository.getProductsByProveedor(id_proveedor);
     }
 
     static async UpdateProduct(product: Product) {
