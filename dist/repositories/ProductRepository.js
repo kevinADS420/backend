@@ -94,8 +94,8 @@ class ProductRepository {
     }
     static deleteProduct(deleteProduct) {
         return __awaiter(this, void 0, void 0, function* () {
-            const sql = 'DELETE FROM Producto WHERE nombreP = ?';
-            const values = [deleteProduct.nombreP];
+            const sql = 'DELETE FROM Producto WHERE id_producto = ?';
+            const values = [deleteProduct.id_producto];
             return config_db_1.default.execute(sql, values);
         });
     }

@@ -87,7 +87,7 @@ app.use('/admin/profile', profile_1.default); // Perfil de admin
 app.use('/products', Get_Products_1.default); // consultar productos 
 app.use('/product/register', Register_Product_1.default); // Registrar producto
 app.use('/product/:id', Update_Product_1.default); // Actualizar producto
-app.use('/product/delete', Delete_Product_1.default); // Eliminar producto
+app.use('/product/delete/:id_producto', Delete_Product_1.default); // Eliminar producto
 // Ruta de inventario (NUEVA)
 app.use('/inventario/create', inventario_routes_1.default); // Crear inventario
 // Ruta de prueba para verificar que CORS funcione

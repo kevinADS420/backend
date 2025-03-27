@@ -1,16 +1,16 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class DeleteProduct {
-    constructor(nombreP) {
-        this._nombreP = nombreP;
+    constructor(id_producto) {
+        this._id_producto = id_producto;
     }
     //Geters
-    get nombreP() {
-        return this._nombreP;
+    get id_producto() {
+        return this._id_producto;
     }
     //seters
-    set nombreP(nombreP) {
-        this._nombreP = nombreP;
+    set id_producto(id_producto) {
+        this._id_producto = id_producto;
     }
 }
 exports.default = DeleteProduct;
