@@ -97,7 +97,7 @@ app.use('/admin/profile', profiles);             // Perfil de admin
 app.use('/products', get_all_products);          // consultar productos 
 app.use('/product/register', register_product);  // Registrar producto
 app.use('/product/:id', update_Product);         // Actualizar producto
-app.use('/product/delete', delete_product);      // Eliminar producto
+app.use('/product/delete/:id_producto', delete_product);      // Eliminar producto
 
 // Ruta de inventario (NUEVA)
 app.use('/inventario/create', create_inventory);        // Crear inventario

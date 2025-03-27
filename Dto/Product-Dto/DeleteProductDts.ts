@@ -1,27 +1,21 @@
 class DeleteProduct {
-
-    private _nombreP: string;
+    private _id_producto: number;
 
     constructor(
-        nombreP: string
-
-    )
-    {
-        this._nombreP = nombreP
+        id_producto: number
+    ) {
+        this._id_producto = id_producto;
     }
 
     //Geters
-
-    get nombreP():string{
-        return this._nombreP;
+    get id_producto(): number {
+        return this._id_producto;
     }
 
     //seters
-
-    set nombreP(nombreP: string) {
-        this._nombreP = nombreP;
+    set id_producto(id_producto: number) {
+        this._id_producto = id_producto;
     }
-
 }
 
 export default DeleteProduct;
