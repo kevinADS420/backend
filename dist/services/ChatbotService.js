@@ -8,11 +8,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ChatbotService = void 0;
+const axios_1 = __importDefault(require("axios"));
 class ChatbotService {
     constructor(productService, inventoryService) {
         this.recipes = [];
+        this.HUGGING_FACE_API_URL = 'https://api-inference.huggingface.co/models/facebook/opt-350m';
+        this.HUGGING_FACE_TOKEN = process.env.HUGGING_FACE_TOKEN;
         this.productService = productService;
         this.inventoryService = inventoryService;
         this.initializeRecipes();
@@ -185,8 +191,56 @@ class ChatbotService {
                 const recipes = this.getRecipesByIngredients(ingredients, recipeType);
                 return this.formatRecipeResponse(recipes, ingredients);
             }
+            // Si el mensaje no está relacionado con Huerto Market, usar Hugging Face
+            if (!this.isHuertoMarketRelated(normalizedMessage)) {
+                return yield this.getGeneralResponse(message);
+            }
             // Si no es ninguna de las anteriores, respuesta general
             return `¡Hola! Soy el asistente de Huerto Market. Puedo ayudarte con información sobre productos en descuento y recetas para preparar con nuestros productos frescos. ¿En qué puedo ayudarte hoy?`;
+        });
+    }
+    /**
+     * Verifica si el mensaje está relacionado con Huerto Market
+     * @param message Mensaje normalizado
+     * @returns true si está relacionado
+     */
+    isHuertoMarketRelated(message) {
+        const huertoMarketKeywords = [
+            'huerto', 'market', 'producto', 'fruta', 'verdura', 'comida',
+            'receta', 'cocinar', 'preparar', 'descuento', 'oferta', 'precio'
+        ];
+        return huertoMarketKeywords.some(keyword => message.includes(keyword));
+    }
+    /**
+     * Obtiene una respuesta general usando Hugging Face
+     * @param message Mensaje del usuario
+     * @returns Respuesta generada
+     */
+    getGeneralResponse(message) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                if (!this.HUGGING_FACE_TOKEN) {
+                    return "Lo siento, no puedo responder preguntas generales en este momento. Por favor, hazme preguntas sobre nuestros productos y recetas.";
+                }
+                const response = yield axios_1.default.post(this.HUGGING_FACE_API_URL, {
+                    inputs: message,
+                    parameters: {
+                        max_length: 100,
+                        temperature: 0.7,
+                        top_p: 0.9
+                    }
+                }, {
+                    headers: {
+                        'Authorization': `Bearer ${this.HUGGING_FACE_TOKEN}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                return response.data[0].generated_text;
+            }
+            catch (error) {
+                console.error('Error al obtener respuesta general:', error);
+                return "Lo siento, no puedo responder preguntas generales en este momento. Por favor, hazme preguntas sobre nuestros productos y recetas.";
+            }
         });
     }
     /**

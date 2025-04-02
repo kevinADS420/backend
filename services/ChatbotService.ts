@@ -1,6 +1,7 @@
 import ProductService from './ProductServices';
 import InventoryService from './InventoryServices';
 import Inventory from '../Dto/Product-Dto/InventoryDto';
+import axios from 'axios';
 
 interface Product {
   id: number;
@@ -17,10 +18,16 @@ interface Recipe {
   beneficios: string[];
 }
 
+interface HuggingFaceResponse {
+  generated_text: string;
+}
+
 export class ChatbotService {
   private productService: ProductService;
   private inventoryService: InventoryService;
   private recipes: Recipe[] = [];
+  private readonly HUGGING_FACE_API_URL = 'https://api-inference.huggingface.co/models/facebook/opt-350m';
+  private readonly HUGGING_FACE_TOKEN = process.env.HUGGING_FACE_TOKEN;
 
   constructor(productService: ProductService, inventoryService: InventoryService) {
     this.productService = productService;
@@ -206,9 +213,64 @@ export class ChatbotService {
       const recipes = this.getRecipesByIngredients(ingredients, recipeType);
       return this.formatRecipeResponse(recipes, ingredients);
     }
+
+    // Si el mensaje no está relacionado con Huerto Market, usar Hugging Face
+    if (!this.isHuertoMarketRelated(normalizedMessage)) {
+      return await this.getGeneralResponse(message);
+    }
     
     // Si no es ninguna de las anteriores, respuesta general
     return `¡Hola! Soy el asistente de Huerto Market. Puedo ayudarte con información sobre productos en descuento y recetas para preparar con nuestros productos frescos. ¿En qué puedo ayudarte hoy?`;
+  }
+
+  /**
+   * Verifica si el mensaje está relacionado con Huerto Market
+   * @param message Mensaje normalizado
+   * @returns true si está relacionado
+   */
+  private isHuertoMarketRelated(message: string): boolean {
+    const huertoMarketKeywords = [
+      'huerto', 'market', 'producto', 'fruta', 'verdura', 'comida', 
+      'receta', 'cocinar', 'preparar', 'descuento', 'oferta', 'precio'
+    ];
+    
+    return huertoMarketKeywords.some(keyword => message.includes(keyword));
+  }
+
+  /**
+   * Obtiene una respuesta general usando Hugging Face
+   * @param message Mensaje del usuario
+   * @returns Respuesta generada
+   */
+  private async getGeneralResponse(message: string): Promise<string> {
+    try {
+      if (!this.HUGGING_FACE_TOKEN) {
+        return "Lo siento, no puedo responder preguntas generales en este momento. Por favor, hazme preguntas sobre nuestros productos y recetas.";
+      }
+
+      const response = await axios.post<HuggingFaceResponse[]>(
+        this.HUGGING_FACE_API_URL,
+        {
+          inputs: message,
+          parameters: {
+            max_length: 100,
+            temperature: 0.7,
+            top_p: 0.9
+          }
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${this.HUGGING_FACE_TOKEN}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      return response.data[0].generated_text;
+    } catch (error) {
+      console.error('Error al obtener respuesta general:', error);
+      return "Lo siento, no puedo responder preguntas generales en este momento. Por favor, hazme preguntas sobre nuestros productos y recetas.";
+    }
   }
 
   /**
