@@ -36,7 +36,8 @@ const createInventory = async (req: Request, res: Response) => {
         );
 
         // Registrar inventario
-        const result = await InventoryService.createInventory(inventoryData);
+        const inventoryService = new InventoryService();
+        const result = await inventoryService.createInventory(inventoryData);
 
         return res.status(201).json({
             status: "Inventario Registrado",

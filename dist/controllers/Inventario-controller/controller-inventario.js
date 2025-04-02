@@ -33,7 +33,8 @@ const createInventory = (req, res) => __awaiter(void 0, void 0, void 0, function
         // Crear objeto de inventario (sin id_producto por ahora)
         const inventoryData = new InventoryDto_1.default(cantidadInventario, parsedFechaIngreso, parsedFechaSalida, parsedFechaRealización);
         // Registrar inventario
-        const result = yield InventoryServices_1.default.createInventory(inventoryData);
+        const inventoryService = new InventoryServices_1.default();
+        const result = yield inventoryService.createInventory(inventoryData);
         return res.status(201).json({
             status: "Inventario Registrado",
             message: "Registro de inventario creado correctamente",

@@ -32,6 +32,8 @@ const Update_Product_1 = __importDefault(require("./routes/Product-Product/Updat
 const Delete_Product_1 = __importDefault(require("./routes/Product-Product/Delete_Product"));
 // Ruta de inventario (NUEVA)
 const inventario_routes_1 = __importDefault(require("./routes/inventario-Routes/inventario_routes"));
+// Rutas de Chatbot
+const chatbotRoutes_1 = __importDefault(require("./routes/Chatbot-Routes/chatbotRoutes"));
 dotenv_1.default.config();
 const app = (0, express_1.default)().use(body_parser_1.default.json());
 // Configuración CORS mejorada para soportar múltiples orígenes
@@ -89,7 +91,9 @@ app.use('/product/register', Register_Product_1.default); // Registrar producto
 app.use('/product/:id', Update_Product_1.default); // Actualizar producto
 app.use('/product/delete', Delete_Product_1.default); // Eliminar producto
 // Ruta de inventario (NUEVA)
-app.use('/inventario/create', inventario_routes_1.default); // Crear inventario
+app.use('/inventario/create', inventario_routes_1.default);
+// Rutas de Chatbot
+app.use('/api/chatbot', chatbotRoutes_1.default);
 // Ruta de prueba para verificar que CORS funcione
 app.get('/api/test-cors', (req, res) => {
     res.json({ message: 'CORS está funcionando correctamente' });

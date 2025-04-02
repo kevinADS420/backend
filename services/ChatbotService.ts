@@ -1,17 +1,12 @@
 import ProductService from './ProductServices';
 import InventoryService from './InventoryServices';
+import Inventory from '../Dto/Product-Dto/InventoryDto';
 
 interface Product {
   id: number;
   name: string;
   price: number;
   discount?: number;
-}
-
-interface Inventory {
-  id: string;
-  quantity: number;
-  inSeason: boolean;
 }
 
 interface Recipe {
@@ -120,8 +115,8 @@ export class ChatbotService {
       const inventory = await this.inventoryService.getProductInventory(productId);
       if (!inventory) return "No disponible actualmente";
       
-      if (inventory.quantity > 20) return "Alta disponibilidad";
-      if (inventory.quantity > 5) return "Disponibilidad media";
+      if (inventory.cantidad > 20) return "Alta disponibilidad";
+      if (inventory.cantidad > 5) return "Disponibilidad media";
       return "Pocas unidades disponibles";
     } catch {
       return "No disponible actualmente";

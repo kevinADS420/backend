@@ -14,9 +14,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const InventoryRepository_1 = __importDefault(require("../repositories/InventoryRepository"));
 class InventoryService {
-    static createInventory(inventory) {
+    createInventory(inventory) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield InventoryRepository_1.default.createInventory(inventory);
+        });
+    }
+    getProductInventory(productId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                // Aquí implementarías la lógica para obtener el inventario de un producto
+                return yield InventoryRepository_1.default.getInventoryByProductId(productId);
+            }
+            catch (error) {
+                console.error('Error al obtener inventario:', error);
+                return null;
+            }
+        });
+    }
+    updateInventory(productId, quantity) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                return yield InventoryRepository_1.default.updateInventory(productId, quantity);
+            }
+            catch (error) {
+                console.error('Error al actualizar inventario:', error);
+                return false;
+            }
         });
     }
 }

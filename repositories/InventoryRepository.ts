@@ -25,6 +25,37 @@ class InventoryRepository {
             throw error;
         }
     }
+
+    static async getInventoryByProductId(productId: string): Promise<Inventory | null> {
+        try {
+            const sql = 'SELECT * FROM Inventario WHERE id_producto = ?';
+            const [rows]: any = await db.execute(sql, [productId]);
+            if (rows.length === 0) return null;
+            
+            const inventory = rows[0];
+            return new Inventory(
+                inventory.cantidad,
+                inventory.fechaIngreso,
+                inventory.fechaSalida,
+                inventory.fechaRealización,
+                inventory.id_producto
+            );
+        } catch (error) {
+            console.error('Error al obtener inventario:', error);
+            throw error;
+        }
+    }
+
+    static async updateInventory(productId: string, quantity: number): Promise<boolean> {
+        try {
+            const sql = 'UPDATE Inventario SET cantidad = ? WHERE id_producto = ?';
+            await db.execute(sql, [quantity, productId]);
+            return true;
+        } catch (error) {
+            console.error('Error al actualizar inventario:', error);
+            throw error;
+        }
+    }
 }
 
 export default InventoryRepository;

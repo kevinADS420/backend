@@ -11,7 +11,8 @@ let update_Product = async(req:Request, res: Response) => {
             Precio,
             imagen
         } = req.body;
-        const updateProduct = await ProductService.UpdateProduct(new Product(nombreP, tipo, Precio, imagen))
+        const productService = new ProductService();
+        const updateProduct = await productService.updateProduct(new Product(nombreP, tipo, Precio, imagen))
 
 
         return res.status(201).json(

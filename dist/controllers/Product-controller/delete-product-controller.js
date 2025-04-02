@@ -31,7 +31,8 @@ const delete_product = (req, res) => __awaiter(void 0, void 0, void 0, function*
                 message: "El ID del producto debe ser un número válido"
             });
         }
-        const deleteProduct = yield ProductServices_1.default.deleteProduct(new DeleteProductDts_1.default(productId));
+        const productService = new ProductServices_1.default();
+        const deleteProduct = yield productService.deleteProduct(new DeleteProductDts_1.default(productId));
         return res.status(200).json({
             status: "Producto Eliminado",
             message: "Producto eliminado con éxito",

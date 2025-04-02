@@ -27,7 +27,8 @@ let register = async (req: Request, res: Response) => {
         const productData = new Product(nombreP, tipo, Precio, imagen, id_inventario, id_proveedor);
         
         // Registrar el producto y asociarlo con el inventario existente
-        const result = await ProductService.registerProductWithInventoryId(productData, id_inventario);
+        const productService = new ProductService();
+        const result = await productService.registerProductWithInventoryId(productData, id_inventario);
 
         return res.status(201).json({ 
             status: "Producto Registrado",

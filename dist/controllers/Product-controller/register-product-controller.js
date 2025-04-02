@@ -28,7 +28,8 @@ let register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         // Crear objeto de producto con el orden correcto de parámetros
         const productData = new RegisterProductDto_1.default(nombreP, tipo, Precio, imagen, id_inventario, id_proveedor);
         // Registrar el producto y asociarlo con el inventario existente
-        const result = yield ProductServices_1.default.registerProductWithInventoryId(productData, id_inventario);
+        const productService = new ProductServices_1.default();
+        const result = yield productService.registerProductWithInventoryId(productData, id_inventario);
         return res.status(201).json({
             status: "Producto Registrado",
             message: "Producto registrado y asociado con inventario correctamente",

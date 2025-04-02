@@ -14,32 +14,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const ProductRepository_1 = __importDefault(require("../repositories/ProductRepository"));
 class ProductService {
-    static register(Product) {
+    register(product) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield ProductRepository_1.default.registerProduct(Product);
+            return yield ProductRepository_1.default.registerProduct(product);
         });
     }
-    static registerWithInventory(product, inventory) {
+    registerWithInventory(product, inventory) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield ProductRepository_1.default.registerProductWithInventory(product, inventory);
         });
     }
-    static registerProductWithInventoryId(product, id_inventario) {
+    registerProductWithInventoryId(product, id_inventario) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield ProductRepository_1.default.registerProductWithInventoryId(product, id_inventario);
         });
     }
-    static getAllProducts() {
+    getAllProducts() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield ProductRepository_1.default.getAllProducts();
         });
     }
-    static UpdateProduct(product) {
+    updateProduct(product) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield ProductRepository_1.default.UpdateProduct(product);
         });
     }
-    static deleteProduct(deleteProduct) {
+    deleteProduct(deleteProduct) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield ProductRepository_1.default.deleteProduct(deleteProduct);
         });

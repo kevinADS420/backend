@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const config_db_1 = __importDefault(require("../config/config-db"));
+const InventoryDto_1 = __importDefault(require("../Dto/Product-Dto/InventoryDto"));
 class InventoryRepository {
     static createInventory(inventory) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -34,6 +35,35 @@ class InventoryRepository {
             }
             catch (error) {
                 console.error('Error al crear inventario:', error);
+                throw error;
+            }
+        });
+    }
+    static getInventoryByProductId(productId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const sql = 'SELECT * FROM Inventario WHERE id_producto = ?';
+                const [rows] = yield config_db_1.default.execute(sql, [productId]);
+                if (rows.length === 0)
+                    return null;
+                const inventory = rows[0];
+                return new InventoryDto_1.default(inventory.cantidad, inventory.fechaIngreso, inventory.fechaSalida, inventory.fechaRealización, inventory.id_producto);
+            }
+            catch (error) {
+                console.error('Error al obtener inventario:', error);
+                throw error;
+            }
+        });
+    }
+    static updateInventory(productId, quantity) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const sql = 'UPDATE Inventario SET cantidad = ? WHERE id_producto = ?';
+                yield config_db_1.default.execute(sql, [quantity, productId]);
+                return true;
+            }
+            catch (error) {
+                console.error('Error al actualizar inventario:', error);
                 throw error;
             }
         });

@@ -1,12 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class Inventory {
-    constructor(cantidad, fechaIngreso, fechaSalida, fechaRealización, id_producto) {
+    constructor(cantidad, fechaIngreso, fechaSalida, fechaRealización, id_producto, inSeason = true) {
         this._cantidad = cantidad;
         this._fechaIngreso = fechaIngreso;
         this._fechaSalida = fechaSalida;
         this._fechaRealización = fechaRealización;
         this._id_producto = id_producto;
+        this._inSeason = inSeason;
     }
     // Getters
     get id_producto() {
@@ -24,6 +25,9 @@ class Inventory {
     get fechaRealización() {
         return this._fechaRealización;
     }
+    get inSeason() {
+        return this._inSeason;
+    }
     // Setters
     set id_producto(id_producto) {
         this._id_producto = id_producto;
@@ -39,6 +43,9 @@ class Inventory {
     }
     set fechaRealización(fechaRealización) {
         this._fechaRealización = fechaRealización;
+    }
+    set inSeason(inSeason) {
+        this._inSeason = inSeason;
     }
 }
 exports.default = Inventory;

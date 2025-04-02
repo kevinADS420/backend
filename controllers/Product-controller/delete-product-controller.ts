@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import DeleteProduct from "../../Dto/Product-Dto/DeleteProductDts"
-import productService from "../../services/ProductServices";
+import ProductService from "../../services/ProductServices";
 
 const delete_product = async (req: Request, res: Response) => {
     try {
@@ -23,6 +23,7 @@ const delete_product = async (req: Request, res: Response) => {
             });
         }
 
+        const productService = new ProductService();
         const deleteProduct = await productService.deleteProduct(new DeleteProduct(productId));
 
         return res.status(200).json({

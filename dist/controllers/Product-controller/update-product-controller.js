@@ -17,7 +17,8 @@ const ProductServices_1 = __importDefault(require("../../services/ProductService
 let update_Product = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { nombreP, tipo, Precio, imagen } = req.body;
-        const updateProduct = yield ProductServices_1.default.UpdateProduct(new RegisterProductDto_1.default(nombreP, tipo, Precio, imagen));
+        const productService = new ProductServices_1.default();
+        const updateProduct = yield productService.updateProduct(new RegisterProductDto_1.default(nombreP, tipo, Precio, imagen));
         return res.status(201).json({ status: 'Producto Actualizado con exito' });
     }
     catch (error) {

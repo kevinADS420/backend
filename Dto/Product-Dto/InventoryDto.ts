@@ -4,19 +4,22 @@ class Inventory {
     private _fechaIngreso: Date;
     private _fechaSalida: Date;
     private _fechaRealización: Date;
+    private _inSeason: boolean;
 
     constructor(
         cantidad: number,
         fechaIngreso: Date,
         fechaSalida: Date,
         fechaRealización: Date,
-        id_producto?: number
+        id_producto?: number,
+        inSeason: boolean = true
     ) {
         this._cantidad = cantidad;
         this._fechaIngreso = fechaIngreso;
         this._fechaSalida = fechaSalida;
         this._fechaRealización = fechaRealización;
         this._id_producto = id_producto;
+        this._inSeason = inSeason;
     }
 
     // Getters
@@ -40,6 +43,10 @@ class Inventory {
         return this._fechaRealización;
     }
 
+    get inSeason(): boolean {
+        return this._inSeason;
+    }
+
     // Setters
     set id_producto(id_producto: number | undefined) {
         this._id_producto = id_producto;
@@ -59,6 +66,10 @@ class Inventory {
 
     set fechaRealización(fechaRealización: Date) {
         this._fechaRealización = fechaRealización;
+    }
+
+    set inSeason(inSeason: boolean) {
+        this._inSeason = inSeason;
     }
 }
 

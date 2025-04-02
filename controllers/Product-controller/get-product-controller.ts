@@ -3,7 +3,8 @@ import ProductService from "../../services/ProductServices";
 
 const getAllProducts = async (req: Request, res: Response) => {
     try {
-        const products = await ProductService.getAllProducts();
+        const productService = new ProductService();
+        const products = await productService.getAllProducts();
         
         // Verificar que products es un array
         if (!Array.isArray(products)) {
