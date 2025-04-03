@@ -1,9 +1,9 @@
 import express from "express";
 import bodyParser from 'body-parser';
 import cors = require('cors'); // Importa cors
+import dotenv from "dotenv";
 
 import auth from './routes/auth';
-import dotenv from "dotenv";
 import unifiedAuth from './routes/unified-auth'; // Ruta de autenticación unificada
 import authProveedor from './routes/Proveedor-Routes/Auth_Proveedor'; // Ruta para autenticación de proveedores
 
@@ -37,6 +37,7 @@ import create_inventory from "./routes/inventario-Routes/inventario_routes";
 // Rutas de Chatbot
 import chatbotRoutes from './routes/Chatbot-Routes/chatbotRoutes';
 
+// Configurar dotenv al inicio
 dotenv.config();
 
 const app = express().use(bodyParser.json());

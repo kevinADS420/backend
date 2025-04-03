@@ -18,8 +18,13 @@ class ChatbotService {
         this.productService = productService;
         this.inventoryService = inventoryService;
         this.initializeRecipes();
+        console.log('GEMINI_API_KEY:', this.GEMINI_API_KEY);
         if (this.GEMINI_API_KEY) {
             this.genAI = new generative_ai_1.GoogleGenerativeAI(this.GEMINI_API_KEY);
+            console.log('Gemini AI initialized successfully');
+        }
+        else {
+            console.log('Failed to initialize Gemini AI - No API key found');
         }
     }
     /**
@@ -218,10 +223,15 @@ class ChatbotService {
     getGeneralResponse(message) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                if (!this.GEMINI_API_KEY || !this.genAI) {
+                if (!this.GEMINI_API_KEY) {
+                    console.error('No Gemini API key found');
                     return "Lo siento, no puedo responder preguntas generales en este momento. Por favor, hazme preguntas sobre nuestros productos y recetas.";
                 }
-                const model = this.genAI.getGenerativeModel({ model: "gemini-pro" });
+                if (!this.genAI) {
+                    console.error('Gemini AI not initialized');
+                    return "Lo siento, no puedo responder preguntas generales en este momento. Por favor, hazme preguntas sobre nuestros productos y recetas.";
+                }
+                const model = this.genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
                 const result = yield model.generateContent(message);
                 const response = yield result.response;
                 return response.text();
@@ -265,9 +275,30 @@ class ChatbotService {
      * @returns Mensaje formateado
      */
     formatDiscountResponse(products) {
-        if (products.length === 0) {
-            return `Lo siento, no hay productos en descuento en este momento. Te invitamos a visitar nuestro catálogo completo para conocer todos nuestros productos frescos.`;
-        }
+        return __awaiter(this, void 0, void 0, function* () {
+            var _a;
+            if (products.length === 0) {
+                return `Lo siento, no hay productos en descuento en este momento. Te invitamos a visitar nuestro catálogo completo para conocer todos nuestros productos frescos.`;
+            }
+            try {
+                const model = (_a = this.genAI) === null || _a === void 0 ? void 0 : _a.getGenerativeModel({ model: "gemini-2.0-flash" });
+                if (!model) {
+                    return this.formatBasicDiscountResponse(products);
+                }
+                const prompt = `Genera un mensaje atractivo y persuasivo para promocionar los siguientes productos en descuento: ${JSON.stringify(products)}. 
+      El mensaje debe ser amigable, destacar los beneficios de cada producto y animar al cliente a comprar. 
+      Incluye los precios originales y con descuento.`;
+                const result = yield model.generateContent(prompt);
+                const response = yield result.response;
+                return response.text();
+            }
+            catch (error) {
+                console.error('Error al generar respuesta con IA:', error);
+                return this.formatBasicDiscountResponse(products);
+            }
+        });
+    }
+    formatBasicDiscountResponse(products) {
         let response = `¡Tenemos estas frutas y verduras en descuento hoy!:\n\n`;
         products.forEach(product => {
             response += `- ${product.name}: ${product.discount} de descuento (de $${product.originalPrice} a $${product.discountedPrice.toFixed(2)}). ${product.availability}.\n`;
@@ -282,10 +313,30 @@ class ChatbotService {
      * @returns Mensaje formateado
      */
     formatRecipeResponse(recipes, ingredients) {
-        if (recipes.length === 0) {
-            return `No encontré recetas específicas con ${ingredients.join(', ')}. ¿Te gustaría probar con otros ingredientes o explorar nuestro catálogo de productos frescos?`;
-        }
-        // Selecciona hasta 2 recetas para no sobrecargar la respuesta
+        return __awaiter(this, void 0, void 0, function* () {
+            var _a;
+            if (recipes.length === 0) {
+                return `No encontré recetas específicas con ${ingredients.join(', ')}. ¿Te gustaría probar con otros ingredientes o explorar nuestro catálogo de productos frescos?`;
+            }
+            try {
+                const model = (_a = this.genAI) === null || _a === void 0 ? void 0 : _a.getGenerativeModel({ model: "gemini-2.0-flash" });
+                if (!model) {
+                    return this.formatBasicRecipeResponse(recipes, ingredients);
+                }
+                const prompt = `Genera una respuesta atractiva para las siguientes recetas que usan estos ingredientes: ${ingredients.join(', ')}. 
+      Las recetas son: ${JSON.stringify(recipes)}. 
+      La respuesta debe ser entusiasta, incluir los beneficios de cada receta y animar al cliente a prepararlas.`;
+                const result = yield model.generateContent(prompt);
+                const response = yield result.response;
+                return response.text();
+            }
+            catch (error) {
+                console.error('Error al generar respuesta con IA:', error);
+                return this.formatBasicRecipeResponse(recipes, ingredients);
+            }
+        });
+    }
+    formatBasicRecipeResponse(recipes, ingredients) {
         const selectedRecipes = recipes.slice(0, 2);
         let response = `¡Aquí tienes ${selectedRecipes.length > 1 ? 'algunas' : 'una'} receta${selectedRecipes.length > 1 ? 's' : ''} que puedes preparar con ${ingredients.join(', ')}!\n\n`;
         selectedRecipes.forEach(recipe => {

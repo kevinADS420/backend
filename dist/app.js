@@ -6,8 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const cors = require("cors"); // Importa cors
-const auth_1 = __importDefault(require("./routes/auth"));
 const dotenv_1 = __importDefault(require("dotenv"));
+const auth_1 = __importDefault(require("./routes/auth"));
 const unified_auth_1 = __importDefault(require("./routes/unified-auth")); // Ruta de autenticación unificada
 const Auth_Proveedor_1 = __importDefault(require("./routes/Proveedor-Routes/Auth_Proveedor")); // Ruta para autenticación de proveedores
 // Rutas de Administrador 
@@ -34,6 +34,7 @@ const Delete_Product_1 = __importDefault(require("./routes/Product-Product/Delet
 const inventario_routes_1 = __importDefault(require("./routes/inventario-Routes/inventario_routes"));
 // Rutas de Chatbot
 const chatbotRoutes_1 = __importDefault(require("./routes/Chatbot-Routes/chatbotRoutes"));
+// Configurar dotenv al inicio
 dotenv_1.default.config();
 const app = (0, express_1.default)().use(body_parser_1.default.json());
 // Configuración CORS mejorada para soportar múltiples orígenes
