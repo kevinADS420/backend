@@ -8,20 +8,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ChatbotService = void 0;
-const axios_1 = __importDefault(require("axios"));
+const generative_ai_1 = require("@google/generative-ai");
 class ChatbotService {
     constructor(productService, inventoryService) {
         this.recipes = [];
-        this.HUGGING_FACE_API_URL = 'https://api-inference.huggingface.co/models/facebook/opt-350m';
-        this.HUGGING_FACE_TOKEN = process.env.HUGGING_FACE_TOKEN;
+        this.GEMINI_API_KEY = process.env.GEMINI_API_KEY;
         this.productService = productService;
         this.inventoryService = inventoryService;
         this.initializeRecipes();
+        if (this.GEMINI_API_KEY) {
+            this.genAI = new generative_ai_1.GoogleGenerativeAI(this.GEMINI_API_KEY);
+        }
     }
     /**
      * Inicializa la base de datos de recetas
@@ -191,7 +190,7 @@ class ChatbotService {
                 const recipes = this.getRecipesByIngredients(ingredients, recipeType);
                 return this.formatRecipeResponse(recipes, ingredients);
             }
-            // Si el mensaje no está relacionado con Huerto Market, usar Hugging Face
+            // Si el mensaje no está relacionado con Huerto Market, usar Gemini
             if (!this.isHuertoMarketRelated(normalizedMessage)) {
                 return yield this.getGeneralResponse(message);
             }
@@ -212,30 +211,20 @@ class ChatbotService {
         return huertoMarketKeywords.some(keyword => message.includes(keyword));
     }
     /**
-     * Obtiene una respuesta general usando Hugging Face
+     * Obtiene una respuesta general usando Gemini
      * @param message Mensaje del usuario
      * @returns Respuesta generada
      */
     getGeneralResponse(message) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                if (!this.HUGGING_FACE_TOKEN) {
+                if (!this.GEMINI_API_KEY || !this.genAI) {
                     return "Lo siento, no puedo responder preguntas generales en este momento. Por favor, hazme preguntas sobre nuestros productos y recetas.";
                 }
-                const response = yield axios_1.default.post(this.HUGGING_FACE_API_URL, {
-                    inputs: message,
-                    parameters: {
-                        max_length: 100,
-                        temperature: 0.7,
-                        top_p: 0.9
-                    }
-                }, {
-                    headers: {
-                        'Authorization': `Bearer ${this.HUGGING_FACE_TOKEN}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-                return response.data[0].generated_text;
+                const model = this.genAI.getGenerativeModel({ model: "gemini-pro" });
+                const result = yield model.generateContent(message);
+                const response = yield result.response;
+                return response.text();
             }
             catch (error) {
                 console.error('Error al obtener respuesta general:', error);

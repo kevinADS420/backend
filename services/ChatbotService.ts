@@ -1,7 +1,7 @@
 import ProductService from './ProductServices';
 import InventoryService from './InventoryServices';
 import Inventory from '../Dto/Product-Dto/InventoryDto';
-import axios from 'axios';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
 interface Product {
   id: number;
@@ -18,21 +18,20 @@ interface Recipe {
   beneficios: string[];
 }
 
-interface HuggingFaceResponse {
-  generated_text: string;
-}
-
 export class ChatbotService {
   private productService: ProductService;
   private inventoryService: InventoryService;
   private recipes: Recipe[] = [];
-  private readonly HUGGING_FACE_API_URL = 'https://api-inference.huggingface.co/models/facebook/opt-350m';
-  private readonly HUGGING_FACE_TOKEN = process.env.HUGGING_FACE_TOKEN;
+  private readonly GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+  private genAI?: GoogleGenerativeAI;
 
   constructor(productService: ProductService, inventoryService: InventoryService) {
     this.productService = productService;
     this.inventoryService = inventoryService;
     this.initializeRecipes();
+    if (this.GEMINI_API_KEY) {
+      this.genAI = new GoogleGenerativeAI(this.GEMINI_API_KEY);
+    }
   }
 
   /**
@@ -214,7 +213,7 @@ export class ChatbotService {
       return this.formatRecipeResponse(recipes, ingredients);
     }
 
-    // Si el mensaje no está relacionado con Huerto Market, usar Hugging Face
+    // Si el mensaje no está relacionado con Huerto Market, usar Gemini
     if (!this.isHuertoMarketRelated(normalizedMessage)) {
       return await this.getGeneralResponse(message);
     }
@@ -238,35 +237,20 @@ export class ChatbotService {
   }
 
   /**
-   * Obtiene una respuesta general usando Hugging Face
+   * Obtiene una respuesta general usando Gemini
    * @param message Mensaje del usuario
    * @returns Respuesta generada
    */
   private async getGeneralResponse(message: string): Promise<string> {
     try {
-      if (!this.HUGGING_FACE_TOKEN) {
+      if (!this.GEMINI_API_KEY || !this.genAI) {
         return "Lo siento, no puedo responder preguntas generales en este momento. Por favor, hazme preguntas sobre nuestros productos y recetas.";
       }
 
-      const response = await axios.post<HuggingFaceResponse[]>(
-        this.HUGGING_FACE_API_URL,
-        {
-          inputs: message,
-          parameters: {
-            max_length: 100,
-            temperature: 0.7,
-            top_p: 0.9
-          }
-        },
-        {
-          headers: {
-            'Authorization': `Bearer ${this.HUGGING_FACE_TOKEN}`,
-            'Content-Type': 'application/json'
-          }
-        }
-      );
-
-      return response.data[0].generated_text;
+      const model = this.genAI.getGenerativeModel({ model: "gemini-pro" });
+      const result = await model.generateContent(message);
+      const response = await result.response;
+      return response.text();
     } catch (error) {
       console.error('Error al obtener respuesta general:', error);
       return "Lo siento, no puedo responder preguntas generales en este momento. Por favor, hazme preguntas sobre nuestros productos y recetas.";
