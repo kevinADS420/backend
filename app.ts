@@ -2,6 +2,8 @@ import express from "express";
 import bodyParser from 'body-parser';
 import cors = require('cors'); // Importa cors
 import dotenv from "dotenv";
+import session from 'express-session';
+import passport from 'passport';
 
 import auth from './routes/auth';
 import unifiedAuth from './routes/unified-auth'; // Ruta de autenticación unificada
@@ -37,16 +39,34 @@ import create_inventory from "./routes/inventario-Routes/inventario_routes";
 // Rutas de Chatbot
 import chatbotRoutes from './routes/Chatbot-Routes/chatbotRoutes';
 
+import googleAuthRoutes from './routes/google-auth-routes';
+
 // Configurar dotenv al inicio
 dotenv.config();
 
 const app = express().use(bodyParser.json());
 
+// Configuración de sesión
+app.use(session({
+    secret: process.env.SESSION_SECRET || 'tu_secreto_aqui',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 24 * 60 * 60 * 1000 // 24 horas
+    }
+}));
+
+// Inicializar Passport
+app.use(passport.initialize());
+app.use(passport.session());
+
 // Configuración CORS mejorada para soportar múltiples orígenes
 const allowedOrigins = [
-  'https://huertomkt.netlify.app', // Sin la barra al final
+  'https://huertomkt.netlify.app', // URL de producción
   'http://localhost:5173',         // Desarrollo local
-  'https://localhost:10101'         // Desarrollo local con HTTPS
+  'https://localhost:10101',       // Desarrollo local con HTTPS
+  'http://localhost:10101'         // Desarrollo local sin HTTPS
 ];
 
 app.use(cors({
@@ -59,12 +79,10 @@ app.use(cors({
     } else {
       console.log(`Origen bloqueado por CORS: ${origin}`);
       callback(null, true); // Temporalmente permitimos todos los orígenes para depuración
-      // Para producción, puedes cambiar a:
-      // callback(new Error('No permitido por CORS'));
     }
   },
-  credentials: true,         // Habilitar credenciales (cookies, auth headers)
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Incluir OPTIONS para preflight
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
 
@@ -108,6 +126,9 @@ app.use('/inventario/create', create_inventory);
 
 // Rutas de Chatbot
 app.use('/api/chatbot', chatbotRoutes);
+
+// Rutas de autenticación con Google
+app.use('/', googleAuthRoutes);
 
 // Ruta de prueba para verificar que CORS funcione
 app.get('/api/test-cors', (req, res) => {

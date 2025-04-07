@@ -7,6 +7,8 @@ const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const cors = require("cors"); // Importa cors
 const dotenv_1 = __importDefault(require("dotenv"));
+const express_session_1 = __importDefault(require("express-session"));
+const passport_1 = __importDefault(require("passport"));
 const auth_1 = __importDefault(require("./routes/auth"));
 const unified_auth_1 = __importDefault(require("./routes/unified-auth")); // Ruta de autenticación unificada
 const Auth_Proveedor_1 = __importDefault(require("./routes/Proveedor-Routes/Auth_Proveedor")); // Ruta para autenticación de proveedores
@@ -34,14 +36,29 @@ const Delete_Product_1 = __importDefault(require("./routes/Product-Product/Delet
 const inventario_routes_1 = __importDefault(require("./routes/inventario-Routes/inventario_routes"));
 // Rutas de Chatbot
 const chatbotRoutes_1 = __importDefault(require("./routes/Chatbot-Routes/chatbotRoutes"));
+const google_auth_routes_1 = __importDefault(require("./routes/google-auth-routes"));
 // Configurar dotenv al inicio
 dotenv_1.default.config();
 const app = (0, express_1.default)().use(body_parser_1.default.json());
+// Configuración de sesión
+app.use((0, express_session_1.default)({
+    secret: process.env.SESSION_SECRET || 'tu_secreto_aqui',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 24 * 60 * 60 * 1000 // 24 horas
+    }
+}));
+// Inicializar Passport
+app.use(passport_1.default.initialize());
+app.use(passport_1.default.session());
 // Configuración CORS mejorada para soportar múltiples orígenes
 const allowedOrigins = [
-    'https://huertomkt.netlify.app', // Sin la barra al final
+    'https://huertomkt.netlify.app', // URL de producción
     'http://localhost:5173', // Desarrollo local
-    'https://localhost:10101' // Desarrollo local con HTTPS
+    'https://localhost:10101', // Desarrollo local con HTTPS
+    'http://localhost:10101' // Desarrollo local sin HTTPS
 ];
 app.use(cors({
     origin: function (origin, callback) {
@@ -54,12 +71,10 @@ app.use(cors({
         else {
             console.log(`Origen bloqueado por CORS: ${origin}`);
             callback(null, true); // Temporalmente permitimos todos los orígenes para depuración
-            // Para producción, puedes cambiar a:
-            // callback(new Error('No permitido por CORS'));
         }
     },
-    credentials: true, // Habilitar credenciales (cookies, auth headers)
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Incluir OPTIONS para preflight
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
 // Middleware de logging para debugging
@@ -95,6 +110,8 @@ app.use('/product/delete', Delete_Product_1.default); // Eliminar producto
 app.use('/inventario/create', inventario_routes_1.default);
 // Rutas de Chatbot
 app.use('/api/chatbot', chatbotRoutes_1.default);
+// Rutas de autenticación con Google
+app.use('/', google_auth_routes_1.default);
 // Ruta de prueba para verificar que CORS funcione
 app.get('/api/test-cors', (req, res) => {
     res.json({ message: 'CORS está funcionando correctamente' });
