@@ -101,23 +101,36 @@ app.use('/login/proveedor', authProveedor);    // Autenticación específica de 
 
 // Ruta de verificación de autenticación
 app.get('/auth/check', (req, res) => {
+  console.log('Headers recibidos:', req.headers);
   const authHeader = req.headers.authorization;
   
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ message: 'No autenticado' });
+  if (!authHeader) {
+    console.log('No se encontró el header de autorización');
+    return res.status(401).json({ message: 'No autenticado', reason: 'No se encontró el header de autorización' });
+  }
+  
+  if (!authHeader.startsWith('Bearer ')) {
+    console.log('El header de autorización no comienza con Bearer');
+    return res.status(401).json({ message: 'No autenticado', reason: 'Formato de token incorrecto' });
   }
 
   const token = authHeader.split(' ')[1];
+  console.log('Token recibido:', token);
   
   try {
     // Verificar el token usando la misma clave que se usa para generarlo
     const decoded = jwt.verify(token, process.env.KEY_TOKEN || 'default_secret_key');
+    console.log('Token verificado correctamente:', decoded);
     return res.status(200).json({ 
       message: 'Autenticado',
       user: decoded
     });
   } catch (error) {
-    return res.status(401).json({ message: 'No autenticado' });
+    console.error('Error al verificar el token:', error);
+    return res.status(401).json({ 
+      message: 'No autenticado', 
+      reason: error instanceof Error ? error.message : 'Error desconocido al verificar el token'
+    });
   }
 });
 
