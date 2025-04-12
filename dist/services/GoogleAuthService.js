@@ -18,6 +18,9 @@ const passport_google_oauth20_1 = require("passport-google-oauth20");
 const google_config_1 = require("../config/google.config");
 class GoogleAuthService {
     constructor() {
+        this.FRONTEND_URL = process.env.FRONTEND_URL || 'https://huertomkt.netlify.app';
+        this.FRONTEND_LOGIN_URL = `${this.FRONTEND_URL}/login`;
+        this.FRONTEND_DASHBOARD_URL = `${this.FRONTEND_URL}/dashboard`;
         this.initializePassport();
     }
     initializePassport() {
@@ -56,20 +59,26 @@ class GoogleAuthService {
     }
     handleGoogleCallback() {
         return passport_1.default.authenticate('google', {
-            failureRedirect: '/login',
-            successRedirect: '/dashboard'
+            failureRedirect: this.FRONTEND_LOGIN_URL,
+            successRedirect: this.FRONTEND_DASHBOARD_URL
         });
     }
     isAuthenticated(req, res, next) {
         if (req.isAuthenticated()) {
             return next();
         }
-        res.redirect('/login');
+        res.status(401).json({ message: 'No autenticado' });
     }
     logout(req, res) {
         req.logout(() => {
-            res.redirect('/');
+            res.redirect(this.FRONTEND_LOGIN_URL);
         });
+    }
+    checkAuth(req, res) {
+        if (req.isAuthenticated()) {
+            return res.json(req.user);
+        }
+        res.status(401).json({ message: 'No autenticado' });
     }
 }
 exports.GoogleAuthService = GoogleAuthService;

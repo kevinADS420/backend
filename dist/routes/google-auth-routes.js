@@ -11,6 +11,8 @@ const googleAuthService = new GoogleAuthService_1.GoogleAuthService();
 router.get('/auth/google', googleAuthService.authenticateGoogle());
 // Ruta de callback después de la autenticación exitosa
 router.get('/auth/google/callback', googleAuthService.handleGoogleCallback());
+// Ruta para verificar el estado de autenticación
+router.get('/auth/check', googleAuthService.checkAuth);
 // Ruta para cerrar sesión
 router.get('/logout', googleAuthService.logout);
 // Ruta protegida de ejemplo

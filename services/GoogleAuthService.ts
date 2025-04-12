@@ -11,6 +11,10 @@ interface GoogleUser {
 }
 
 export class GoogleAuthService {
+    private readonly FRONTEND_URL = process.env.FRONTEND_URL || 'https://huertomkt.netlify.app';
+    private readonly FRONTEND_LOGIN_URL = `${this.FRONTEND_URL}/login`;
+    private readonly FRONTEND_DASHBOARD_URL = `${this.FRONTEND_URL}/dashboard`;
+
     constructor() {
         this.initializePassport();
     }
@@ -53,8 +57,8 @@ export class GoogleAuthService {
 
     public handleGoogleCallback() {
         return passport.authenticate('google', {
-            failureRedirect: '/login',
-            successRedirect: '/dashboard'
+            failureRedirect: this.FRONTEND_LOGIN_URL,
+            successRedirect: this.FRONTEND_DASHBOARD_URL
         });
     }
 
@@ -62,12 +66,19 @@ export class GoogleAuthService {
         if (req.isAuthenticated()) {
             return next();
         }
-        res.redirect('/login');
+        res.status(401).json({ message: 'No autenticado' });
     }
 
     public logout(req: Request, res: Response) {
         req.logout(() => {
-            res.redirect('/');
+            res.redirect(this.FRONTEND_LOGIN_URL);
         });
+    }
+
+    public checkAuth(req: Request, res: Response) {
+        if (req.isAuthenticated()) {
+            return res.json(req.user);
+        }
+        res.status(401).json({ message: 'No autenticado' });
     }
 } 
