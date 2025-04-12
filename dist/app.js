@@ -90,15 +90,23 @@ app.use('/login/customer', Auth_Customer_1.default); // Autenticación específi
 app.use('/login/proveedor', Auth_Proveedor_1.default); // Autenticación específica de proveedor
 // Ruta de verificación de autenticación
 app.get('/auth/check', (req, res) => {
-    console.log('Headers recibidos:', req.headers);
+    console.log('Headers recibidos:', JSON.stringify(req.headers, null, 2));
     const authHeader = req.headers.authorization;
     if (!authHeader) {
         console.log('No se encontró el header de autorización');
-        return res.status(401).json({ message: 'No autenticado', reason: 'No se encontró el header de autorización' });
+        return res.status(401).json({
+            message: 'No autenticado',
+            reason: 'No se encontró el header de autorización',
+            headers: req.headers
+        });
     }
     if (!authHeader.startsWith('Bearer ')) {
         console.log('El header de autorización no comienza con Bearer');
-        return res.status(401).json({ message: 'No autenticado', reason: 'Formato de token incorrecto' });
+        return res.status(401).json({
+            message: 'No autenticado',
+            reason: 'Formato de token incorrecto',
+            authHeader: authHeader
+        });
     }
     const token = authHeader.split(' ')[1];
     console.log('Token recibido:', token);
@@ -115,7 +123,8 @@ app.get('/auth/check', (req, res) => {
         console.error('Error al verificar el token:', error);
         return res.status(401).json({
             message: 'No autenticado',
-            reason: error instanceof Error ? error.message : 'Error desconocido al verificar el token'
+            reason: error instanceof Error ? error.message : 'Error desconocido al verificar el token',
+            token: token
         });
     }
 });
