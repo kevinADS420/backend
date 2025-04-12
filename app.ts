@@ -4,6 +4,7 @@ import cors = require('cors'); // Importa cors
 import dotenv from "dotenv";
 import session from 'express-session';
 import passport from 'passport';
+import jwt from 'jsonwebtoken';
 
 import auth from './routes/auth';
 import unifiedAuth from './routes/unified-auth'; // Ruta de autenticación unificada
@@ -97,6 +98,28 @@ app.use('/login', unifiedAuth);                // Autenticación unificada
 app.use('/login/admin', auth);                 // Autenticación específica de admin
 app.use('/login/customer', auth_customer);     // Autenticación específica de cliente
 app.use('/login/proveedor', authProveedor);    // Autenticación específica de proveedor
+
+// Ruta de verificación de autenticación
+app.get('/auth/check', (req, res) => {
+  const authHeader = req.headers.authorization;
+  
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ message: 'No autenticado' });
+  }
+
+  const token = authHeader.split(' ')[1];
+  
+  try {
+    // Verificar el token usando la misma clave que se usa para generarlo
+    const decoded = jwt.verify(token, process.env.KEY_TOKEN || 'default_secret_key');
+    return res.status(200).json({ 
+      message: 'Autenticado',
+      user: decoded
+    });
+  } catch (error) {
+    return res.status(401).json({ message: 'No autenticado' });
+  }
+});
 
 // Rutas de cliente
 app.use('/customer/email', get_customer_by_email);  // Obtener cliente por email

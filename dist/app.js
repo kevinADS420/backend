@@ -9,6 +9,7 @@ const cors = require("cors"); // Importa cors
 const dotenv_1 = __importDefault(require("dotenv"));
 const express_session_1 = __importDefault(require("express-session"));
 const passport_1 = __importDefault(require("passport"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const auth_1 = __importDefault(require("./routes/auth"));
 const unified_auth_1 = __importDefault(require("./routes/unified-auth")); // Ruta de autenticación unificada
 const Auth_Proveedor_1 = __importDefault(require("./routes/Proveedor-Routes/Auth_Proveedor")); // Ruta para autenticación de proveedores
@@ -87,6 +88,25 @@ app.use('/login', unified_auth_1.default); // Autenticación unificada
 app.use('/login/admin', auth_1.default); // Autenticación específica de admin
 app.use('/login/customer', Auth_Customer_1.default); // Autenticación específica de cliente
 app.use('/login/proveedor', Auth_Proveedor_1.default); // Autenticación específica de proveedor
+// Ruta de verificación de autenticación
+app.get('/auth/check', (req, res) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ message: 'No autenticado' });
+    }
+    const token = authHeader.split(' ')[1];
+    try {
+        // Verificar el token usando la misma clave que se usa para generarlo
+        const decoded = jsonwebtoken_1.default.verify(token, process.env.KEY_TOKEN || 'default_secret_key');
+        return res.status(200).json({
+            message: 'Autenticado',
+            user: decoded
+        });
+    }
+    catch (error) {
+        return res.status(401).json({ message: 'No autenticado' });
+    }
+});
 // Rutas de cliente
 app.use('/customer/email', Get_Customer_By_Email_1.default); // Obtener cliente por email
 app.use('/customer', Update_Customer_1.default); // Actualizar cliente (PUT /customer/:id)
