@@ -8,7 +8,7 @@ const GoogleAuthService_1 = require("../services/GoogleAuthService");
 const router = express_1.default.Router();
 const googleAuthService = new GoogleAuthService_1.GoogleAuthService();
 // Ruta para iniciar el proceso de autenticación con Google
-router.get('/auth/google', googleAuthService.authenticateGoogle());
+router.get('/auth/google/login', googleAuthService.authenticateGoogle());
 // Ruta de callback después de la autenticación exitosa
 router.get('/auth/google/callback', googleAuthService.handleGoogleCallback());
 // Ruta para verificar el estado de autenticación
