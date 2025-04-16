@@ -16,11 +16,13 @@ exports.GoogleAuthService = void 0;
 const passport_1 = __importDefault(require("passport"));
 const passport_google_oauth20_1 = require("passport-google-oauth20");
 const google_config_1 = require("../config/google.config");
+const CustomerService_1 = require("./CustomerService");
 class GoogleAuthService {
     constructor() {
-        this.FRONTEND_URL = process.env.FRONTEND_URL || 'https://huertomkt.netlify.app';
-        this.FRONTEND_LOGIN_URL = `${this.FRONTEND_URL}/login`;
-        this.FRONTEND_DASHBOARD_URL = `${this.FRONTEND_URL}/dashboard`;
+        this.FRONTEND_URL = 'https://huertomkt.netlify.app';
+        this.FRONTEND_SUCCESS_URL = `${this.FRONTEND_URL}`;
+        this.FRONTEND_FAILURE_URL = `${this.FRONTEND_URL}/registro`;
+        this.customerService = new CustomerService_1.CustomerService();
         this.initializePassport();
     }
     initializePassport() {
@@ -30,25 +32,37 @@ class GoogleAuthService {
             callbackURL: google_config_1.googleConfig.callbackURL,
             scope: google_config_1.googleConfig.scope
         }, (accessToken, refreshToken, profile, done) => __awaiter(this, void 0, void 0, function* () {
-            var _a, _b, _c, _d;
+            var _a, _b;
             try {
-                // Aquí puedes agregar la lógica para guardar o actualizar el usuario en tu base de datos
+                console.log('Google profile:', profile);
+                const email = ((_b = (_a = profile.emails) === null || _a === void 0 ? void 0 : _a[0]) === null || _b === void 0 ? void 0 : _b.value) || '';
+                // Verificar si el usuario existe o crearlo como cliente
+                let customer = yield this.customerService.findByEmail(email);
+                if (!customer) {
+                    customer = yield this.customerService.create({
+                        email: email,
+                        name: profile.displayName,
+                        // Otros campos necesarios con valores por defecto
+                    });
+                }
                 const user = {
-                    id: profile.id,
-                    displayName: profile.displayName,
-                    email: ((_b = (_a = profile.emails) === null || _a === void 0 ? void 0 : _a[0]) === null || _b === void 0 ? void 0 : _b.value) || '',
-                    picture: (_d = (_c = profile.photos) === null || _c === void 0 ? void 0 : _c[0]) === null || _d === void 0 ? void 0 : _d.value
+                    id: customer.id,
+                    email: customer.email,
+                    role: 'cliente'
                 };
                 return done(null, user);
             }
             catch (error) {
+                console.error('Error en callback de Google:', error);
                 return done(error);
             }
         })));
         passport_1.default.serializeUser((user, done) => {
+            console.log('Serializando usuario:', user);
             done(null, user);
         });
         passport_1.default.deserializeUser((user, done) => {
+            console.log('Deserializando usuario:', user);
             done(null, user);
         });
     }
@@ -58,20 +72,33 @@ class GoogleAuthService {
         });
     }
     handleGoogleCallback() {
-        return passport_1.default.authenticate('google', {
-            failureRedirect: this.FRONTEND_LOGIN_URL,
-            successRedirect: this.FRONTEND_DASHBOARD_URL
-        });
+        return (req, res, next) => {
+            passport_1.default.authenticate('google', (err, user) => {
+                if (err) {
+                    return res.redirect(this.FRONTEND_FAILURE_URL);
+                }
+                if (!user) {
+                    return res.redirect(this.FRONTEND_FAILURE_URL);
+                }
+                req.logIn(user, (err) => {
+                    if (err) {
+                        return res.redirect(this.FRONTEND_FAILURE_URL);
+                    }
+                    // Redirigir al usuario a la página principal en lugar de /dashboard
+                    return res.redirect(this.FRONTEND_SUCCESS_URL);
+                });
+            })(req, res, next);
+        };
     }
     isAuthenticated(req, res, next) {
         if (req.isAuthenticated()) {
             return next();
         }
-        res.status(401).json({ message: 'No autenticado' });
+        res.status(401).json({ error: 'No autenticado' });
     }
     logout(req, res) {
         req.logout(() => {
-            res.redirect(this.FRONTEND_LOGIN_URL);
+            res.status(200).json({ success: true });
         });
     }
     checkAuth(req, res) {

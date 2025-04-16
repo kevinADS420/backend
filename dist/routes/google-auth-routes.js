@@ -13,6 +13,10 @@ router.get('/auth/google/login', googleAuthService.authenticateGoogle());
 router.get('/auth/google/callback', googleAuthService.handleGoogleCallback());
 // Ruta para verificar el estado de autenticación
 router.get('/auth/check', googleAuthService.checkAuth);
+// Ruta para obtener el perfil del usuario autenticado
+router.get('/auth/profile', googleAuthService.isAuthenticated, (req, res) => {
+    res.json(req.user);
+});
 // Ruta para cerrar sesión
 router.get('/logout', googleAuthService.logout);
 // Ruta protegida de ejemplo
@@ -21,5 +25,19 @@ router.get('/dashboard', googleAuthService.isAuthenticated, (req, res) => {
         message: 'Bienvenido al dashboard',
         user: req.user
     });
+});
+// Ruta para verificar si el usuario está autenticado (para el frontend)
+router.get('/auth/status', (req, res) => {
+    if (req.isAuthenticated()) {
+        res.json({
+            isAuthenticated: true,
+            user: req.user
+        });
+    }
+    else {
+        res.json({
+            isAuthenticated: false
+        });
+    }
 });
 exports.default = router;

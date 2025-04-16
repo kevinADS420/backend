@@ -83,25 +83,19 @@ export class GoogleAuthService {
         return (req: Request, res: Response, next: NextFunction) => {
             passport.authenticate('google', (err: any, user: GoogleUser) => {
                 if (err) {
-                    return res.status(500).json({ error: 'Error de autenticación' });
+                    return res.redirect(this.FRONTEND_FAILURE_URL);
                 }
                 if (!user) {
-                    return res.status(401).json({ error: 'No se pudo autenticar' });
+                    return res.redirect(this.FRONTEND_FAILURE_URL);
                 }
 
                 req.logIn(user, (err) => {
                     if (err) {
-                        return res.status(500).json({ error: 'Error al iniciar sesión' });
+                        return res.redirect(this.FRONTEND_FAILURE_URL);
                     }
                     
-                    return res.status(200).json({
-                        success: true,
-                        user: {
-                            id: user.id,
-                            email: user.email,
-                            role: user.role
-                        }
-                    });
+                    // Redirigir al usuario a la página principal en lugar de /dashboard
+                    return res.redirect(this.FRONTEND_SUCCESS_URL);
                 });
             })(req, res, next);
         };
