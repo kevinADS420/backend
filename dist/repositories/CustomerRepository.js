@@ -18,7 +18,7 @@ const nodemailer_1 = __importDefault(require("nodemailer"));
 class CustomerRepository {
     static login(auth) {
         return __awaiter(this, void 0, void 0, function* () {
-            const sql = 'SELECT id_cliente, contraseña FROM Cliente WHERE Email=?';
+            const sql = 'SELECT id_cliente, contraseña FROM cliente WHERE Email=?';
             const values = [auth.Email];
             const result = yield config_db_1.default.execute(sql, values);
             if (result[0].length > 0) {
@@ -33,14 +33,14 @@ class CustomerRepository {
     }
     static add(customer) {
         return __awaiter(this, void 0, void 0, function* () {
-            const sql = 'INSERT INTO Cliente (Nombres, Apellidos, Email, contraseña) VALUES (?, ?, ?, ?)';
+            const sql = 'INSERT INTO cliente (Nombres, Apellidos, Email, contraseña) VALUES (?, ?, ?, ?)';
             const values = [customer.Nombres, customer.Apellidos, customer.Email, customer.contraseña];
             return config_db_1.default.execute(sql, values);
         });
     }
     static deleteCustomer(deleteCustomer) {
         return __awaiter(this, void 0, void 0, function* () {
-            const sql = 'DELETE FROM Cliente WHERE Apellidos = ? AND Email = ?';
+            const sql = 'DELETE FROM cliente WHERE Apellidos = ? AND Email = ?';
             const values = [deleteCustomer.Apellidos, deleteCustomer.Email];
             return config_db_1.default.execute(sql, values);
         });
@@ -52,11 +52,11 @@ class CustomerRepository {
                 yield connection.beginTransaction();
                 console.log('Actualizando cliente con ID:', customer.id_cliente);
                 // Update customer basic info
-                let sql = 'UPDATE Cliente SET Nombres = ?, Apellidos = ?, Email = ? WHERE id_cliente = ?';
+                let sql = 'UPDATE cliente SET Nombres = ?, Apellidos = ?, Email = ? WHERE id_cliente = ?';
                 let values = [customer.Nombres, customer.Apellidos, customer.Email, customer.id_cliente];
                 // If password is provided, update it
                 if (customer.contraseña) {
-                    sql = 'UPDATE Cliente SET Nombres = ?, Apellidos = ?, Email = ?, contraseña = ? WHERE id_cliente = ?';
+                    sql = 'UPDATE cliente SET Nombres = ?, Apellidos = ?, Email = ?, contraseña = ? WHERE id_cliente = ?';
                     values = [customer.Nombres, customer.Apellidos, customer.Email, customer.contraseña, customer.id_cliente];
                 }
                 const [updateResult] = yield connection.execute(sql, values);
@@ -78,7 +78,7 @@ class CustomerRepository {
                 }
                 yield connection.commit();
                 // Get updated customer data
-                const [customerData] = yield connection.execute('SELECT c.*, t.númeroTelefono as numeroTelefono, t.tipo as tipoTelefono FROM Cliente c LEFT JOIN Telefono t ON c.id_cliente = t.id_cliente WHERE c.id_cliente = ?', [customer.id_cliente]);
+                const [customerData] = yield connection.execute('SELECT c.*, t.númeroTelefono as numeroTelefono, t.tipo as tipoTelefono FROM cliente c LEFT JOIN Telefono t ON c.id_cliente = t.id_cliente WHERE c.id_cliente = ?', [customer.id_cliente]);
                 return customerData[0];
             }
             catch (error) {
@@ -93,7 +93,7 @@ class CustomerRepository {
     static solicitarResetPassword(resetData) {
         return __awaiter(this, void 0, void 0, function* () {
             // Verificar si el email existe
-            const [result] = yield config_db_1.default.execute('SELECT id_cliente FROM Cliente WHERE Email = ?', [resetData.Email]);
+            const [result] = yield config_db_1.default.execute('SELECT id_cliente FROM cliente WHERE Email = ?', [resetData.Email]);
             if (result.length === 0) {
                 throw new Error('Email no encontrado');
             }
@@ -137,7 +137,7 @@ class CustomerRepository {
             }
             // Si el código es válido, actualizar la contraseña
             const hashedPassword = yield bcryptjs_1.default.hash(resetData.nuevaContraseña, 10);
-            yield config_db_1.default.execute('UPDATE Cliente SET contraseña = ? WHERE Email = ?', [hashedPassword, resetData.Email]);
+            yield config_db_1.default.execute('UPDATE cliente SET contraseña = ? WHERE Email = ?', [hashedPassword, resetData.Email]);
             // Limpiar el código usado
             this.codigosVerificacion.delete(resetData.Email);
             return { success: true, message: 'Contraseña actualizada exitosamente' };

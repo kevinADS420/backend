@@ -17,7 +17,7 @@ model Administrador {
   Email            String   @unique @db.VarChar(50)
   contraseña       String   @db.VarChar(250)
   createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  updatedAt        DateTime?
 
   @@map("Administrador")
 }
@@ -29,7 +29,7 @@ model Cliente {
   Email      String   @unique @db.VarChar(50)
   contraseña Bytes    @db.VarBinary(250)
   createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  updatedAt  DateTime?
 
   @@map("cliente")
 }
@@ -41,7 +41,7 @@ model Proveedor {
   Email        String   @unique @db.VarChar(50)
   contraseña   Bytes    @db.VarBinary(255)
   createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  updatedAt    DateTime?
 
   @@map("Proveedor")
 }
@@ -53,7 +53,7 @@ model Inventario {
   fechaSalida      DateTime @db.Date
   fechaRealización DateTime @db.Date
   createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  updatedAt        DateTime?
 
   @@map("Inventario")
 }
@@ -65,7 +65,7 @@ model PaymentPreference {
   payer             String   @db.Text
   status            String   @db.VarChar(50)
   fecha_creacion    DateTime @default(now())
-  fecha_actualizacion DateTime @updatedAt
+  fecha_actualizacion DateTime?
 
   @@map("payment_preferences")
 } 

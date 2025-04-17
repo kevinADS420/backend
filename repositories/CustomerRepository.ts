@@ -12,7 +12,7 @@ class CustomerRepository {
     private static CODIGO_EXPIRACION = 10 * 60 * 1000; // 10 minutos en milisegundos
 
     static async login(auth: Auth) {
-        const sql = 'SELECT id_cliente, contraseña FROM Cliente WHERE Email=?';
+        const sql = 'SELECT id_cliente, contraseña FROM cliente WHERE Email=?';
         const values = [auth.Email];
         const result: any = await db.execute(sql, values);
         if (result[0].length > 0) {
@@ -26,13 +26,13 @@ class CustomerRepository {
     }
 
     static async add(customer: Customer){
-        const sql = 'INSERT INTO Cliente (Nombres, Apellidos, Email, contraseña) VALUES (?, ?, ?, ?)';
+        const sql = 'INSERT INTO cliente (Nombres, Apellidos, Email, contraseña) VALUES (?, ?, ?, ?)';
         const values = [ customer.Nombres, customer.Apellidos, customer.Email, customer.contraseña];        
         return db.execute(sql, values);
     }
 
     static async deleteCustomer(deleteCustomer : DeleteCustomer){
-      const sql = 'DELETE FROM Cliente WHERE Apellidos = ? AND Email = ?';
+      const sql = 'DELETE FROM cliente WHERE Apellidos = ? AND Email = ?';
       const values = [deleteCustomer.Apellidos, deleteCustomer.Email];
       return db.execute(sql,values);
     }
@@ -45,12 +45,12 @@ class CustomerRepository {
             console.log('Actualizando cliente con ID:', customer.id_cliente);
     
             // Update customer basic info
-            let sql = 'UPDATE Cliente SET Nombres = ?, Apellidos = ?, Email = ? WHERE id_cliente = ?';
+            let sql = 'UPDATE cliente SET Nombres = ?, Apellidos = ?, Email = ? WHERE id_cliente = ?';
             let values = [customer.Nombres, customer.Apellidos, customer.Email, customer.id_cliente];
     
             // If password is provided, update it
             if (customer.contraseña) {
-                sql = 'UPDATE Cliente SET Nombres = ?, Apellidos = ?, Email = ?, contraseña = ? WHERE id_cliente = ?';
+                sql = 'UPDATE cliente SET Nombres = ?, Apellidos = ?, Email = ?, contraseña = ? WHERE id_cliente = ?';
                 values = [customer.Nombres, customer.Apellidos, customer.Email, customer.contraseña, customer.id_cliente];
             }
     
@@ -87,7 +87,7 @@ class CustomerRepository {
             
             // Get updated customer data
             const [customerData]: any = await connection.execute(
-                'SELECT c.*, t.númeroTelefono as numeroTelefono, t.tipo as tipoTelefono FROM Cliente c LEFT JOIN Telefono t ON c.id_cliente = t.id_cliente WHERE c.id_cliente = ?',
+                'SELECT c.*, t.númeroTelefono as numeroTelefono, t.tipo as tipoTelefono FROM cliente c LEFT JOIN Telefono t ON c.id_cliente = t.id_cliente WHERE c.id_cliente = ?',
                 [customer.id_cliente]
             );
     
@@ -103,7 +103,7 @@ class CustomerRepository {
     static async solicitarResetPassword(resetData: PasswordReset) {
         // Verificar si el email existe
         const [result]: any = await db.execute(
-            'SELECT id_cliente FROM Cliente WHERE Email = ?',
+            'SELECT id_cliente FROM cliente WHERE Email = ?',
             [resetData.Email]
         );
 
@@ -159,7 +159,7 @@ class CustomerRepository {
         // Si el código es válido, actualizar la contraseña
         const hashedPassword = await bcrypt.hash(resetData.nuevaContraseña!, 10);
         await db.execute(
-            'UPDATE Cliente SET contraseña = ? WHERE Email = ?',
+            'UPDATE cliente SET contraseña = ? WHERE Email = ?',
             [hashedPassword, resetData.Email]
         );
 
