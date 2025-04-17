@@ -15,7 +15,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const config_db_1 = __importDefault(require("../../config/config-db"));
 const getProveedorByEmail = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const Email = req.params.email;
+        const Email = req.body.Email || req.query.Email;
+        if (!Email) {
+            return res.status(400).json({ message: "El email es requerido" });
+        }
         const sql = 'SELECT id_proveedor, nombres, apellidos, Email FROM Proveedor WHERE Email = ?';
         const [rows] = yield config_db_1.default.execute(sql, [Email]);
         if (rows.length === 0) {

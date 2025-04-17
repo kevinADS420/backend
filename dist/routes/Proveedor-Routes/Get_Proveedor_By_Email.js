@@ -6,5 +6,5 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const get_Proveedor_controller_1 = __importDefault(require("../../controllers/Proveedor-controller/get-Proveedor-controller"));
 const router = express_1.default.Router();
-router.get('/:email', get_Proveedor_controller_1.default);
+router.post('/', get_Proveedor_controller_1.default);
 exports.default = router;

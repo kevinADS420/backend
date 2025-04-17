@@ -3,8 +3,12 @@ import db from "../../config/config-db";
 
 const getProveedorByEmail = async (req: Request, res: Response) => {
   try {
-      const Email = req.params.email;
+      const Email = req.body.Email || req.query.Email;
       
+      if (!Email) {
+        return res.status(400).json({ message: "El email es requerido" });
+      }
+
       const sql = 'SELECT id_proveedor, nombres, apellidos, Email FROM Proveedor WHERE Email = ?';
       const [rows]: any = await db.execute(sql, [Email]);
       
