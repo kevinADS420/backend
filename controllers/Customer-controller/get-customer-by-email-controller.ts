@@ -5,7 +5,7 @@ const getCustomerByEmail = async (req: Request, res: Response) => {
   try {
     const Email = req.params.email;
     
-    const sql = 'SELECT id_cliente, Nombres, Apellidos, Email FROM Cliente WHERE Email = ?';
+    const sql = 'SELECT id_cliente, Nombres, Apellidos, Email FROM cliente WHERE Email = ?';
     const [rows]: any = await db.execute(sql, [Email]);
     
     if (rows.length === 0) {

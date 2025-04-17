@@ -16,7 +16,7 @@ const config_db_1 = __importDefault(require("../../config/config-db"));
 const getCustomerByEmail = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const Email = req.params.email;
-        const sql = 'SELECT id_cliente, Nombres, Apellidos, Email FROM Cliente WHERE Email = ?';
+        const sql = 'SELECT id_cliente, Nombres, Apellidos, Email FROM cliente WHERE Email = ?';
         const [rows] = yield config_db_1.default.execute(sql, [Email]);
         if (rows.length === 0) {
             return res.status(404).json({ message: "Cliente no encontrado" });
