@@ -15,7 +15,9 @@ model Cliente {
   Nombres    String      @db.VarChar(50)
   Apellidos  String      @db.VarChar(50)
   Email      String      @unique @db.VarChar(50)
-  contraseña Bytes       @db.VarBinary(250)
+  contraseña Bytes?      @db.VarBinary(250)
+  googleId   String?     @unique @db.VarChar(255)
+  role       String      @default("cliente") @db.VarChar(20)
   createdAt  DateTime    @default(now())
   updatedAt  DateTime?
   

@@ -17,15 +17,19 @@ class CustomerService {
     }
     findByEmail(email) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.prisma.cliente.findUnique({
-                where: { Email: email },
-                select: {
-                    id_cliente: true,
-                    Email: true,
-                    Nombres: true,
-                    Apellidos: true
-                }
+            const result = yield this.prisma.cliente.findUnique({
+                where: { Email: email }
             });
+            if (!result)
+                return null;
+            return {
+                id_cliente: result.id_cliente,
+                Email: result.Email,
+                Nombres: result.Nombres,
+                Apellidos: result.Apellidos,
+                role: result.role || 'cliente',
+                googleId: result.googleId
+            };
         });
     }
     getProfile(id) {
@@ -43,20 +47,18 @@ class CustomerService {
     }
     create(data) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.prisma.cliente.create({
-                data: {
-                    Email: data.Email,
-                    Nombres: data.Nombres,
-                    Apellidos: data.Apellidos,
-                    contraseña: Buffer.from('') // Consider generating a random password or handling this differently
-                },
-                select: {
-                    id_cliente: true,
-                    Email: true,
-                    Nombres: true,
-                    Apellidos: true
-                }
+            const customerData = Object.assign(Object.assign({ Email: data.Email, Nombres: data.Nombres, Apellidos: data.Apellidos, contraseña: Buffer.from('') }, (data.googleId && { googleId: data.googleId })), (data.role && { role: data.role }));
+            const result = yield this.prisma.cliente.create({
+                data: customerData
             });
+            return {
+                id_cliente: result.id_cliente,
+                Email: result.Email,
+                Nombres: result.Nombres,
+                Apellidos: result.Apellidos,
+                role: result.role || 'cliente',
+                googleId: result.googleId
+            };
         });
     }
     updateProfile(id, data) {

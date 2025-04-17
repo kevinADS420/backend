@@ -14,7 +14,10 @@ declare global {
 interface GoogleUser {
     id_cliente: number;
     Email: string;
+    Nombres: string;
+    Apellidos: string;
     role: string;
+    googleId: string;
 }
 
 export class GoogleAuthService {
@@ -38,26 +41,39 @@ export class GoogleAuthService {
             try {
                 console.log('Google profile:', profile);
                 const email = profile.emails?.[0]?.value || '';
+                const googleId = profile.id;
+                const nombres = profile.name?.givenName || '';
+                const apellidos = profile.name?.familyName || '';
                 
                 // Verificar si el usuario existe o crearlo como cliente
                 let customer = await this.customerService.findByEmail(email);
                 if (!customer) {
                     customer = await this.customerService.create({
-                        Email: profile.emails?.[0]?.value || '',
-                        Nombres: profile.name?.givenName || '',
-                        Apellidos: profile.name?.familyName || ''
+                        Email: email,
+                        Nombres: nombres,
+                        Apellidos: apellidos,
+                        googleId: googleId,
+                        role: 'cliente'
                     });
                 }
 
+                if (!customer) {
+                    throw new Error('No se pudo crear o encontrar el cliente');
+                }
+
+                // Crear el objeto de usuario con todos los datos necesarios
                 const user: GoogleUser = {
                     id_cliente: customer.id_cliente,
                     Email: customer.Email,
-                    role: 'cliente'
+                    Nombres: customer.Nombres,
+                    Apellidos: customer.Apellidos,
+                    role: customer.role || 'cliente',
+                    googleId: googleId
                 };
 
                 return done(null, user);
             } catch (error) {
-                console.error('Error en callback de Google:', error);
+                console.error('Error en la autenticación de Google:', error);
                 return done(error as Error);
             }
         }));

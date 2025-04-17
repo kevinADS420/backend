@@ -4,6 +4,8 @@ interface CustomerData {
     Email: string;
     Nombres: string;
     Apellidos: string;
+    googleId?: string;
+    role?: string;
 }
 
 interface CustomerProfile {
@@ -11,6 +13,8 @@ interface CustomerProfile {
     Email: string;
     Nombres: string;
     Apellidos: string;
+    role?: string;
+    googleId?: string;
 }
 
 export class CustomerService {
@@ -21,15 +25,20 @@ export class CustomerService {
     }
 
     async findByEmail(email: string) {
-        return await this.prisma.cliente.findUnique({
-            where: { Email: email },
-            select: {
-                id_cliente: true,
-                Email: true,
-                Nombres: true,
-                Apellidos: true
-            }
+        const result = await this.prisma.cliente.findUnique({
+            where: { Email: email }
         });
+        
+        if (!result) return null;
+        
+        return {
+            id_cliente: result.id_cliente,
+            Email: result.Email,
+            Nombres: result.Nombres,
+            Apellidos: result.Apellidos,
+            role: (result as any).role || 'cliente',
+            googleId: (result as any).googleId
+        };
     }
 
     async getProfile(id: number): Promise<CustomerProfile | null> {
@@ -45,20 +54,27 @@ export class CustomerService {
     }
 
     async create(data: CustomerData) {
-        return await this.prisma.cliente.create({
-            data: {
-                Email: data.Email,
-                Nombres: data.Nombres,
-                Apellidos: data.Apellidos,
-                contraseña: Buffer.from('') // Consider generating a random password or handling this differently
-            },
-            select: {
-                id_cliente: true,
-                Email: true,
-                Nombres: true,
-                Apellidos: true
-            }
+        const customerData = {
+            Email: data.Email,
+            Nombres: data.Nombres,
+            Apellidos: data.Apellidos,
+            contraseña: Buffer.from(''),
+            ...(data.googleId && { googleId: data.googleId }),
+            ...(data.role && { role: data.role })
+        };
+        
+        const result = await this.prisma.cliente.create({
+            data: customerData
         });
+
+        return {
+            id_cliente: result.id_cliente,
+            Email: result.Email,
+            Nombres: result.Nombres,
+            Apellidos: result.Apellidos,
+            role: (result as any).role || 'cliente',
+            googleId: (result as any).googleId
+        };
     }
 
     async updateProfile(id: number, data: Partial<CustomerProfile>) {

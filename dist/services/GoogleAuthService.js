@@ -32,28 +32,40 @@ class GoogleAuthService {
             callbackURL: google_config_1.googleConfig.callbackURL,
             scope: google_config_1.googleConfig.scope
         }, (accessToken, refreshToken, profile, done) => __awaiter(this, void 0, void 0, function* () {
-            var _a, _b, _c, _d, _e, _f;
+            var _a, _b, _c, _d;
             try {
                 console.log('Google profile:', profile);
                 const email = ((_b = (_a = profile.emails) === null || _a === void 0 ? void 0 : _a[0]) === null || _b === void 0 ? void 0 : _b.value) || '';
+                const googleId = profile.id;
+                const nombres = ((_c = profile.name) === null || _c === void 0 ? void 0 : _c.givenName) || '';
+                const apellidos = ((_d = profile.name) === null || _d === void 0 ? void 0 : _d.familyName) || '';
                 // Verificar si el usuario existe o crearlo como cliente
                 let customer = yield this.customerService.findByEmail(email);
                 if (!customer) {
                     customer = yield this.customerService.create({
-                        Email: ((_d = (_c = profile.emails) === null || _c === void 0 ? void 0 : _c[0]) === null || _d === void 0 ? void 0 : _d.value) || '',
-                        Nombres: ((_e = profile.name) === null || _e === void 0 ? void 0 : _e.givenName) || '',
-                        Apellidos: ((_f = profile.name) === null || _f === void 0 ? void 0 : _f.familyName) || ''
+                        Email: email,
+                        Nombres: nombres,
+                        Apellidos: apellidos,
+                        googleId: googleId,
+                        role: 'cliente'
                     });
                 }
+                if (!customer) {
+                    throw new Error('No se pudo crear o encontrar el cliente');
+                }
+                // Crear el objeto de usuario con todos los datos necesarios
                 const user = {
                     id_cliente: customer.id_cliente,
                     Email: customer.Email,
-                    role: 'cliente'
+                    Nombres: customer.Nombres,
+                    Apellidos: customer.Apellidos,
+                    role: customer.role || 'cliente',
+                    googleId: googleId
                 };
                 return done(null, user);
             }
             catch (error) {
-                console.error('Error en callback de Google:', error);
+                console.error('Error en la autenticación de Google:', error);
                 return done(error);
             }
         })));
