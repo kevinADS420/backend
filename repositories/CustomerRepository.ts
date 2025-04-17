@@ -12,23 +12,57 @@ class CustomerRepository {
     private static CODIGO_EXPIRACION = 10 * 60 * 1000; // 10 minutos en milisegundos
 
     static async login(auth: Auth) {
-        const sql = 'SELECT id_cliente, contraseña FROM cliente WHERE Email=?';
-        const values = [auth.Email];
-        const result: any = await db.execute(sql, values);
-        if (result[0].length > 0) {
-            const isPasswordValid = await bcrypt.compare(auth.contraseña, result[0][0].contraseña);
-            if (isPasswordValid) {
-                return { logged: true, status: "Successful authentication", id: result[0][0].id_cliente, role: "customer" }
+        try {
+            const sql = 'SELECT id_cliente, contraseña FROM cliente WHERE Email=?';
+            const values = [auth.Email];
+            const result: any = await db.execute(sql, values);
+            
+            if (!result || !result[0] || result[0].length === 0) {
+                return { logged: false, status: "Invalid username or password" };
             }
-            return { logged: false, status: "1.0 Invalid username or password" };   
+
+            const storedPassword = result[0][0].contraseña;
+            const providedPassword = auth.contraseña;
+
+            if (!storedPassword || !providedPassword) {
+                return { logged: false, status: "Invalid username or password" };
+            }
+
+            // Asegurarse de que storedPassword sea una cadena
+            const storedPasswordStr = storedPassword.toString();
+            
+            try {
+                const isPasswordValid = await bcrypt.compare(providedPassword, storedPasswordStr);
+                
+                if (isPasswordValid) {
+                    return { 
+                        logged: true, 
+                        status: "Successful authentication", 
+                        id: result[0][0].id_cliente, 
+                        role: "customer" 
+                    };
+                }
+            } catch (compareError) {
+                return { logged: false, status: "Error en la autenticación" };
+            }
+            
+            return { logged: false, status: "Invalid username or password" };
+        } catch (error) {
+            console.error('Error en login:', error);
+            return { logged: false, status: "Error de conexión con la base de datos" };
         }
-        return { logged: false, status: "2.0 Invalid username or password" };
     }
 
     static async add(customer: Customer){
-        const sql = 'INSERT INTO cliente (Nombres, Apellidos, Email, contraseña) VALUES (?, ?, ?, ?)';
-        const values = [ customer.Nombres, customer.Apellidos, customer.Email, customer.contraseña];        
-        return db.execute(sql, values);
+        try {
+            const hashedPassword = await bcrypt.hash(customer.contraseña, 10);
+            const sql = 'INSERT INTO cliente (Nombres, Apellidos, Email, contraseña) VALUES (?, ?, ?, ?)';
+            const values = [customer.Nombres, customer.Apellidos, customer.Email, hashedPassword];        
+            return db.execute(sql, values);
+        } catch (error) {
+            console.error('Error en add:', error);
+            throw error;
+        }
     }
 
     static async deleteCustomer(deleteCustomer : DeleteCustomer){

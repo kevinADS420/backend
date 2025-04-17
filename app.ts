@@ -146,35 +146,35 @@ app.get('/auth/check', (req, res) => {
 
 // Rutas de cliente
 app.use('/customer/email', get_customer_by_email);  // Obtener cliente por email
-app.use('/customer', update_customer);              // Actualizar cliente (PUT /customer/:id)
 app.use('/customer/register', register_customer);   // Registrar cliente
+app.use('/customer/:id', update_customer);          // Actualizar cliente
 app.use('/customer/delete', delete_customer);       // Eliminar cliente
 app.use('/customer/profile', profile_customer);     // Perfil de cliente
 
-// Rutas Proveedor
+// Rutas de proveedor
 app.use('/proveedor/email', get_Proveedor_by_email);  // Obtener proveedor por email
 app.use('/proveedor/register', register_Proveedor);   // Registrar proveedor
 app.use('/proveedor/profile', profile_proveedor);     // Perfil de proveedor
 
-// Rutas admin
+// Rutas de administrador
 app.use('/admin/register', register_Admin);      // Registrar admin
 app.use('/admin/delete', delete_Admin);          // Eliminar admin
 app.use('/admin/profile', profiles);             // Perfil de admin
 
-// Rutas productos
-app.use('/products', get_all_products);          // consultar productos 
+// Rutas de productos
+app.use('/products', get_all_products);          // Consultar productos
 app.use('/product/register', register_product);  // Registrar producto
 app.use('/product/:id', update_Product);         // Actualizar producto
 app.use('/product/delete', delete_product);      // Eliminar producto
 
-// Ruta de inventario (NUEVA)
-app.use('/inventario/create', create_inventory);    
+// Rutas de inventario
+app.use('/inventario/create', create_inventory); // Crear inventario
 
-// Rutas de Chatbot
+// Rutas de chatbot
 app.use('/api/chatbot', chatbotRoutes);
 
 // Rutas de autenticación con Google
-app.use('/', googleAuthRoutes);
+app.use('/auth/google', googleAuthRoutes);
 
 // Rutas de pago
 app.use('/api/payments', paymentRoutes);

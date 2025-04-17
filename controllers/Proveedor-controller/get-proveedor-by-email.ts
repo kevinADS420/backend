@@ -1,43 +1,24 @@
 import { Request, Response } from "express";
 import db from "../../config/config-db";
 
-const proveedorProfile = async (req: Request, res: Response) => {
+const getProveedorByEmail = async (req: Request, res: Response) => {
     try {
-        console.log('Request body:', req.body);
-        console.log('Request headers:', req.headers);
+        const { email } = req.params;
         
-        const idUser = req.body.id;
-        const role = req.body.role;
-        
-        console.log('ID del proveedor:', idUser);
-        console.log('Rol del proveedor:', role);
-        
-        if (!idUser) {
-            console.log('Error: ID de proveedor no proporcionado');
+        if (!email) {
             return res.status(400).json({
                 status: 'error',
-                message: 'ID de proveedor no proporcionado'
-            });
-        }
-
-        if (role !== 'proveedor') {
-            console.log('Error: Rol incorrecto');
-            return res.status(403).json({
-                status: 'error',
-                message: 'Acceso denegado. Rol incorrecto'
+                message: 'Email no proporcionado'
             });
         }
 
         // Obtener información del proveedor
         const [proveedorResult]: any = await db.execute(
-            'SELECT id_proveedor, nombres, apellidos, Email FROM Proveedor WHERE id_proveedor = ?',
-            [idUser]
+            'SELECT id_proveedor, nombres, apellidos, Email FROM Proveedor WHERE Email = ?',
+            [email]
         );
 
-        console.log('Resultado de la consulta del proveedor:', proveedorResult);
-
         if (!proveedorResult || proveedorResult.length === 0) {
-            console.log('Error: Proveedor no encontrado');
             return res.status(404).json({
                 status: 'error',
                 message: 'Proveedor no encontrado'
@@ -45,6 +26,7 @@ const proveedorProfile = async (req: Request, res: Response) => {
         }
 
         const proveedor = proveedorResult[0];
+        const idUser = proveedor.id_proveedor;
 
         // Obtener información de teléfono si existe
         const [phoneResult]: any = await db.execute(
@@ -52,15 +34,11 @@ const proveedorProfile = async (req: Request, res: Response) => {
             [idUser]
         );
 
-        console.log('Resultado de la consulta del teléfono:', phoneResult);
-
         // Obtener información de dirección si existe
         const [addressResult]: any = await db.execute(
             'SELECT barrio, calle, numero FROM Direccion WHERE id_cliente = ?',
             [idUser]
         );
-
-        console.log('Resultado de la consulta de la dirección:', addressResult);
 
         return res.status(200).json({
             status: 'success',
@@ -81,7 +59,7 @@ const proveedorProfile = async (req: Request, res: Response) => {
             }
         });
     } catch (error: any) {
-        console.error('Error en profile-proveedor-controller:', error);
+        console.error('Error en get-proveedor-by-email:', error);
         return res.status(500).json({
             status: 'error',
             message: 'Error interno del servidor',
@@ -90,4 +68,4 @@ const proveedorProfile = async (req: Request, res: Response) => {
     }
 }
 
-export default proveedorProfile;
+export { getProveedorByEmail }; 

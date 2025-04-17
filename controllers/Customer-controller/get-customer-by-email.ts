@@ -1,43 +1,24 @@
 import { Request, Response } from "express";
 import db from "../../config/config-db";
 
-const customerProfile = async (req: Request, res: Response) => {
+const getCustomerByEmail = async (req: Request, res: Response) => {
     try {
-        console.log('Request body:', req.body);
-        console.log('Request headers:', req.headers);
+        const { email } = req.params;
         
-        const idUser = req.body.id;
-        const role = req.body.role;
-        
-        console.log('ID del usuario:', idUser);
-        console.log('Rol del usuario:', role);
-        
-        if (!idUser) {
-            console.log('Error: ID de usuario no proporcionado');
+        if (!email) {
             return res.status(400).json({
                 status: 'error',
-                message: 'ID de usuario no proporcionado'
-            });
-        }
-
-        if (role !== 'customer') {
-            console.log('Error: Rol incorrecto');
-            return res.status(403).json({
-                status: 'error',
-                message: 'Acceso denegado. Rol incorrecto'
+                message: 'Email no proporcionado'
             });
         }
 
         // Obtener información del cliente
         const [customerResult]: any = await db.execute(
-            'SELECT id_cliente, Nombres, Apellidos, Email FROM cliente WHERE id_cliente = ?',
-            [idUser]
+            'SELECT id_cliente, Nombres, Apellidos, Email FROM Cliente WHERE Email = ?',
+            [email]
         );
 
-        console.log('Resultado de la consulta del cliente:', customerResult);
-
         if (!customerResult || customerResult.length === 0) {
-            console.log('Error: Cliente no encontrado');
             return res.status(404).json({
                 status: 'error',
                 message: 'Cliente no encontrado'
@@ -45,6 +26,7 @@ const customerProfile = async (req: Request, res: Response) => {
         }
 
         const customer = customerResult[0];
+        const idUser = customer.id_cliente;
 
         // Obtener información de teléfono si existe
         const [phoneResult]: any = await db.execute(
@@ -52,37 +34,32 @@ const customerProfile = async (req: Request, res: Response) => {
             [idUser]
         );
 
-        console.log('Resultado de la consulta del teléfono:', phoneResult);
-
         // Obtener información de dirección si existe
         const [addressResult]: any = await db.execute(
-            'SELECT calle, ciudad, departamento, codigoPostal FROM Direccion WHERE id_cliente = ?',
+            'SELECT barrio, calle, numero FROM Direccion WHERE id_cliente = ?',
             [idUser]
         );
-
-        console.log('Resultado de la consulta de la dirección:', addressResult);
 
         return res.status(200).json({
             status: 'success',
             data: {
                 id_cliente: customer.id_cliente,
-                Nombres: customer.Nombres,
-                Apellidos: customer.Apellidos,
+                nombres: customer.Nombres,
+                apellidos: customer.Apellidos,
                 Email: customer.Email,
                 telefono: phoneResult.length > 0 ? {
                     numero: phoneResult[0].númeroTelefono,
                     tipo: phoneResult[0].tipo
                 } : null,
                 direccion: addressResult.length > 0 ? {
+                    barrio: addressResult[0].barrio,
                     calle: addressResult[0].calle,
-                    ciudad: addressResult[0].ciudad,
-                    departamento: addressResult[0].departamento,
-                    codigoPostal: addressResult[0].códigoPostal
+                    numero: addressResult[0].numero
                 } : null
             }
         });
     } catch (error: any) {
-        console.error('Error en profile-customer-controller:', error);
+        console.error('Error en get-customer-by-email:', error);
         return res.status(500).json({
             status: 'error',
             message: 'Error interno del servidor',
@@ -91,4 +68,4 @@ const customerProfile = async (req: Request, res: Response) => {
     }
 }
 
-export default customerProfile;
+export { getCustomerByEmail }; 

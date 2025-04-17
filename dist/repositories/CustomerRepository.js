@@ -18,24 +18,54 @@ const nodemailer_1 = __importDefault(require("nodemailer"));
 class CustomerRepository {
     static login(auth) {
         return __awaiter(this, void 0, void 0, function* () {
-            const sql = 'SELECT id_cliente, contraseña FROM cliente WHERE Email=?';
-            const values = [auth.Email];
-            const result = yield config_db_1.default.execute(sql, values);
-            if (result[0].length > 0) {
-                const isPasswordValid = yield bcryptjs_1.default.compare(auth.contraseña, result[0][0].contraseña);
-                if (isPasswordValid) {
-                    return { logged: true, status: "Successful authentication", id: result[0][0].id_cliente, role: "customer" };
+            try {
+                const sql = 'SELECT id_cliente, contraseña FROM cliente WHERE Email=?';
+                const values = [auth.Email];
+                const result = yield config_db_1.default.execute(sql, values);
+                if (!result || !result[0] || result[0].length === 0) {
+                    return { logged: false, status: "Invalid username or password" };
                 }
-                return { logged: false, status: "1.0 Invalid username or password" };
+                const storedPassword = result[0][0].contraseña;
+                const providedPassword = auth.contraseña;
+                if (!storedPassword || !providedPassword) {
+                    return { logged: false, status: "Invalid username or password" };
+                }
+                // Asegurarse de que storedPassword sea una cadena
+                const storedPasswordStr = storedPassword.toString();
+                try {
+                    const isPasswordValid = yield bcryptjs_1.default.compare(providedPassword, storedPasswordStr);
+                    if (isPasswordValid) {
+                        return {
+                            logged: true,
+                            status: "Successful authentication",
+                            id: result[0][0].id_cliente,
+                            role: "customer"
+                        };
+                    }
+                }
+                catch (compareError) {
+                    return { logged: false, status: "Error en la autenticación" };
+                }
+                return { logged: false, status: "Invalid username or password" };
             }
-            return { logged: false, status: "2.0 Invalid username or password" };
+            catch (error) {
+                console.error('Error en login:', error);
+                return { logged: false, status: "Error de conexión con la base de datos" };
+            }
         });
     }
     static add(customer) {
         return __awaiter(this, void 0, void 0, function* () {
-            const sql = 'INSERT INTO cliente (Nombres, Apellidos, Email, contraseña) VALUES (?, ?, ?, ?)';
-            const values = [customer.Nombres, customer.Apellidos, customer.Email, customer.contraseña];
-            return config_db_1.default.execute(sql, values);
+            try {
+                const hashedPassword = yield bcryptjs_1.default.hash(customer.contraseña, 10);
+                const sql = 'INSERT INTO cliente (Nombres, Apellidos, Email, contraseña) VALUES (?, ?, ?, ?)';
+                const values = [customer.Nombres, customer.Apellidos, customer.Email, hashedPassword];
+                return config_db_1.default.execute(sql, values);
+            }
+            catch (error) {
+                console.error('Error en add:', error);
+                throw error;
+            }
         });
     }
     static deleteCustomer(deleteCustomer) {
