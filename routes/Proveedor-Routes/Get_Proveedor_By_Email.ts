@@ -3,6 +3,7 @@ import getProveedorByEmailController from "../../controllers/Proveedor-controlle
 
 const router = express.Router();
 
+router.get('/emil', getProveedorByEmailController);
 router.post('/', getProveedorByEmailController);
 
 export default router;
