@@ -174,7 +174,7 @@ app.use('/inventario/create', create_inventory); // Crear inventario
 app.use('/api/chatbot', chatbotRoutes);
 
 // Rutas de autenticación con Google
-app.use('/auth/google', googleAuthRoutes);
+app.use('/', googleAuthRoutes);
 
 // Rutas de pago
 app.use('/api/payments', paymentRoutes);

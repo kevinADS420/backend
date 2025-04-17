@@ -3,7 +3,7 @@ import RegisterProductController from '../../controllers/Product-controller/regi
 import RegisterValidator from '../../middleware/Product-Validator/RegisterValidatorProduct'
 import upload from "../../middleware/upload";
 
-const router = express.Router();
+const   router = express.Router();
 
 router.post('/',upload.single("imagen"), RegisterValidator.validatorParams, RegisterValidator.validator, RegisterProductController)
 

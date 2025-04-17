@@ -153,7 +153,7 @@ app.use('/inventario/create', inventario_routes_1.default); // Crear inventario
 // Rutas de chatbot
 app.use('/api/chatbot', chatbotRoutes_1.default);
 // Rutas de autenticación con Google
-app.use('/auth/google', google_auth_routes_1.default);
+app.use('/', google_auth_routes_1.default);
 // Rutas de pago
 app.use('/api/payments', paymentRoutes_1.default);
 // Ruta de prueba para verificar que CORS funcione
