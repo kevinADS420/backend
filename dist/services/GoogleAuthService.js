@@ -87,17 +87,39 @@ class GoogleAuthService {
         return (req, res, next) => {
             passport_1.default.authenticate('google', (err, user) => {
                 if (err) {
-                    return res.redirect(this.FRONTEND_FAILURE_URL);
+                    return res.status(500).json({
+                        status: 'error',
+                        message: 'Error en la autenticación de Google',
+                        error: err.message
+                    });
                 }
                 if (!user) {
-                    return res.redirect(this.FRONTEND_FAILURE_URL);
+                    return res.status(401).json({
+                        status: 'error',
+                        message: 'No se pudo autenticar con Google'
+                    });
                 }
                 req.logIn(user, (err) => {
                     if (err) {
-                        return res.redirect(this.FRONTEND_FAILURE_URL);
+                        return res.status(500).json({
+                            status: 'error',
+                            message: 'Error al iniciar sesión',
+                            error: err.message
+                        });
                     }
-                    // Redirigir al usuario a la página principal en lugar de /dashboard
-                    return res.redirect(this.FRONTEND_SUCCESS_URL);
+                    // Enviar los datos del usuario como JSON
+                    return res.status(200).json({
+                        status: 'success',
+                        message: 'Autenticación exitosa',
+                        data: {
+                            id: user.id_cliente,
+                            email: user.Email,
+                            nombres: user.Nombres,
+                            apellidos: user.Apellidos,
+                            role: user.role,
+                            googleId: user.googleId
+                        }
+                    });
                 });
             })(req, res, next);
         };
