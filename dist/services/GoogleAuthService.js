@@ -32,7 +32,7 @@ class GoogleAuthService {
             callbackURL: google_config_1.googleConfig.callbackURL,
             scope: google_config_1.googleConfig.scope
         }, (accessToken, refreshToken, profile, done) => __awaiter(this, void 0, void 0, function* () {
-            var _a, _b;
+            var _a, _b, _c, _d, _e, _f;
             try {
                 console.log('Google profile:', profile);
                 const email = ((_b = (_a = profile.emails) === null || _a === void 0 ? void 0 : _a[0]) === null || _b === void 0 ? void 0 : _b.value) || '';
@@ -40,14 +40,14 @@ class GoogleAuthService {
                 let customer = yield this.customerService.findByEmail(email);
                 if (!customer) {
                     customer = yield this.customerService.create({
-                        email: email,
-                        name: profile.displayName,
-                        // Otros campos necesarios con valores por defecto
+                        Email: ((_d = (_c = profile.emails) === null || _c === void 0 ? void 0 : _c[0]) === null || _d === void 0 ? void 0 : _d.value) || '',
+                        Nombres: ((_e = profile.name) === null || _e === void 0 ? void 0 : _e.givenName) || '',
+                        Apellidos: ((_f = profile.name) === null || _f === void 0 ? void 0 : _f.familyName) || ''
                     });
                 }
                 const user = {
-                    id: customer.id,
-                    email: customer.email,
+                    id_cliente: customer.id_cliente,
+                    Email: customer.Email,
                     role: 'cliente'
                 };
                 return done(null, user);

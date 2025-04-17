@@ -9,6 +9,7 @@ import jwt from 'jsonwebtoken';
 import auth from './routes/auth';
 import unifiedAuth from './routes/unified-auth'; // Ruta de autenticación unificada
 import authProveedor from './routes/Proveedor-Routes/Auth_Proveedor'; // Ruta para autenticación de proveedores
+import paymentRoutes from './routes/paymentRoutes'; // Importar rutas de pago
 
 // Rutas de Administrador 
 import register_Admin from "./routes/Admin-Routes/Register_Admin"
@@ -174,6 +175,9 @@ app.use('/api/chatbot', chatbotRoutes);
 
 // Rutas de autenticación con Google
 app.use('/', googleAuthRoutes);
+
+// Rutas de pago
+app.use('/api/payments', paymentRoutes);
 
 // Ruta de prueba para verificar que CORS funcione
 app.get('/api/test-cors', (req, res) => {

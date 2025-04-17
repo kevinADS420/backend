@@ -1,16 +1,16 @@
 import { PrismaClient } from '@prisma/client';
 
 interface CustomerData {
-    email: string;
-    name: string;
+    Email: string;
+    Nombres: string;
+    Apellidos: string;
 }
 
 interface CustomerProfile {
-    id: string;
-    email: string;
-    name: string;
-    address: string;
-    phone: string;
+    id_cliente: number;
+    Email: string;
+    Nombres: string;
+    Apellidos: string;
 }
 
 export class CustomerService {
@@ -21,61 +21,55 @@ export class CustomerService {
     }
 
     async findByEmail(email: string) {
-        return await this.prisma.customer.findUnique({
-            where: { email },
+        return await this.prisma.cliente.findUnique({
+            where: { Email: email },
             select: {
-                id: true,
-                email: true,
-                name: true,
-                address: true,
-                phone: true
+                id_cliente: true,
+                Email: true,
+                Nombres: true,
+                Apellidos: true
             }
         });
     }
 
-    async getProfile(id: string): Promise<CustomerProfile | null> {
-        return await this.prisma.customer.findUnique({
-            where: { id },
+    async getProfile(id: number): Promise<CustomerProfile | null> {
+        return await this.prisma.cliente.findUnique({
+            where: { id_cliente: id },
             select: {
-                id: true,
-                email: true,
-                name: true,
-                address: true,
-                phone: true
+                id_cliente: true,
+                Email: true,
+                Nombres: true,
+                Apellidos: true
             }
         });
     }
 
     async create(data: CustomerData) {
-        return await this.prisma.customer.create({
+        return await this.prisma.cliente.create({
             data: {
-                email: data.email,
-                name: data.name,
-                // Add default values for required fields
-                address: '',
-                phone: '',
-                password: '' // Consider generating a random password or handling this differently
+                Email: data.Email,
+                Nombres: data.Nombres,
+                Apellidos: data.Apellidos,
+                contraseña: Buffer.from('') // Consider generating a random password or handling this differently
             },
             select: {
-                id: true,
-                email: true,
-                name: true,
-                address: true,
-                phone: true
+                id_cliente: true,
+                Email: true,
+                Nombres: true,
+                Apellidos: true
             }
         });
     }
 
-    async updateProfile(id: string, data: Partial<CustomerProfile>) {
-        return await this.prisma.customer.update({
-            where: { id },
+    async updateProfile(id: number, data: Partial<CustomerProfile>) {
+        return await this.prisma.cliente.update({
+            where: { id_cliente: id },
             data,
             select: {
-                id: true,
-                email: true,
-                name: true,
-                address: true,
-                phone: true
+                id_cliente: true,
+                Email: true,
+                Nombres: true,
+                Apellidos: true
             }
         });
     }

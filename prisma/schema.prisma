@@ -1,0 +1,71 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Administrador {
+  id_administrador Int      @id @default(autoincrement())
+  Nombres          String   @db.VarChar(50)
+  Apellidos        String   @db.VarChar(50)
+  Email            String   @unique @db.VarChar(50)
+  contraseña       String   @db.VarChar(250)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@map("Administrador")
+}
+
+model Cliente {
+  id_cliente Int      @id @default(autoincrement())
+  Nombres    String   @db.VarChar(50)
+  Apellidos  String   @db.VarChar(50)
+  Email      String   @unique @db.VarChar(50)
+  contraseña Bytes    @db.VarBinary(250)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("cliente")
+}
+
+model Proveedor {
+  id_proveedor Int      @id @default(autoincrement())
+  nombres      String   @db.VarChar(50)
+  apellidos    String   @db.VarChar(50)
+  Email        String   @unique @db.VarChar(50)
+  contraseña   Bytes    @db.VarBinary(255)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("Proveedor")
+}
+
+model Inventario {
+  id_inventario    Int      @id @default(autoincrement())
+  cantidad         Int
+  fechaIngreso     DateTime @db.Date
+  fechaSalida      DateTime @db.Date
+  fechaRealización DateTime @db.Date
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@map("Inventario")
+}
+
+model PaymentPreference {
+  id_pago           String   @id @db.VarChar(36)
+  preference_id     String   @unique @db.VarChar(255)
+  items             String   @db.Text
+  payer             String   @db.Text
+  status            String   @db.VarChar(50)
+  fecha_creacion    DateTime @default(now())
+  fecha_actualizacion DateTime @updatedAt
+
+  @@map("payment_preferences")
+} 

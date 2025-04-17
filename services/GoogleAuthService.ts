@@ -12,8 +12,8 @@ declare global {
 }
 
 interface GoogleUser {
-    id: string;
-    email: string;
+    id_cliente: number;
+    Email: string;
     role: string;
 }
 
@@ -43,15 +43,15 @@ export class GoogleAuthService {
                 let customer = await this.customerService.findByEmail(email);
                 if (!customer) {
                     customer = await this.customerService.create({
-                        email: email,
-                        name: profile.displayName,
-                        // Otros campos necesarios con valores por defecto
+                        Email: profile.emails?.[0]?.value || '',
+                        Nombres: profile.name?.givenName || '',
+                        Apellidos: profile.name?.familyName || ''
                     });
                 }
 
                 const user: GoogleUser = {
-                    id: customer.id,
-                    email: customer.email,
+                    id_cliente: customer.id_cliente,
+                    Email: customer.Email,
                     role: 'cliente'
                 };
 

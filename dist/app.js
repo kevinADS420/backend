@@ -13,6 +13,7 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const auth_1 = __importDefault(require("./routes/auth"));
 const unified_auth_1 = __importDefault(require("./routes/unified-auth")); // Ruta de autenticación unificada
 const Auth_Proveedor_1 = __importDefault(require("./routes/Proveedor-Routes/Auth_Proveedor")); // Ruta para autenticación de proveedores
+const paymentRoutes_1 = __importDefault(require("./routes/paymentRoutes")); // Importar rutas de pago
 // Rutas de Administrador 
 const Register_Admin_1 = __importDefault(require("./routes/Admin-Routes/Register_Admin"));
 const Delete_Admin_1 = __importDefault(require("./routes/Admin-Routes/Delete_Admin"));
@@ -153,6 +154,8 @@ app.use('/inventario/create', inventario_routes_1.default);
 app.use('/api/chatbot', chatbotRoutes_1.default);
 // Rutas de autenticación con Google
 app.use('/', google_auth_routes_1.default);
+// Rutas de pago
+app.use('/api/payments', paymentRoutes_1.default);
 // Ruta de prueba para verificar que CORS funcione
 app.get('/api/test-cors', (req, res) => {
     res.json({ message: 'CORS está funcionando correctamente' });

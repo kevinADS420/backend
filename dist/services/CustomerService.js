@@ -17,64 +17,58 @@ class CustomerService {
     }
     findByEmail(email) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.prisma.customer.findUnique({
-                where: { email },
+            return yield this.prisma.cliente.findUnique({
+                where: { Email: email },
                 select: {
-                    id: true,
-                    email: true,
-                    name: true,
-                    address: true,
-                    phone: true
+                    id_cliente: true,
+                    Email: true,
+                    Nombres: true,
+                    Apellidos: true
                 }
             });
         });
     }
     getProfile(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.prisma.customer.findUnique({
-                where: { id },
+            return yield this.prisma.cliente.findUnique({
+                where: { id_cliente: id },
                 select: {
-                    id: true,
-                    email: true,
-                    name: true,
-                    address: true,
-                    phone: true
+                    id_cliente: true,
+                    Email: true,
+                    Nombres: true,
+                    Apellidos: true
                 }
             });
         });
     }
     create(data) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.prisma.customer.create({
+            return yield this.prisma.cliente.create({
                 data: {
-                    email: data.email,
-                    name: data.name,
-                    // Add default values for required fields
-                    address: '',
-                    phone: '',
-                    password: '' // Consider generating a random password or handling this differently
+                    Email: data.Email,
+                    Nombres: data.Nombres,
+                    Apellidos: data.Apellidos,
+                    contraseña: Buffer.from('') // Consider generating a random password or handling this differently
                 },
                 select: {
-                    id: true,
-                    email: true,
-                    name: true,
-                    address: true,
-                    phone: true
+                    id_cliente: true,
+                    Email: true,
+                    Nombres: true,
+                    Apellidos: true
                 }
             });
         });
     }
     updateProfile(id, data) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.prisma.customer.update({
-                where: { id },
+            return yield this.prisma.cliente.update({
+                where: { id_cliente: id },
                 data,
                 select: {
-                    id: true,
-                    email: true,
-                    name: true,
-                    address: true,
-                    phone: true
+                    id_cliente: true,
+                    Email: true,
+                    Nombres: true,
+                    Apellidos: true
                 }
             });
         });
