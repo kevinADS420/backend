@@ -19,8 +19,10 @@ const customerProfile = (req, res) => __awaiter(void 0, void 0, void 0, function
         console.log('Request headers:', req.headers);
         const idUser = req.body.id;
         const role = req.body.role;
+        const googleData = req.body.googleData; // Datos de Google si existen
         console.log('ID del usuario:', idUser);
         console.log('Rol del usuario:', role);
+        console.log('Datos de Google:', googleData);
         if (!idUser) {
             console.log('Error: ID de usuario no proporcionado');
             return res.status(400).json({
@@ -28,15 +30,25 @@ const customerProfile = (req, res) => __awaiter(void 0, void 0, void 0, function
                 message: 'ID de usuario no proporcionado'
             });
         }
-        if (role !== 'customer') {
+        if (role !== 'customer' && role !== 'cliente') {
             console.log('Error: Rol incorrecto');
             return res.status(403).json({
                 status: 'error',
                 message: 'Acceso denegado. Rol incorrecto'
             });
         }
+        // Si hay datos de Google, actualizar el perfil
+        if (googleData) {
+            try {
+                yield config_db_1.default.execute('UPDATE cliente SET Nombres = ?, Apellidos = ?, Email = ?, googleId = ? WHERE id_cliente = ?', [googleData.nombres, googleData.apellidos, googleData.email, googleData.googleId, idUser]);
+                console.log('Perfil actualizado con datos de Google');
+            }
+            catch (updateError) {
+                console.error('Error al actualizar con datos de Google:', updateError);
+            }
+        }
         // Obtener información del cliente
-        const [customerResult] = yield config_db_1.default.execute('SELECT id_cliente, Nombres, Apellidos, Email FROM cliente WHERE id_cliente = ?', [idUser]);
+        const [customerResult] = yield config_db_1.default.execute('SELECT id_cliente, Nombres, Apellidos, Email, googleId FROM cliente WHERE id_cliente = ?', [idUser]);
         console.log('Resultado de la consulta del cliente:', customerResult);
         if (!customerResult || customerResult.length === 0) {
             console.log('Error: Cliente no encontrado');
@@ -59,6 +71,7 @@ const customerProfile = (req, res) => __awaiter(void 0, void 0, void 0, function
                 Nombres: customer.Nombres,
                 Apellidos: customer.Apellidos,
                 Email: customer.Email,
+                googleId: customer.googleId,
                 telefono: phoneResult.length > 0 ? {
                     numero: phoneResult[0].númeroTelefono,
                     tipo: phoneResult[0].tipo

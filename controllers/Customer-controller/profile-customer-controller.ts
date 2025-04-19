@@ -8,9 +8,11 @@ const customerProfile = async (req: Request, res: Response) => {
         
         const idUser = req.body.id;
         const role = req.body.role;
+        const googleData = req.body.googleData; // Datos de Google si existen
         
         console.log('ID del usuario:', idUser);
         console.log('Rol del usuario:', role);
+        console.log('Datos de Google:', googleData);
         
         if (!idUser) {
             console.log('Error: ID de usuario no proporcionado');
@@ -20,7 +22,7 @@ const customerProfile = async (req: Request, res: Response) => {
             });
         }
 
-        if (role !== 'customer') {
+        if (role !== 'customer' && role !== 'cliente') {
             console.log('Error: Rol incorrecto');
             return res.status(403).json({
                 status: 'error',
@@ -28,9 +30,22 @@ const customerProfile = async (req: Request, res: Response) => {
             });
         }
 
+        // Si hay datos de Google, actualizar el perfil
+        if (googleData) {
+            try {
+                await db.execute(
+                    'UPDATE cliente SET Nombres = ?, Apellidos = ?, Email = ?, googleId = ? WHERE id_cliente = ?',
+                    [googleData.nombres, googleData.apellidos, googleData.email, googleData.googleId, idUser]
+                );
+                console.log('Perfil actualizado con datos de Google');
+            } catch (updateError) {
+                console.error('Error al actualizar con datos de Google:', updateError);
+            }
+        }
+
         // Obtener información del cliente
         const [customerResult]: any = await db.execute(
-            'SELECT id_cliente, Nombres, Apellidos, Email FROM cliente WHERE id_cliente = ?',
+            'SELECT id_cliente, Nombres, Apellidos, Email, googleId FROM cliente WHERE id_cliente = ?',
             [idUser]
         );
 
@@ -69,6 +84,7 @@ const customerProfile = async (req: Request, res: Response) => {
                 Nombres: customer.Nombres,
                 Apellidos: customer.Apellidos,
                 Email: customer.Email,
+                googleId: customer.googleId,
                 telefono: phoneResult.length > 0 ? {
                     numero: phoneResult[0].númeroTelefono,
                     tipo: phoneResult[0].tipo

@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
 }
 
 datasource db {
@@ -8,19 +9,20 @@ datasource db {
 }
 
 model Cliente {
-  id_cliente  Int         @id @default(autoincrement())
-  Nombres     String      @db.VarChar(50)
-  Apellidos   String      @db.VarChar(50)
-  Email       String      @unique @db.VarChar(50)
-  contraseña Bytes?      @db.VarBinary(250)
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime?
-  googleId    String?     @unique @db.VarChar(255)
-  role        String      @default("cliente") @db.VarChar(20)
-  direcciones Direccion[]
-  pagos       Pago[]
-  pedidos     Pedido[]
-  telefonos   Telefono[]
+  id_cliente         Int                 @id @default(autoincrement())
+  Nombres            String              @db.VarChar(50)
+  Apellidos          String              @db.VarChar(50)
+  Email              String              @unique @db.VarChar(50)
+  contraseña        Bytes?              @db.VarBinary(250)
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime?
+  googleId           String?             @unique @db.VarChar(255)
+  role               String              @default("cliente") @db.VarChar(20)
+  direcciones        Direccion[]
+  pagos              Pago[]
+  pedidos            Pedido[]
+  telefonos          Telefono[]
+  paymentPreferences PaymentPreference[]
 
   @@map("cliente")
 }
@@ -49,16 +51,17 @@ model Direccion {
 }
 
 model Pedido {
-  id_pedido        Int              @id @default(autoincrement())
-  estado_pedido    String           @db.VarChar(50)
-  fecha_pedido     DateTime         @db.Date
-  total_pago       Decimal          @db.Decimal(10, 2)
-  id_cliente       Int
-  id_administrador Int
-  pagos            Pago[]
-  administrador    Administrador    @relation(fields: [id_administrador], references: [id_administrador], onDelete: Cascade)
-  cliente          Cliente          @relation(fields: [id_cliente], references: [id_cliente], onDelete: Cascade)
-  productos        PedidoProducto[]
+  id_pedido          Int                 @id @default(autoincrement())
+  estado_pedido      String              @db.VarChar(50)
+  fecha_pedido       DateTime            @db.Date
+  total_pago         Decimal             @db.Decimal(10, 2)
+  id_cliente         Int
+  id_administrador   Int
+  pagos              Pago[]
+  administrador      Administrador       @relation(fields: [id_administrador], references: [id_administrador], onDelete: Cascade)
+  cliente            Cliente             @relation(fields: [id_cliente], references: [id_cliente], onDelete: Cascade)
+  productos          PedidoProducto[]
+  paymentPreferences PaymentPreference[]
 
   @@index([id_administrador], map: "Pedido_id_administrador_fkey")
   @@index([id_cliente], map: "Pedido_id_cliente_fkey")
@@ -156,6 +159,13 @@ model PaymentPreference {
   fecha_creacion      DateTime  @default(now())
   fecha_actualizacion DateTime?
   id_pago             String    @id @db.VarChar(36)
+  id_cliente          Int
+  id_pedido           Int
+  radicado            String    @unique @db.VarChar(50)
+  cliente             Cliente   @relation(fields: [id_cliente], references: [id_cliente], onDelete: Cascade)
+  pedido              Pedido    @relation(fields: [id_pedido], references: [id_pedido], onDelete: Cascade)
 
+  @@index([id_cliente], map: "PaymentPreference_id_cliente_fkey")
+  @@index([id_pedido], map: "PaymentPreference_id_pedido_fkey")
   @@map("payment_preferences")
 }

@@ -20,9 +20,22 @@ class PaymentRepository {
         return __awaiter(this, void 0, void 0, function* () {
             const connection = yield database_1.default.getConnection();
             try {
+                // Primero crear un pedido
+                const [pedidoResult] = yield connection.execute('INSERT INTO Pedido (estado_pedido, fecha_pedido, total_pago, id_cliente, id_administrador) VALUES (?, ?, ?, ?, ?)', ['pendiente', new Date(), data.items.reduce((sum, item) => sum + (item.unit_price * item.quantity), 0), data.payer.id, 1] // Usando 1 como id_administrador por defecto
+                );
+                // Obtener el ID del pedido creado
+                const [pedido] = yield connection.execute('SELECT id_pedido FROM Pedido WHERE id_cliente = ? ORDER BY id_pedido DESC LIMIT 1', [data.payer.id]);
+                if (!Array.isArray(pedido) || pedido.length === 0) {
+                    throw new Error('No se pudo crear el pedido');
+                }
+                const idPedido = pedido[0].id_pedido;
                 const id = (0, uuid_1.v4)();
-                const [result] = yield connection.execute('INSERT INTO payment_preferences (id_pago, preference_id, items, payer, status) VALUES (?, ?, ?, ?, ?)', [id, data.preferenceId, JSON.stringify(data.items), JSON.stringify(data.payer), data.status]);
-                return Object.assign({ id }, data);
+                // Generar un número de radicado único (formato: RAD-YYYYMMDD-XXXXX)
+                const fecha = new Date();
+                const radicado = `RAD-${fecha.getFullYear()}${String(fecha.getMonth() + 1).padStart(2, '0')}${String(fecha.getDate()).padStart(2, '0')}-${Math.floor(Math.random() * 100000).toString().padStart(5, '0')}`;
+                // Ahora crear la preferencia de pago con el ID del pedido
+                const [result] = yield connection.execute('INSERT INTO payment_preferences (id_pago, preference_id, items, payer, status, id_cliente, id_pedido, radicado) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [id, data.preferenceId, JSON.stringify(data.items), JSON.stringify(data.payer), data.status, data.payer.id, idPedido, radicado]);
+                return Object.assign({ id, idPedido, radicado }, data);
             }
             finally {
                 connection.release();
