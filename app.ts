@@ -43,6 +43,8 @@ import chatbotRoutes from './routes/Chatbot-Routes/chatbotRoutes';
 
 import googleAuthRoutes from './routes/google-auth-routes';
 
+import cart_routes from './routes/Payment-Routes/cart-routes';
+
 // Configurar dotenv al inicio
 dotenv.config();
 
@@ -178,6 +180,9 @@ app.use('/', googleAuthRoutes);
 
 // Rutas de pago
 app.use('/api/payments', paymentRoutes);
+
+// Rutas del carrito
+app.use('/cart', cart_routes);
 
 // Ruta de prueba para verificar que CORS funcione
 app.get('/api/test-cors', (req, res) => {

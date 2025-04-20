@@ -12,31 +12,41 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getCart = void 0;
+exports.getCartItem = void 0;
 const database_1 = __importDefault(require("../../config/database"));
-const getCart = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id_cliente } = req.params;
+const getCartItem = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { cartItemId } = req.params;
     try {
-        // Obtener los items del carrito con la información del producto
-        const [items] = yield database_1.default.query(`SELECT c.id_producto, c.cantidad, p.nombreP, p.Precio, p.imagen 
+        // Obtener detalles del item del carrito incluyendo información del producto
+        const [cartItem] = yield database_1.default.query(`SELECT c.*, p.nombreP, p.Precio, p.cantidad_disponible, p.imagen 
              FROM Carrito c 
              JOIN Producto p ON c.id_producto = p.id_producto 
-             WHERE c.id_cliente = ?`, [id_cliente]);
-        // Calcular el total del carrito
-        const total = items.reduce((sum, item) => {
-            return sum + (item.Precio * item.cantidad);
-        }, 0);
+             WHERE c.id_carrito = ?`, [cartItemId]);
+        if (cartItem.length === 0) {
+            return res.status(404).json({
+                error: 'Item no encontrado en el carrito'
+            });
+        }
+        const item = cartItem[0];
+        // Calcular subtotal
+        const subtotal = item.Precio * item.cantidad;
         res.json({
-            items: items,
-            total: total
+            id_carrito: item.id_carrito,
+            id_producto: item.id_producto,
+            nombre_producto: item.nombreP,
+            precio_unitario: item.Precio,
+            cantidad: item.cantidad,
+            cantidad_disponible: item.cantidad_disponible,
+            imagen: item.imagen,
+            subtotal: subtotal
         });
     }
     catch (error) {
-        console.error('Error al obtener el carrito:', error);
+        console.error('Error al obtener detalles del item del carrito:', error);
         res.status(500).json({
-            error: 'Error al obtener el carrito',
+            error: 'Error al obtener detalles del item del carrito',
             details: error instanceof Error ? error.message : 'Error desconocido'
         });
     }
 });
-exports.getCart = getCart;
+exports.getCartItem = getCartItem;

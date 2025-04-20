@@ -39,6 +39,7 @@ const inventario_routes_1 = __importDefault(require("./routes/inventario-Routes/
 // Rutas de Chatbot
 const chatbotRoutes_1 = __importDefault(require("./routes/Chatbot-Routes/chatbotRoutes"));
 const google_auth_routes_1 = __importDefault(require("./routes/google-auth-routes"));
+const cart_routes_1 = __importDefault(require("./routes/Payment-Routes/cart-routes"));
 // Configurar dotenv al inicio
 dotenv_1.default.config();
 const app = (0, express_1.default)().use(body_parser_1.default.json());
@@ -156,6 +157,8 @@ app.use('/api/chatbot', chatbotRoutes_1.default);
 app.use('/', google_auth_routes_1.default);
 // Rutas de pago
 app.use('/api/payments', paymentRoutes_1.default);
+// Rutas del carrito
+app.use('/cart', cart_routes_1.default);
 // Ruta de prueba para verificar que CORS funcione
 app.get('/api/test-cors', (req, res) => {
     res.json({ message: 'CORS está funcionando correctamente' });

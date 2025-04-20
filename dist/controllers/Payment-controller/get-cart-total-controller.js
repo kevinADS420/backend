@@ -12,31 +12,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getCart = void 0;
+exports.getCartTotal = void 0;
 const database_1 = __importDefault(require("../../config/database"));
-const getCart = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id_cliente } = req.params;
+const getCartTotal = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { customerId } = req.params;
     try {
-        // Obtener los items del carrito con la información del producto
-        const [items] = yield database_1.default.query(`SELECT c.id_producto, c.cantidad, p.nombreP, p.Precio, p.imagen 
+        // Obtener todos los items del carrito con sus precios
+        const [items] = yield database_1.default.query(`SELECT c.id_carrito, c.cantidad, p.precio 
              FROM Carrito c 
              JOIN Producto p ON c.id_producto = p.id_producto 
-             WHERE c.id_cliente = ?`, [id_cliente]);
-        // Calcular el total del carrito
-        const total = items.reduce((sum, item) => {
-            return sum + (item.Precio * item.cantidad);
-        }, 0);
+             WHERE c.id_cliente = ?`, [customerId]);
+        // Calcular el total
+        let total = 0;
+        items.forEach(item => {
+            total += item.cantidad * item.precio;
+        });
         res.json({
-            items: items,
-            total: total
+            total: total,
+            items_count: items.length
         });
     }
     catch (error) {
-        console.error('Error al obtener el carrito:', error);
+        console.error('Error al calcular el total del carrito:', error);
         res.status(500).json({
-            error: 'Error al obtener el carrito',
+            error: 'Error al calcular el total del carrito',
             details: error instanceof Error ? error.message : 'Error desconocido'
         });
     }
 });
-exports.getCart = getCart;
+exports.getCartTotal = getCartTotal;
