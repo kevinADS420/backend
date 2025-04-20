@@ -9,7 +9,7 @@ const router = express.Router();
 // Crear una instancia del middleware con el rol 'customer'
 const verifyCustomerRole = verifyRoles(['customer']);
 
-router.get('/profile', verifyToken, verifyCustomerRole, customerProfileController);
+router.get('/', verifyToken, verifyCustomerRole, customerProfileController);
 router.get('/email/:email', getCustomerByEmail);
 
 export default router;

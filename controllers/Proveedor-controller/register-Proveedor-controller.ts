@@ -1,35 +1,32 @@
 import { Request, Response } from "express";
-import Proveedor from '../../Dto/Proveedor-Dto/RegisterProveedorDto'
+import Proveedor from '../../Dto/Proveedor-Dto/RegisterProveedorDto';
 import ProveedorService from '../../services/ProveedorServices';
 
-
 let register = async (req: Request, res: Response) => {
-    try {
-        console.log('Solicitud recibida:', req.body);  // Añade esto para depuración
+  try {
+    const { nombres, apellidos, Email, contraseña } = req.body;
+    const result = await ProveedorService.register(new Proveedor(nombres, apellidos, Email, contraseña));
 
-        const {
-            nombres,
-            apellidos,
-            Email,
-            contraseña
-        } = req.body;
-        
-        console.log('Datos extraídos:', { nombres, apellidos, Email });  // Añade esto
-        
-        const registerProveedor = await ProveedorService.register(new Proveedor(nombres, apellidos, Email, contraseña));
-        console.log('Registro exitoso');  // Añade esto
-        
-        return res.status(201).json({ status: 'Registro con éxito' });
-    } catch (error: any) {
-        console.error('Error al registrar proveedor:', error);  // Añade esto
-        
-        if (error && error.code == "ER_DUP_ENTRY") {  
-            return res.status(409).json({ errorInfo: error.sqlMessage });
-        } else {
-            return res.status(500).json({ error: "Error interno del servidor", details: error.message });
-        }
+    if (result) {
+      return res.status(201).json({
+        status: 'Registro exitoso'
+      });
     }
+    return res.status(400).json({
+      status: 'Error en el registro'
+    });
+  } catch (error: any) {
+    if (error && error.code == "ER_DUP_ENTRY") {
+      return res.status(409).json({ 
+        status: 'Error',
+        message: error.sqlMessage 
+      });
+    }
+    return res.status(500).json({
+      status: 'Error',
+      message: 'Error interno del servidor'
+    });
+  }
 }
-
 
 export default register;

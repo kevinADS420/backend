@@ -21,7 +21,6 @@ let proveedorAuth = async (req: Request, res: Response) => {
       status: login.status
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       status: "Error interno del servidor"
     });

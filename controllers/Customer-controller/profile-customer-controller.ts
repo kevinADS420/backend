@@ -74,7 +74,7 @@ const customerProfile = async (req: Request, res: Response) => {
         });
     } finally {
         if (connection) {
-            connection.release();
+            await connection.release();
         }
     }
 }

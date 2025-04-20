@@ -24,7 +24,7 @@ let customerAuth = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         if (login.logged) {
             return res.status(200).json({
                 status: login.status,
-                token: (0, generateToken_1.default)({ id: login.id, role: login.role }, process.env.KEY_TOKEN, 6)
+                token: (0, generateToken_1.default)({ id: login.id, role: "customer" }, process.env.KEY_TOKEN, 6)
             });
         }
         return res.status(401).json({

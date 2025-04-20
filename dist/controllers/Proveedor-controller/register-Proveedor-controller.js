@@ -16,21 +16,28 @@ const RegisterProveedorDto_1 = __importDefault(require("../../Dto/Proveedor-Dto/
 const ProveedorServices_1 = __importDefault(require("../../services/ProveedorServices"));
 let register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log('Solicitud recibida:', req.body); // Añade esto para depuración
         const { nombres, apellidos, Email, contraseña } = req.body;
-        console.log('Datos extraídos:', { nombres, apellidos, Email }); // Añade esto
-        const registerProveedor = yield ProveedorServices_1.default.register(new RegisterProveedorDto_1.default(nombres, apellidos, Email, contraseña));
-        console.log('Registro exitoso'); // Añade esto
-        return res.status(201).json({ status: 'Registro con éxito' });
+        const result = yield ProveedorServices_1.default.register(new RegisterProveedorDto_1.default(nombres, apellidos, Email, contraseña));
+        if (result) {
+            return res.status(201).json({
+                status: 'Registro exitoso'
+            });
+        }
+        return res.status(400).json({
+            status: 'Error en el registro'
+        });
     }
     catch (error) {
-        console.error('Error al registrar proveedor:', error); // Añade esto
         if (error && error.code == "ER_DUP_ENTRY") {
-            return res.status(409).json({ errorInfo: error.sqlMessage });
+            return res.status(409).json({
+                status: 'Error',
+                message: error.sqlMessage
+            });
         }
-        else {
-            return res.status(500).json({ error: "Error interno del servidor", details: error.message });
-        }
+        return res.status(500).json({
+            status: 'Error',
+            message: 'Error interno del servidor'
+        });
     }
 });
 exports.default = register;

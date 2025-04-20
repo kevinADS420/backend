@@ -11,6 +11,6 @@ const get_customer_by_email_1 = require("../../controllers/Customer-controller/g
 const router = express_1.default.Router();
 // Crear una instancia del middleware con el rol 'customer'
 const verifyCustomerRole = (0, VerifyCustomerRole_1.default)(['customer']);
-router.get('/profile', VerifyToken_1.default, verifyCustomerRole, profile_customer_controller_1.default);
+router.get('/', VerifyToken_1.default, verifyCustomerRole, profile_customer_controller_1.default);
 router.get('/email/:email', get_customer_by_email_1.getCustomerByEmail);
 exports.default = router;

@@ -71,7 +71,7 @@ const customerProfile = (req, res) => __awaiter(void 0, void 0, void 0, function
     }
     finally {
         if (connection) {
-            connection.release();
+            yield connection.release();
         }
     }
 });

@@ -81,14 +81,7 @@ app.use(cors({
 }));
 // Middleware de logging para debugging
 app.use((req, res, next) => {
-    console.log('=== Nueva Petición ===');
-    console.log('Fecha:', new Date().toISOString());
-    console.log('Método:', req.method);
-    console.log('URL:', req.url);
-    console.log('Ruta original:', req.originalUrl);
-    console.log('Headers:', JSON.stringify(req.headers, null, 2));
-    console.log('Body:', JSON.stringify(req.body, null, 2));
-    console.log('=== Fin de Logging ===');
+    console.log(`${new Date().toISOString()} - ${req.method} ${req.url} - Origin: ${req.headers.origin}`);
     next();
 });
 // Rutas de autenticación
@@ -141,7 +134,7 @@ app.use('/customer/email', Get_Customer_By_Email_1.default); // Obtener cliente 
 app.use('/customer/register', Register_Customer_1.default); // Registrar cliente
 app.use('/customer/:id', Update_Customer_1.default); // Actualizar cliente
 app.use('/customer/delete', Delete_Customer_1.default); // Eliminar cliente
-app.use('/customer', Profile_Customer_1.default); // Perfil de cliente
+app.use('/customer/profile', Profile_Customer_1.default); // Perfil de cliente
 // Rutas de proveedor
 app.use('/proveedor/email', Get_Proveedor_By_Email_1.default); // Obtener proveedor por email
 app.use('/proveedor/register', Register_Proveedor_1.default); // Registrar proveedor
@@ -159,14 +152,14 @@ app.use('/product/delete', Delete_Product_1.default); // Eliminar producto
 app.use('/inventario/create', inventario_routes_1.default); // Crear inventario
 // Rutas de chatbot
 app.use('/api/chatbot', chatbotRoutes_1.default);
+// Rutas de autenticación con Google
+app.use('/', google_auth_routes_1.default);
 // Rutas de pago
-app.use('/api/payments', paymentRoutes_1.default);
+app.use('/', paymentRoutes_1.default);
 // Ruta de prueba para verificar que CORS funcione
 app.get('/api/test-cors', (req, res) => {
     res.json({ message: 'CORS está funcionando correctamente' });
 });
-// Rutas de autenticación con Google (movida al final)
-app.use('/auth/google', google_auth_routes_1.default);
 // Puerto 
 const PORT = process.env.PORT || 10101;
 app.listen(PORT, () => {

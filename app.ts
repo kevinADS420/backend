@@ -90,14 +90,7 @@ app.use(cors({
 
 // Middleware de logging para debugging
 app.use((req, res, next) => {
-  console.log('=== Nueva Petición ===');
-  console.log('Fecha:', new Date().toISOString());
-  console.log('Método:', req.method);
-  console.log('URL:', req.url);
-  console.log('Ruta original:', req.originalUrl);
-  console.log('Headers:', JSON.stringify(req.headers, null, 2));
-  console.log('Body:', JSON.stringify(req.body, null, 2));
-  console.log('=== Fin de Logging ===');
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.url} - Origin: ${req.headers.origin}`);
   next();
 });
 
@@ -156,7 +149,7 @@ app.use('/customer/email', get_customer_by_email);  // Obtener cliente por email
 app.use('/customer/register', register_customer);   // Registrar cliente
 app.use('/customer/:id', update_customer);          // Actualizar cliente
 app.use('/customer/delete', delete_customer);       // Eliminar cliente
-app.use('/customer', profile_customer);             // Perfil de cliente
+app.use('/customer/profile', profile_customer);     // Perfil de cliente
 
 // Rutas de proveedor
 app.use('/proveedor/email', get_Proveedor_by_email);  // Obtener proveedor por email
@@ -180,16 +173,16 @@ app.use('/inventario/create', create_inventory); // Crear inventario
 // Rutas de chatbot
 app.use('/api/chatbot', chatbotRoutes);
 
+// Rutas de autenticación con Google
+app.use('/', googleAuthRoutes);
+
 // Rutas de pago
-app.use('/api/payments', paymentRoutes);
+app.use('/', paymentRoutes);
 
 // Ruta de prueba para verificar que CORS funcione
 app.get('/api/test-cors', (req, res) => {
   res.json({ message: 'CORS está funcionando correctamente' });
 });
-
-// Rutas de autenticación con Google (movida al final)
-app.use('/auth/google', googleAuthRoutes);
 
 // Puerto 
 const PORT = process.env.PORT || 10101;
