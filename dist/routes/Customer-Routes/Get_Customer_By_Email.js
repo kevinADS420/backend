@@ -8,4 +8,5 @@ const get_customer_by_email_controller_1 = __importDefault(require("../../contro
 const router = express_1.default.Router();
 // Ruta para obtener un cliente por su email
 router.get('/:email', get_customer_by_email_controller_1.default);
+router.post('/', get_customer_by_email_controller_1.default);
 exports.default = router;

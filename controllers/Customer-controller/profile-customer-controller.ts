@@ -2,18 +2,12 @@ import { Request, Response } from "express";
 import db from "../../config/config-db";
 
 const customerProfile = async (req: Request, res: Response) => {
+    let connection;
     try {
-        console.log('Request body:', req.body);
-        console.log('Request headers:', req.headers);
-        
         const idUser = req.body.id;
         const role = req.body.role;
         
-        console.log('ID del usuario:', idUser);
-        console.log('Rol del usuario:', role);
-        
         if (!idUser) {
-            console.log('Error: ID de usuario no proporcionado');
             return res.status(400).json({
                 status: 'error',
                 message: 'ID de usuario no proporcionado'
@@ -21,23 +15,20 @@ const customerProfile = async (req: Request, res: Response) => {
         }
 
         if (role !== 'customer') {
-            console.log('Error: Rol incorrecto');
             return res.status(403).json({
                 status: 'error',
                 message: 'Acceso denegado. Rol incorrecto'
             });
         }
 
-        // Obtener información del cliente
-        const [customerResult]: any = await db.execute(
+        connection = await db.getConnection();
+
+        const [customerResult]: any = await connection.execute(
             'SELECT id_cliente, Nombres, Apellidos, Email FROM cliente WHERE id_cliente = ?',
             [idUser]
         );
 
-        console.log('Resultado de la consulta del cliente:', customerResult);
-
         if (!customerResult || customerResult.length === 0) {
-            console.log('Error: Cliente no encontrado');
             return res.status(404).json({
                 status: 'error',
                 message: 'Cliente no encontrado'
@@ -46,21 +37,16 @@ const customerProfile = async (req: Request, res: Response) => {
 
         const customer = customerResult[0];
 
-        // Obtener información de teléfono si existe
-        const [phoneResult]: any = await db.execute(
-            'SELECT númeroTelefono, tipo FROM Telefono WHERE id_cliente = ?',
-            [idUser]
-        );
-
-        console.log('Resultado de la consulta del teléfono:', phoneResult);
-
-        // Obtener información de dirección si existe
-        const [addressResult]: any = await db.execute(
-            'SELECT calle, ciudad, departamento, codigoPostal FROM Direccion WHERE id_cliente = ?',
-            [idUser]
-        );
-
-        console.log('Resultado de la consulta de la dirección:', addressResult);
+        const [phoneResult, addressResult]: any = await Promise.all([
+            connection.execute(
+                'SELECT númeroTelefono, tipo FROM Telefono WHERE id_cliente = ?',
+                [idUser]
+            ),
+            connection.execute(
+                'SELECT barrio, calle, numero FROM Direccion WHERE id_cliente = ?',
+                [idUser]
+            )
+        ]);
 
         return res.status(200).json({
             status: 'success',
@@ -69,25 +55,27 @@ const customerProfile = async (req: Request, res: Response) => {
                 Nombres: customer.Nombres,
                 Apellidos: customer.Apellidos,
                 Email: customer.Email,
-                telefono: phoneResult.length > 0 ? {
-                    numero: phoneResult[0].númeroTelefono,
-                    tipo: phoneResult[0].tipo
+                telefono: phoneResult[0].length > 0 ? {
+                    numero: phoneResult[0][0].númeroTelefono,
+                    tipo: phoneResult[0][0].tipo
                 } : null,
-                direccion: addressResult.length > 0 ? {
-                    calle: addressResult[0].calle,
-                    ciudad: addressResult[0].ciudad,
-                    departamento: addressResult[0].departamento,
-                    codigoPostal: addressResult[0].códigoPostal
+                direccion: addressResult[0].length > 0 ? {
+                    barrio: addressResult[0][0].barrio,
+                    calle: addressResult[0][0].calle,
+                    numero: addressResult[0][0].numero
                 } : null
             }
         });
     } catch (error: any) {
-        console.error('Error en profile-customer-controller:', error);
         return res.status(500).json({
             status: 'error',
             message: 'Error interno del servidor',
             error: error.message
         });
+    } finally {
+        if (connection) {
+            connection.release();
+        }
     }
 }
 

@@ -14,7 +14,7 @@ const getCustomerByEmail = async (req: Request, res: Response) => {
 
         // Obtener información del cliente
         const [customerResult]: any = await db.execute(
-            'SELECT id_cliente, Nombres, Apellidos, Email FROM Cliente WHERE Email = ?',
+            'SELECT id_cliente, Nombres, Apellidos, Email FROM cliente WHERE Email = ?',
             [email]
         );
 

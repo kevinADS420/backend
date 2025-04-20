@@ -3,7 +3,11 @@ import db from "../../config/config-db";
 
 const getCustomerByEmail = async (req: Request, res: Response) => {
   try {
-    const Email = req.params.email;
+    const Email = req.body.Email || req.query.Email;
+
+    if (!Email) {
+      return res.status(400).json({ message: "El email es requerido" });
+    }
     
     const sql = 'SELECT id_cliente, Nombres, Apellidos, Email FROM cliente WHERE Email = ?';
     const [rows]: any = await db.execute(sql, [Email]);

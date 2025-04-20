@@ -24,7 +24,7 @@ const getCustomerByEmail = (req, res) => __awaiter(void 0, void 0, void 0, funct
             });
         }
         // Obtener información del cliente
-        const [customerResult] = yield config_db_1.default.execute('SELECT id_cliente, Nombres, Apellidos, Email FROM Cliente WHERE Email = ?', [email]);
+        const [customerResult] = yield config_db_1.default.execute('SELECT id_cliente, Nombres, Apellidos, Email FROM cliente WHERE Email = ?', [email]);
         if (!customerResult || customerResult.length === 0) {
             return res.status(404).json({
                 status: 'error',
