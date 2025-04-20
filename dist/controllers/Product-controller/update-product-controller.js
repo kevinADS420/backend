@@ -13,21 +13,25 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const RegisterProductDto_1 = __importDefault(require("../../Dto/Product-Dto/RegisterProductDto"));
-const ProductServices_1 = __importDefault(require("../../services/ProductServices"));
-let update_Product = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const ProductService_1 = __importDefault(require("../../services/ProductService"));
+const productService = new ProductService_1.default();
+const updateProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { nombreP, tipo, Precio, imagen } = req.body;
-        const productService = new ProductServices_1.default();
-        const updateProduct = yield productService.updateProduct(new RegisterProductDto_1.default(nombreP, tipo, Precio, imagen));
-        return res.status(201).json({ status: 'Producto Actualizado con exito' });
+        const { id } = req.params;
+        const { nombreP, tipo, Precio, cantidad, imagen } = req.body;
+        const updateProduct = new RegisterProductDto_1.default(nombreP, tipo, Precio, cantidad, imagen, undefined, undefined, parseInt(id));
+        const result = yield productService.updateProduct(updateProduct);
+        return res.status(200).json({
+            status: 'Producto actualizado exitosamente',
+            data: result
+        });
     }
     catch (error) {
-        if (error && error.code == "ER_DUP_ENTRY") {
-            return res.status(500).json({ errorInfo: error.sqlMessage });
-        }
-        else {
-            return res.status(500).json({ error: "Error al actualizar producto", details: error.message });
-        }
+        console.error('Error al actualizar el producto:', error);
+        return res.status(500).json({
+            status: 'Error al actualizar el producto',
+            error: error instanceof Error ? error.message : 'Error desconocido'
+        });
     }
 });
-exports.default = update_Product;
+exports.default = updateProduct;

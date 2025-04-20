@@ -13,40 +13,67 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const RegisterProductDto_1 = __importDefault(require("../../Dto/Product-Dto/RegisterProductDto"));
-const ProductServices_1 = __importDefault(require("../../services/ProductServices"));
-let register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const ProductService_1 = __importDefault(require("../../services/ProductService"));
+const config_db_1 = __importDefault(require("../../config/config-db"));
+const productService = new ProductService_1.default();
+const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let connection;
     try {
-        const { nombreP, tipo, Precio, id_inventario, id_proveedor } = req.body;
+        const { nombreP, tipo, Precio, cantidad, imagen, id_proveedor } = req.body;
         if (!req.file) {
             return res.status(400).json({ error: "Se requiere una imagen" });
         }
-        const imagen = req.file.buffer;
-        // Validar id_inventario
-        if (!id_inventario) {
-            return res.status(400).json({ error: "Se requiere un ID de inventario válido" });
+        const imagenBuffer = req.file.buffer;
+        // Validar cantidad
+        if (!cantidad || cantidad <= 0) {
+            return res.status(400).json({ error: "Se requiere una cantidad válida mayor a 0" });
         }
-        // Crear objeto de producto con el orden correcto de parámetros
-        const productData = new RegisterProductDto_1.default(nombreP, tipo, Precio, imagen, id_inventario, id_proveedor);
-        // Registrar el producto y asociarlo con el inventario existente
-        const productService = new ProductServices_1.default();
-        const result = yield productService.registerProductWithInventoryId(productData, id_inventario);
-        return res.status(201).json({
-            status: "Producto Registrado",
-            message: "Producto registrado y asociado con inventario correctamente",
-            data: {
-                producto: nombreP,
-                productId: result.productId,
-                id_inventario: id_inventario,
-                id_proveedor: id_proveedor
+        connection = yield config_db_1.default.getConnection();
+        // Configurar el tiempo de espera de bloqueo
+        yield connection.execute('SET SESSION innodb_lock_wait_timeout = 50');
+        try {
+            yield connection.beginTransaction();
+            // 1. Primero crear el inventario
+            const [inventoryResult] = yield connection.execute('INSERT INTO Inventario (cantidad, fechaIngreso, fechaSalida, fechaRealización) VALUES (?, NOW(), NOW(), NOW())', [cantidad]);
+            const id_inventario = inventoryResult.insertId;
+            // 2. Crear objeto de producto con el id_inventario generado
+            const productData = new RegisterProductDto_1.default(nombreP, tipo, Precio, cantidad, imagenBuffer, id_inventario, id_proveedor);
+            // 3. Registrar el producto directamente en la base de datos
+            const [result] = yield connection.execute('INSERT INTO Producto (nombreP, tipo, Precio, cantidad, imagen, id_inventario, id_proveedor) VALUES (?, ?, ?, ?, ?, ?, ?)', [nombreP, tipo, Precio, cantidad, imagenBuffer, id_inventario, id_proveedor]);
+            const productId = result.insertId;
+            yield connection.commit();
+            return res.status(201).json({
+                status: "Producto Registrado",
+                message: "Producto registrado y asociado con inventario correctamente",
+                data: {
+                    producto: nombreP,
+                    productId: productId,
+                    id_inventario: id_inventario,
+                    id_proveedor: id_proveedor,
+                    cantidad: cantidad
+                }
+            });
+        }
+        catch (error) {
+            if (connection) {
+                yield connection.rollback();
             }
-        });
+            throw error;
+        }
     }
     catch (error) {
         if ((error === null || error === void 0 ? void 0 : error.code) === "ER_DUP_ENTRY") {
             return res.status(500).json({ errorInfo: error.sqlMessage });
         }
-        console.error("Error al registrar producto:", error);
-        res.status(500).json({ error: error.message || "Error interno del servidor" });
+        return res.status(500).json({
+            error: "Error interno del servidor",
+            message: error.message
+        });
+    }
+    finally {
+        if (connection) {
+            yield connection.release();
+        }
     }
 });
 exports.default = register;

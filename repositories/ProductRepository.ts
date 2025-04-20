@@ -6,14 +6,14 @@ import Inventory from '../Dto/Product-Dto/InventoryDto';
 class ProductRepository {
 
    static async getAllProducts() {
-    const sql = 'SELECT id_producto, nombreP, tipo, Precio, imagen, id_inventario, id_proveedor FROM Producto';
+    const sql = 'SELECT id_producto, nombreP, tipo, Precio, cantidad, imagen, id_inventario, id_proveedor FROM Producto';
     const [rows] = await db.execute(sql);
     return rows as any[];
 }
 
     static async registerProduct(product: Product) {
-        const sql = 'INSERT INTO Producto (nombreP, tipo, Precio, imagen, id_inventario, id_proveedor) VALUES (?, ?, ?, ?,?, ?)';
-        const values = [product.nombreP, product.tipo, product.Precio, product.imagen, product.id_inventario, product.id_proveedor];
+        const sql = 'INSERT INTO Producto (nombreP, tipo, Precio, cantidad, imagen, id_inventario, id_proveedor) VALUES (?, ?, ?, ?, ?, ?, ?)';
+        const values = [product.nombreP, product.tipo, product.Precio, product.cantidad, product.imagen, product.id_inventario, product.id_proveedor];
         const result = await db.execute(sql, values);
         return result;
     }
@@ -37,8 +37,8 @@ class ProductRepository {
 
             // Registrar el producto
             const [productResult]: any = await connection.execute(
-                'INSERT INTO Producto (nombreP, tipo, Precio, imagen) VALUES (?, ?, ?, ?)',
-                [product.nombreP, product.tipo, product.Precio, product.imagen]
+                'INSERT INTO Producto (nombreP, tipo, Precio, cantidad, imagen) VALUES (?, ?, ?, ?, ?)',
+                [product.nombreP, product.tipo, product.Precio, product.cantidad, product.imagen]
             );
 
             const productId = productResult.insertId;
@@ -72,8 +72,8 @@ class ProductRepository {
 
             // Registrar el producto
             const [productResult]: any = await connection.execute(
-                'INSERT INTO Producto (nombreP, tipo, Precio, imagen, id_proveedor) VALUES (?, ?, ?, ?, ?)',
-                [product.nombreP, product.tipo, product.Precio, product.imagen, product.id_proveedor]
+                'INSERT INTO Producto (nombreP, tipo, Precio, cantidad, imagen, id_proveedor) VALUES (?, ?, ?, ?, ?, ?)',
+                [product.nombreP, product.tipo, product.Precio, product.cantidad, product.imagen, product.id_proveedor]
             );
 
             const productId = productResult.insertId;
@@ -101,8 +101,8 @@ class ProductRepository {
     }
 
     static async UpdateProduct(product: Product) {
-        const sql = 'UPDATE Producto SET nombreP = ?, tipo = ?, Precio = ?, imagen = ? WHERE id_producto = ?';
-        const values = [product.nombreP, product.tipo, product.Precio, product.imagen];
+        const sql = 'UPDATE Producto SET nombreP = ?, tipo = ?, Precio = ?, cantidad = ?, imagen = ? WHERE id_producto = ?';
+        const values = [product.nombreP, product.tipo, product.Precio, product.cantidad, product.imagen, product.id_producto];
         return db.execute(sql, values);
     }
 }

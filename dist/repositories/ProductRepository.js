@@ -16,15 +16,15 @@ const config_db_1 = __importDefault(require("../config/config-db"));
 class ProductRepository {
     static getAllProducts() {
         return __awaiter(this, void 0, void 0, function* () {
-            const sql = 'SELECT id_producto, nombreP, tipo, Precio, imagen, id_inventario, id_proveedor FROM Producto';
+            const sql = 'SELECT id_producto, nombreP, tipo, Precio, cantidad, imagen, id_inventario, id_proveedor FROM Producto';
             const [rows] = yield config_db_1.default.execute(sql);
             return rows;
         });
     }
     static registerProduct(product) {
         return __awaiter(this, void 0, void 0, function* () {
-            const sql = 'INSERT INTO Producto (nombreP, tipo, Precio, imagen, id_inventario, id_proveedor) VALUES (?, ?, ?, ?,?, ?)';
-            const values = [product.nombreP, product.tipo, product.Precio, product.imagen, product.id_inventario, product.id_proveedor];
+            const sql = 'INSERT INTO Producto (nombreP, tipo, Precio, cantidad, imagen, id_inventario, id_proveedor) VALUES (?, ?, ?, ?, ?, ?, ?)';
+            const values = [product.nombreP, product.tipo, product.Precio, product.cantidad, product.imagen, product.id_inventario, product.id_proveedor];
             const result = yield config_db_1.default.execute(sql, values);
             return result;
         });
@@ -48,7 +48,7 @@ class ProductRepository {
             try {
                 yield connection.beginTransaction();
                 // Registrar el producto
-                const [productResult] = yield connection.execute('INSERT INTO Producto (nombreP, tipo, Precio, imagen) VALUES (?, ?, ?, ?)', [product.nombreP, product.tipo, product.Precio, product.imagen]);
+                const [productResult] = yield connection.execute('INSERT INTO Producto (nombreP, tipo, Precio, cantidad, imagen) VALUES (?, ?, ?, ?, ?)', [product.nombreP, product.tipo, product.Precio, product.cantidad, product.imagen]);
                 const productId = productResult.insertId;
                 // Registrar en el inventario
                 yield connection.execute('INSERT INTO Inventario (id_producto, cantidad, fechaIngreso, fechaSalida, fechaRealización) VALUES (?, ?, ?, ?, ?)', [
@@ -76,7 +76,7 @@ class ProductRepository {
             try {
                 yield connection.beginTransaction();
                 // Registrar el producto
-                const [productResult] = yield connection.execute('INSERT INTO Producto (nombreP, tipo, Precio, imagen, id_proveedor) VALUES (?, ?, ?, ?, ?)', [product.nombreP, product.tipo, product.Precio, product.imagen, product.id_proveedor]);
+                const [productResult] = yield connection.execute('INSERT INTO Producto (nombreP, tipo, Precio, cantidad, imagen, id_proveedor) VALUES (?, ?, ?, ?, ?, ?)', [product.nombreP, product.tipo, product.Precio, product.cantidad, product.imagen, product.id_proveedor]);
                 const productId = productResult.insertId;
                 // Actualizar el registro de inventario con el id_producto
                 yield connection.execute('UPDATE Inventario SET id_producto = ? WHERE id_inventario = ?', [productId, id_inventario]);
@@ -101,8 +101,8 @@ class ProductRepository {
     }
     static UpdateProduct(product) {
         return __awaiter(this, void 0, void 0, function* () {
-            const sql = 'UPDATE Producto SET nombreP = ?, tipo = ?, Precio = ?, imagen = ? WHERE id_producto = ?';
-            const values = [product.nombreP, product.tipo, product.Precio, product.imagen];
+            const sql = 'UPDATE Producto SET nombreP = ?, tipo = ?, Precio = ?, cantidad = ?, imagen = ? WHERE id_producto = ?';
+            const values = [product.nombreP, product.tipo, product.Precio, product.cantidad, product.imagen, product.id_producto];
             return config_db_1.default.execute(sql, values);
         });
     }

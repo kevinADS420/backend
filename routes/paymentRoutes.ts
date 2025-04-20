@@ -1,16 +1,21 @@
-import { Router } from 'express';
-import { PaymentController } from '../controllers/paymentController';
+import express from "express";
+import verifyToken from "../middleware/VerifyToken";
+import verifyRoles from "../middleware/VerifyCustomerRole";
+import createPreference from "../controllers/Payment-controller/payment-controller";
 
-const router = Router();
-const paymentController = new PaymentController();
+const router = express.Router();
 
-// Crear una preferencia de pago
-router.post('/create-preference', paymentController.createPaymentPreference.bind(paymentController));
+// Crear una instancia del middleware con el rol 'customer'
+const verifyCustomerRole = verifyRoles(['customer']);
 
-// Webhook para recibir notificaciones de Mercado Pago
-router.post('/webhook', paymentController.handleWebhook.bind(paymentController));
+// Ruta para crear una preferencia de pago
+router.post('/create-preference', verifyToken, verifyCustomerRole, createPreference);
 
-// Obtener el estado de un pago
-router.get('/status/:paymentId', paymentController.getPaymentStatus.bind(paymentController));
+// Ruta para recibir notificaciones de webhook
+router.post('/webhook', (req, res) => {
+    // Aquí manejaremos las notificaciones de Mercado Pago
+    console.log('Webhook recibido:', req.body);
+    res.status(200).send('OK');
+});
 
 export default router; 
