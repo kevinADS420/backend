@@ -2,6 +2,7 @@ import express from "express";
 import verifyToken from "../middleware/VerifyToken";
 import verifyRoles from "../middleware/VerifyCustomerRole";
 import createPreference from "../controllers/Payment-controller/payment-controller";
+import getCart from '../controllers/Payment-controller/get-cart-controller';
 
 const router = express.Router();
 
@@ -10,6 +11,9 @@ const verifyCustomerRole = verifyRoles(['customer']);
 
 // Ruta para crear una preferencia de pago
 router.post('/create-preference', verifyToken, verifyCustomerRole, createPreference);
+
+// Ruta para obtener el carrito de compras
+router.get('/cart/:customerId', getCart);
 
 // Ruta para recibir notificaciones de webhook
 router.post('/webhook', (req, res) => {
