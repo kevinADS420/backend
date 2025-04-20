@@ -177,7 +177,7 @@ app.use('/api/chatbot', chatbotRoutes);
 app.use('/', googleAuthRoutes);
 
 // Rutas de pago
-app.use('/', paymentRoutes);
+app.use('/api/payments', paymentRoutes);
 
 // Ruta de prueba para verificar que CORS funcione
 app.get('/api/test-cors', (req, res) => {

@@ -155,7 +155,7 @@ app.use('/api/chatbot', chatbotRoutes_1.default);
 // Rutas de autenticación con Google
 app.use('/', google_auth_routes_1.default);
 // Rutas de pago
-app.use('/', paymentRoutes_1.default);
+app.use('/api/payments', paymentRoutes_1.default);
 // Ruta de prueba para verificar que CORS funcione
 app.get('/api/test-cors', (req, res) => {
     res.json({ message: 'CORS está funcionando correctamente' });
