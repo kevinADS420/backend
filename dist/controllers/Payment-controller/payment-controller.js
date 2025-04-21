@@ -13,63 +13,45 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mercadopago_1 = require("mercadopago");
-const config_db_1 = __importDefault(require("../../config/config-db"));
+const database_1 = __importDefault(require("../../config/database"));
 const client = new mercadopago_1.MercadoPagoConfig({
-    accessToken: process.env.MP_ACCESS_TOKEN || 'TEST-1234567890123456-123456-12345678901234567890123456789012-123456789'
+    accessToken: 'APP_USR-844363715892854-041021-8efdb2d81700ddae2b860944b1a2fd9a-2381703263'
 });
 const createPreference = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b, _c;
-    let connection;
     try {
-        const { items, customerId } = req.body;
-        if (!items || !Array.isArray(items) || items.length === 0) {
-            return res.status(400).json({
-                status: 'error',
-                message: 'El carrito está vacío'
-            });
-        }
-        if (!customerId) {
+        const { id_cliente } = req.body;
+        if (!id_cliente) {
             return res.status(400).json({
                 status: 'error',
                 message: 'ID de cliente no proporcionado'
             });
         }
-        connection = yield config_db_1.default.getConnection();
-        // Verificar que el cliente existe
-        const [customerResult] = yield connection.execute('SELECT id_cliente FROM cliente WHERE id_cliente = ?', [customerId]);
-        if (!customerResult || customerResult.length === 0) {
-            return res.status(404).json({
+        // Obtener los items del carrito con la información del producto
+        const [cartItems] = yield database_1.default.query(`SELECT c.cantidad, p.id_producto, p.nombreP, p.Precio 
+             FROM Carrito c 
+             JOIN Producto p ON c.id_producto = p.id_producto 
+             WHERE c.id_cliente = ?`, [id_cliente]);
+        if (cartItems.length === 0) {
+            return res.status(400).json({
                 status: 'error',
-                message: 'Cliente no encontrado'
-            });
-        }
-        // Obtener información de los productos del carrito
-        const productIds = items.map(item => item.id);
-        const [productsResult] = yield connection.execute('SELECT id_producto, nombre, precio FROM producto WHERE id_producto IN (?)', [productIds]);
-        if (!productsResult || productsResult.length === 0) {
-            return res.status(404).json({
-                status: 'error',
-                message: 'Productos no encontrados'
+                message: 'El carrito está vacío'
             });
         }
         // Crear items para la preferencia
-        const preferenceItems = items.map((item) => ({
-            id: item.id.toString(),
-            title: item.title,
-            unit_price: Number(item.unit_price),
-            quantity: Number(item.quantity),
-            currency_id: item.currency_id
+        const preferenceItems = cartItems.map(item => ({
+            id: item.id_producto.toString(),
+            title: item.nombreP,
+            unit_price: Number(item.Precio),
+            quantity: Number(item.cantidad),
+            currency_id: "COP"
         }));
+        // Calcular el total
+        const total = preferenceItems.reduce((sum, item) => sum + (item.unit_price * item.quantity), 0);
         // Crear la preferencia de pago
         const preference = new mercadopago_1.Preference(client);
         const result = yield preference.create({
             body: {
                 items: preferenceItems,
-                payer: {
-                    email: (_a = req.body.payer) === null || _a === void 0 ? void 0 : _a.email,
-                    name: (_b = req.body.payer) === null || _b === void 0 ? void 0 : _b.name,
-                    surname: (_c = req.body.payer) === null || _c === void 0 ? void 0 : _c.surname
-                },
                 back_urls: {
                     success: "http://localhost:5173/success",
                     failure: "http://localhost:5173/failure",
@@ -79,23 +61,21 @@ const createPreference = (req, res) => __awaiter(void 0, void 0, void 0, functio
             }
         });
         // Guardar la preferencia en la base de datos
-        yield connection.execute('INSERT INTO ordenes (id_cliente, id_preferencia, estado, total) VALUES (?, ?, ?, ?)', [customerId, result.id, 'pending', preferenceItems.reduce((total, item) => total + (item.unit_price * item.quantity), 0)]);
-        return res.status(200).json({
-            status: 'Preferencia creada exitosamente',
-            data: result
+        yield database_1.default.query('INSERT INTO ordenes (id_cliente, id_preferencia, estado, total) VALUES (?, ?, ?, ?)', [id_cliente, result.id, 'pending', total]);
+        return res.json({
+            preferenceId: result.id,
+            init_point: result.init_point,
+            items: preferenceItems,
+            total: total
         });
     }
     catch (error) {
         console.error('Error al crear la preferencia:', error);
         return res.status(500).json({
-            status: 'Error al crear la preferencia',
-            error: error instanceof Error ? error.message : 'Error desconocido'
+            status: 'error',
+            message: 'Error al crear la preferencia',
+            details: error instanceof Error ? error.message : 'Error desconocido'
         });
-    }
-    finally {
-        if (connection) {
-            yield connection.release();
-        }
     }
 });
 exports.default = createPreference;
