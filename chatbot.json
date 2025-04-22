@@ -1,0 +1,421 @@
+{
+    "nombre": "Huerto MKT",
+    "descripcion": "Es un proyecto de Marketplace enfocado en la venta y distribución de frutas y verduras frescas. Su objetivo es conectar directamente a productores locales con consumidores, promoviendo la compra de productos saludables y sostenibles. A través de la plataforma, los usuarios pueden explorar una variedad de opciones frescas, realizar pedidos en línea y recibir sus productos directamente en su puerta.",
+    "principales_objetivos": [
+      "Frescura garantizada",
+      "Apoyo local",
+      "Sostenibilidad",
+      "Accesibilidad a productos saludables",
+      "Reducción de intermediarios",
+      "Educación nutricional"
+    ],
+    "enfoque": "El enfoque principal de Huerto MKT es apoyar la agricultura local, reducir intermediarios, y ofrecer productos de alta calidad a precios competitivos.",
+    "vision": "Nuestra visión es ser la plataforma líder en la transformación del comercio agrícola local, creando un ecosistema digital inclusivo que empodere a los productores rurales y garantice el acceso a los alimentos frescos y de calidad para todos los consumidores del Quindío y eventualmente de Colombia.",
+    "mision": {
+      "descripcion": "Nuestra Misión es poder cerrar la brecha entre productores y consumidores mediante una plataforma digital innovadora que:",
+      "puntos": [
+        "Conecta directamente a campesinos con compradores finales.",
+        "Promueve la inclusión digital de comunidades rurales.",
+        "Garantiza precios justos para productores y consumidores.",
+        "Fomenta hábitos de alimentación saludable.",
+        "Contribuye a la sostenibilidad ambiental.",
+        "Apoya la economía local y el desarrollo rural."
+      ]
+    },
+    "valores": [
+      {
+        "nombre": "Compromiso",
+        "descripcion": "Apoyando a los productores locales y garantizando la calidad de nuestros productos."
+      },
+      {
+        "nombre": "Calidad",
+        "descripcion": "Garantizamos productos frescos y de alta calidad, seleccionados cuidadosamente."
+      },
+      {
+        "nombre": "Sostenibilidad",
+        "descripcion": "Fomentamos prácticas agrícolas responsables y el cuidado del medio ambiente."
+      },
+      {
+        "nombre": "Transparencia",
+        "descripcion": "Ofrecemos información clara sobre el origen y características de nuestros productos."
+      },
+      {
+        "nombre": "Innovación",
+        "descripcion": "Utilizamos tecnología para mejorar la experiencia de compra y la eficiencia logística."
+      },
+      {
+        "nombre": "Comunidad",
+        "descripcion": "Construimos relaciones sólidas entre productores, consumidores y nuestro equipo."
+      }
+    ],
+    "beneficios": [
+      "Entrega rápida y segura",
+      "Precios justos y sin intermediarios",
+      "Promoción y ofertas especiales",
+      "Gestión de pedidos simplificada",
+      "Apoyo técnico y asesoramiento",
+      "Mercado local directo",
+      "Productos frescos y de temporada",
+      "Trazabilidad completa de los productos",
+      "Programa de fidelización",
+      "Recetas y consejos nutricionales",
+      "Suscripciones a cajas semanales",
+      "Eventos y talleres gastronómicos"
+    ],
+    "origen_productos": "Nuestros productos a la venta son cultivos en el campo colombiano, ubicado exactamente en el eje cafetero en el pueblo de Genova, Quindío un municipio ubicado en la cordillera central colombiana.",
+    "productos": [
+      {
+        "nombre": "Naranja",
+        "precio_kg": 7980,
+        "stock": true,
+        "caracteristicas": "Es una fruta rica en vitamina C, sales, minerales y azúcares, Su pulpa es dulce y ácida, y casi el 90% de su contenido es agua.",
+        "usos": "Con ella se pueden hacer múltiples jugos o extractos de pulpa. También se utiliza con endulzante natural para la cocina.",
+        "categoria": "frutas",
+        "beneficios_salud": ["Alto contenido en vitamina C", "Antioxidante", "Refuerza el sistema inmunológico", "Mejora la absorción de hierro"],
+        "temporada": "Todo el año",
+        "conservacion": "Mantener en lugar fresco y seco, puede refrigerarse para mayor duración"
+      },
+      {
+        "nombre": "Aguacate",
+        "precio_kg": 6980,
+        "stock": true,
+        "caracteristicas": "Se caracteriza por tener un sabor suave y una textura mantecosa ideal para el consumo.",
+        "usos": "Se puede usar para hacer guacamole, salsas, aderezos, ensaladas. Adicional su pulpa se utiliza en productos cosméticos ya que su principio es la hidratación.",
+        "categoria": "frutas",
+        "beneficios_salud": ["Rico en grasas saludables", "Alto contenido en fibra", "Fuente de potasio", "Beneficioso para la salud cardiovascular"],
+        "temporada": "Todo el año",
+        "conservacion": "Madurar a temperatura ambiente, refrigerar cuando esté maduro"
+      },
+      {
+        "nombre": "Piña",
+        "precio_kg": 4480,
+        "stock": true,
+        "caracteristicas": "Su aroma y sabor dulce es lo que la caracteriza, adicional sus propiedades nutritivas y terapéuticas.",
+        "usos": "Con ella se pueden hacer jugos, estratos, postres, adicional como endulzante en múltiples preparaciones. Se utiliza también como terapia en múltiples enfermedades.",
+        "categoria": "frutas",
+        "beneficios_salud": ["Contiene bromelina, enzima digestiva", "Antiinflamatorio natural", "Rico en vitamina C", "Ayuda a la digestión"],
+        "temporada": "Todo el año",
+        "conservacion": "Refrigerar después de cortada, mantener entera a temperatura ambiente"
+      },
+      {
+        "nombre": "Lechuga",
+        "precio_kg": 6500,
+        "stock": true,
+        "caracteristicas": "Es un alimento bajo en calorías, rica en antioxidantes, fibra sales minerales y vitaminas del grupo B1,B2 y B6.",
+        "usos": "Con esta hortaliza se pueden preparar infinidad de ensaladas al gusto, tanto dulces como saladas, sacando provecho de todas sus propiedades.",
+        "categoria": "verduras",
+        "beneficios_salud": ["Bajo en calorías", "Alto contenido en agua", "Fuente de fibra", "Rica en vitaminas y minerales"],
+        "temporada": "Todo el año",
+        "conservacion": "Refrigerar en bolsa perforada, lavar solo antes de consumir"
+      },
+      {
+        "nombre": "Zanahoria",
+        "precio_kg": 4480,
+        "stock": true,
+        "caracteristicas": "Es una hortaliza anaranjada con raíz comestible, Se compone principalmente de agua, y posee hidratos de carbono, vitaminas E, B, B3, fósforo, calcio, yodo, magnesio, potasio y otras vitaminas y minerales que favorecen el funcionamiento del organismo.",
+        "usos": "Con ella se hacen licuados para la digestión, también para la piel. Adicional se usa en la cocina tradicional como guisante o adobo.",
+        "categoria": "verduras",
+        "beneficios_salud": ["Rica en betacaroteno", "Mejora la visión", "Antioxidante", "Beneficiosa para la piel"],
+        "temporada": "Todo el año",
+        "conservacion": "Refrigerar sin lavar, cortar las hojas si las tiene"
+      },
+      {
+        "nombre": "Plátano",
+        "precio_kg": 4980,
+        "stock": true,
+        "caracteristicas": "Es una fruta cuya cascara es de color amarillo en su maduración y verde en su estado de recolección, la pulpa, de color blanco o beige, es muy blanda cuando ya ha alcanzado su etapa de maduración. No posee semilla y tiene una gran cantidad de potasio, por lo que resulta muy dulce al paladar.",
+        "usos": "Con este producto se preparan platanitos de paquete, adicional en la cocina tradicional se utiliza para caldos como el sancocho, se puede utilizar en coladas por sus principios de vitaminas y minerales.",
+        "categoria": "frutas",
+        "beneficios_salud": ["Alto contenido en potasio", "Fuente de energía", "Rico en fibra", "Beneficioso para la salud intestinal"],
+        "temporada": "Todo el año",
+        "conservacion": "Madurar a temperatura ambiente, refrigerar cuando esté maduro"
+      },
+      {
+        "nombre": "Limón",
+        "precio_kg": 6990,
+        "stock": true,
+        "caracteristicas": "El limón Tahití tiene su cosecha todo el año, Es un híbrido de limón y naranja agria, tiene un sabor agridulce.",
+        "usos": "Es utilizado en postres, adicional para hacer bebidas a base de su fruta. En la cocina tradicional también tiene múltiples usos. Rico en vitaminas B9, C, E y A.",
+        "categoria": "frutas",
+        "beneficios_salud": ["Alto contenido en vitamina C", "Antioxidante", "Alcalinizante", "Refuerza el sistema inmunológico"],
+        "temporada": "Todo el año",
+        "conservacion": "Mantener a temperatura ambiente o refrigerar"
+      },
+      {
+        "nombre": "Granadilla",
+        "precio_kg": 5480,
+        "stock": true,
+        "caracteristicas": "Su pulpa está compuesta por una masa gelatinosa y jugosa acompañada de pequeñas semillas negras. Tiene un sabor muy peculiar y exquisito, entre dulce y ácido. Además tiene un aroma muy delicado y agradable.",
+        "usos": "Esta fruta contiene vitaminas y minerales esenciales para el ser humano. De allí que las personas la valoren tanto. Y lo mejor de todo es que su consumo no tiene ninguna restricción, se puede consumir diariamente sin riesgo alguno. La granadilla tiene minerales como el hierro, calcio, magnesio, sodio, fósforo, potasio y zinc.",
+        "categoria": "frutas",
+        "beneficios_salud": ["Calmante natural", "Ayuda al sueño", "Rica en antioxidantes", "Beneficiosa para la digestión"],
+        "temporada": "Todo el año",
+        "conservacion": "Refrigerar para mayor duración"
+      },
+      {
+        "nombre": "Tomate",
+        "precio_kg": 6980,
+        "stock": true,
+        "caracteristicas": "La mayor parte de su peso es agua, y el segundo constituyente en importancia son los carbohidratos. Contiene azúcares simples que le confieren un ligero sabor dulce, y algunos ácidos orgánicos que le otorgan el sabor ácido característico.",
+        "usos": "Múltiples preparaciones gastronómicas, ya que su sabor dulce y acido aportan una mezcla de sabores a los platos.",
+        "categoria": "verduras",
+        "beneficios_salud": ["Rico en licopeno", "Antioxidante", "Beneficioso para la salud cardiovascular", "Fuente de vitamina C"],
+        "temporada": "Todo el año",
+        "conservacion": "Mantener a temperatura ambiente, refrigerar cuando esté maduro"
+      },
+      {
+        "nombre": "Cacao",
+        "precio_kg": 40000,
+        "stock": true,
+        "caracteristicas": "El fruto del cacaotero, llamado \"mazorca\", es una baya grande y ovalada, carnosa, cuya coloración tiende del amarillo al púrpura, y de unos 30 cm de largo. Dentro de cada mazorca de cacao se encuentran entre 30 y 40 semillas. Un grano de cacao contiene una enorme cantidad de sustancias nutritivas, como proteínas (11,5%), almidones (7,5%), taninos (6%), agua (5%), sales y oligoelementos (2,6%), ácidos orgánicos (2%), teobromina (1,2%), cafeína (0,2%), entre otros.",
+        "usos": "Se saca el activo principal de chocolate de mesa o de cocina, también para realizar la preparación de diferentes tipos de chocolatinas por su sabor dulce.",
+        "categoria": "frutas",
+        "beneficios_salud": ["Rico en antioxidantes", "Mejora el estado de ánimo", "Beneficioso para la salud cardiovascular", "Fuente de magnesio"],
+        "temporada": "Todo el año",
+        "conservacion": "Mantener en lugar fresco y seco, alejado de la luz directa"
+      },
+      {
+        "nombre": "Yuca",
+        "precio_kg": 6680,
+        "stock": true,
+        "caracteristicas": "Es un tubérculo de raíz comestible, está considerada como la tercera fuente más grande de carbohidratos. La yuca hervida también contiene pequeñas cantidades de hierro, vitamina C, vitamina K y niacina (vitamina B3).",
+        "usos": "Tiene su principal aporte que es el almidón de yuca, utilizado para preparar arepas, pasteles. También en preparación de caldos conocido como sancocho.",
+        "categoria": "tubérculos",
+        "beneficios_salud": ["Libre de gluten", "Fuente de carbohidratos", "Bajo en grasas", "Beneficiosa para la digestión"],
+        "temporada": "Todo el año",
+        "conservacion": "Mantener en lugar fresco y oscuro, puede refrigerarse"
+      },
+      {
+        "nombre": "Banano",
+        "precio_kg": 3280,
+        "stock": true,
+        "caracteristicas": "Esta dulce fruta es deliciosa y aporta nutrientes y vitaminas que ayudan al buen funcionamiento del sistema nervioso y muscular. Lo que diferencia a la banana, es que es consumida cruda.",
+        "usos": "Se utiliza para licuados, postres. También como acompañante de algunos platos.",
+        "categoria": "frutas",
+        "beneficios_salud": ["Alto contenido en potasio", "Fuente de energía", "Rico en fibra", "Beneficioso para la salud intestinal"],
+        "temporada": "Todo el año",
+        "conservacion": "Madurar a temperatura ambiente, refrigerar cuando esté maduro"
+      },
+      {
+        "nombre": "Quinoa",
+        "precio_kg": 15800,
+        "stock": true,
+        "caracteristicas": "Es un pseudocereal considerado un superalimento por su alto contenido en proteínas, fibra y minerales. No contiene gluten y es de fácil digestión.",
+        "usos": "Se puede usar como sustituto del arroz, en ensaladas, sopas, hamburguesas vegetarianas y bowls saludables.",
+        "categoria": "granos",
+        "beneficios_salud": ["Alto contenido en proteínas", "Libre de gluten", "Rica en fibra", "Fuente de hierro y magnesio"],
+        "temporada": "Todo el año",
+        "conservacion": "Mantener en lugar fresco y seco, en recipiente hermético"
+      },
+      {
+        "nombre": "Chía",
+        "precio_kg": 12500,
+        "stock": true,
+        "caracteristicas": "Son semillas pequeñas de color negro o blanco, ricas en omega-3, fibra y proteínas. Tienen la capacidad de absorber líquidos y formar un gel.",
+        "usos": "Se pueden agregar a batidos, yogures, ensaladas, panes y postres. También se pueden remojar para hacer pudding.",
+        "categoria": "semillas",
+        "beneficios_salud": ["Rica en omega-3", "Alto contenido en fibra", "Antioxidante", "Beneficiosa para la salud cardiovascular"],
+        "temporada": "Todo el año",
+        "conservacion": "Mantener en lugar fresco y seco, en recipiente hermético"
+      },
+      {
+        "nombre": "Espinacas",
+        "precio_kg": 7500,
+        "stock": true,
+        "caracteristicas": "Son hojas verdes comestibles, ricas en hierro, vitaminas A, C, K y ácido fólico. Tienen un sabor suave y son muy versátiles en la cocina.",
+        "usos": "Se pueden consumir crudas en ensaladas, cocidas en sopas, salteadas como guarnición, o en batidos verdes.",
+        "categoria": "verduras",
+        "beneficios_salud": ["Rica en hierro", "Alto contenido en vitamina K", "Antioxidante", "Beneficiosa para la salud ósea"],
+        "temporada": "Todo el año",
+        "conservacion": "Refrigerar en bolsa perforada, lavar solo antes de consumir"
+      },
+      {
+        "nombre": "Brócoli",
+        "precio_kg": 8900,
+        "stock": true,
+        "caracteristicas": "Es una verdura de la familia de las crucíferas, rica en vitamina C, fibra y compuestos antioxidantes. Tiene un sabor suave y textura crujiente.",
+        "usos": "Se puede consumir crudo en ensaladas, cocido al vapor, salteado, en sopas o como guarnición.",
+        "categoria": "verduras",
+        "beneficios_salud": ["Rico en vitamina C", "Anticancerígeno", "Alto contenido en fibra", "Beneficioso para la salud digestiva"],
+        "temporada": "Todo el año",
+        "conservacion": "Refrigerar sin lavar, en bolsa perforada"
+      },
+      {
+        "nombre": "Jengibre",
+        "precio_kg": 12000,
+        "stock": true,
+        "caracteristicas": "Es una raíz aromática con un sabor picante y refrescante. Tiene propiedades antiinflamatorias y digestivas.",
+        "usos": "Se puede usar fresco en tés, batidos, sopas y platos salados. También se puede secar y moler para usar como especia.",
+        "categoria": "raíces",
+        "beneficios_salud": ["Antiinflamatorio", "Ayuda a la digestión", "Alivia náuseas", "Refuerza el sistema inmunológico"],
+        "temporada": "Todo el año",
+        "conservacion": "Mantener en lugar fresco y seco, puede refrigerarse"
+      },
+      {
+        "nombre": "Cúrcuma",
+        "precio_kg": 15000,
+        "stock": true,
+        "caracteristicas": "Es una raíz de color amarillo intenso, con un sabor terroso y ligeramente picante. Es conocida por sus propiedades antiinflamatorias.",
+        "usos": "Se puede usar fresca rallada en platos, o seca y molida como especia. Se combina bien con pimienta negra para aumentar su absorción.",
+        "categoria": "raíces",
+        "beneficios_salud": ["Antiinflamatorio", "Antioxidante", "Beneficiosa para la salud articular", "Ayuda a la digestión"],
+        "temporada": "Todo el año",
+        "conservacion": "Mantener en lugar fresco y seco, en recipiente hermético"
+      }
+    ],
+    "comidas_saludables": [
+      {
+        "nombre": "Bowl de Quinoa",
+        "descripcion": "Plato completo con quinoa, aguacate, tomate, pepino y aderezo de limón.",
+        "ingredientes": ["quinoa", "aguacate", "tomate", "pepino", "limón", "aceite de oliva"],
+        "beneficios": ["Alto en proteínas", "Rico en grasas saludables", "Bajo en calorías", "Equilibrado nutricionalmente"],
+        "preparacion": "Cocinar la quinoa, cortar las verduras, mezclar todos los ingredientes y aderezar con limón y aceite de oliva."
+      },
+      {
+        "nombre": "Ensalada de Espinacas",
+        "descripcion": "Ensalada fresca con espinacas, naranja, granadilla y nueces.",
+        "ingredientes": ["espinacas", "naranja", "granadilla", "nueces", "aceite de oliva", "vinagre balsámico"],
+        "beneficios": ["Rica en hierro", "Alto contenido en vitamina C", "Antioxidante", "Baja en calorías"],
+        "preparacion": "Lavar las espinacas, pelar y cortar la naranja, abrir la granadilla, picar las nueces y mezclar todos los ingredientes con el aderezo."
+      },
+      {
+        "nombre": "Smoothie Verde",
+        "descripcion": "Bebida energética con espinacas, plátano, manzana y jengibre.",
+        "ingredientes": ["espinacas", "plátano", "manzana", "jengibre", "agua de coco", "limón"],
+        "beneficios": ["Rico en nutrientes", "Energético", "Desintoxicante", "Refuerza el sistema inmunológico"],
+        "preparacion": "Lavar todos los ingredientes, pelar el plátano y la manzana, rallar el jengibre y licuar todo con agua de coco y limón."
+      },
+      {
+        "nombre": "Sopa de Verduras",
+        "descripcion": "Sopa nutritiva con zanahoria, apio, cebolla, tomate y especias.",
+        "ingredientes": ["zanahoria", "apio", "cebolla", "tomate", "ajo", "jengibre", "cúrcuma", "caldo de verduras"],
+        "beneficios": ["Baja en calorías", "Rica en vitaminas y minerales", "Hidratante", "Beneficiosa para la digestión"],
+        "preparacion": "Picar todas las verduras, saltear la cebolla y el ajo, agregar el resto de verduras y el caldo, cocinar hasta que estén tiernas."
+      },
+      {
+        "nombre": "Tostadas de Aguacate",
+        "descripcion": "Tostadas integrales con aguacate, tomate, huevo y semillas de chía.",
+        "ingredientes": ["pan integral", "aguacate", "tomate", "huevo", "semillas de chía", "limón", "sal y pimienta"],
+        "beneficios": ["Rico en grasas saludables", "Alto en proteínas", "Bajo en carbohidratos refinados", "Saciante"],
+        "preparacion": "Tostar el pan, machacar el aguacate con limón, sal y pimienta, cocinar el huevo, montar todos los ingredientes sobre el pan y espolvorear con semillas de chía."
+      }
+    ],
+    "promociones": [
+      {
+        "nombre": "2x1 en Frutas Seleccionadas",
+        "descripcion": "Lleva dos kilos de frutas seleccionadas y paga solo uno.",
+        "productos": ["naranja", "plátano", "piña"],
+        "dias": "martes",
+        "validez": "Todo el mes",
+        "restricciones": "Mínimo 2kg por producto"
+      },
+      {
+        "nombre": "Descuento en Verduras Orgánicas",
+        "descripcion": "20% de descuento en todas las verduras orgánicas.",
+        "productos": ["lechuga", "espinacas", "brócoli", "zanahoria"],
+        "dias": "miércoles",
+        "validez": "Todo el mes",
+        "restricciones": "Aplicable solo a productos marcados como orgánicos"
+      },
+      {
+        "nombre": "Combo Saludable",
+        "descripcion": "Pack con quinoa, chía y linaza con 15% de descuento.",
+        "productos": ["quinoa", "chía"],
+        "dias": "todos",
+        "validez": "Todo el mes",
+        "restricciones": "Válido solo para la compra del combo completo"
+      },
+      {
+        "nombre": "Pack Familiar de Frutas",
+        "descripcion": "Pack de 5kg de frutas variadas con 25% de descuento.",
+        "productos": ["naranja", "plátano", "piña", "granadilla", "limón"],
+        "dias": "viernes y sábado",
+        "validez": "Todo el mes",
+        "restricciones": "Mínimo 5kg en total"
+      },
+      {
+        "nombre": "3x2 en Productos Orgánicos",
+        "descripcion": "Lleva tres productos orgánicos y paga solo dos.",
+        "productos": ["tomate", "lechuga", "zanahoria", "brócoli"],
+        "dias": "fines de semana",
+        "validez": "Todo el mes",
+        "restricciones": "Aplicable solo a productos marcados como orgánicos"
+      },
+      {
+        "nombre": "Descuento en Productos Saludables",
+        "descripcion": "30% de descuento en productos de la categoría saludable.",
+        "productos": ["quinoa", "chía", "jengibre", "cúrcuma"],
+        "dias": "lunes",
+        "validez": "Todo el mes",
+        "restricciones": "Válido solo para productos de la categoría saludable"
+      },
+      {
+        "nombre": "Pack Detox",
+        "descripcion": "Pack con té verde, jengibre y limón con 20% de descuento.",
+        "productos": ["jengibre", "limón"],
+        "dias": "todos",
+        "validez": "Todo el mes",
+        "restricciones": "Válido solo para la compra del pack completo"
+      },
+      {
+        "nombre": "Ofertas de Temporada",
+        "descripcion": "Descuentos especiales en productos de temporada.",
+        "productos": ["todos"],
+        "dias": "todos",
+        "validez": "Variable según temporada",
+        "restricciones": "Aplicable solo a productos marcados como de temporada"
+      }
+    ],
+    "consejos_nutricionales": [
+      {
+        "titulo": "Consume al menos 5 porciones de frutas y verduras al día",
+        "descripcion": "Las frutas y verduras son ricas en vitaminas, minerales y antioxidantes que ayudan a prevenir enfermedades.",
+        "beneficios": ["Mejora la salud general", "Reduce el riesgo de enfermedades crónicas", "Aumenta la energía", "Mejora la digestión"]
+      },
+      {
+        "titulo": "Prefiere productos orgánicos",
+        "descripcion": "Los productos orgánicos se cultivan sin pesticidas ni químicos, lo que reduce la exposición a sustancias nocivas.",
+        "beneficios": ["Menor exposición a pesticidas", "Mayor contenido de nutrientes", "Mejor sabor", "Más sostenible para el medio ambiente"]
+      },
+      {
+        "titulo": "Incluye granos integrales en tu dieta",
+        "descripcion": "Los granos integrales como la quinoa son ricos en fibra, proteínas y nutrientes esenciales.",
+        "beneficios": ["Mayor saciedad", "Mejor control del peso", "Reduce el riesgo de diabetes", "Mejora la salud intestinal"]
+      },
+      {
+        "titulo": "Bebe al menos 8 vasos de agua al día",
+        "descripcion": "La hidratación es esencial para el buen funcionamiento del organismo y la salud general.",
+        "beneficios": ["Mejora la digestión", "Mantiene la piel hidratada", "Aumenta la energía", "Ayuda a eliminar toxinas"]
+      },
+      {
+        "titulo": "Evita alimentos procesados",
+        "descripcion": "Los alimentos procesados suelen contener altas cantidades de azúcar, sal y grasas poco saludables.",
+        "beneficios": ["Reduce el riesgo de obesidad", "Mejora la salud cardiovascular", "Mayor control del peso", "Mejor calidad de vida"]
+      },
+      {
+        "titulo": "Come más fibra",
+        "descripcion": "La fibra ayuda a mantener una buena digestión y a controlar los niveles de azúcar en sangre.",
+        "beneficios": ["Mejora la digestión", "Reduce el colesterol", "Controla el apetito", "Previene el estreñimiento"]
+      },
+      {
+        "titulo": "Incluye proteínas vegetales",
+        "descripcion": "Las proteínas vegetales como las legumbres son una excelente alternativa a las proteínas animales.",
+        "beneficios": ["Reduce el riesgo de enfermedades cardíacas", "Menor impacto ambiental", "Rica en fibra y nutrientes", "Más económica"]
+      },
+      {
+        "titulo": "Consume alimentos ricos en antioxidantes",
+        "descripcion": "Los antioxidantes ayudan a proteger las células del daño causado por los radicales libres.",
+        "beneficios": ["Retrasa el envejecimiento", "Reduce el riesgo de cáncer", "Mejora la salud de la piel", "Refuerza el sistema inmunológico"]
+      },
+      {
+        "titulo": "Planifica tus comidas",
+        "descripcion": "Planificar tus comidas con anticipación te ayuda a mantener una alimentación saludable y equilibrada.",
+        "beneficios": ["Mejor control de la alimentación", "Ahorro de tiempo y dinero", "Reduce el desperdicio de alimentos", "Facilita la compra de productos saludables"]
+      },
+      {
+        "titulo": "Lee las etiquetas nutricionales",
+        "descripcion": "Leer las etiquetas te ayuda a tomar decisiones informadas sobre los alimentos que consumes.",
+        "beneficios": ["Mejor control de la alimentación", "Identificación de ingredientes nocivos", "Comparación de productos", "Toma de decisiones conscientes"]
+      }
+    ]
+  }
