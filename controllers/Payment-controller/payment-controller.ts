@@ -1,9 +1,16 @@
 import { Request, Response } from "express";
-import { MercadoPagoConfig, Preference } from 'mercadopago';
+import { MercadoPagoConfig, Preference, Payment } from 'mercadopago';
 import pool from "../../config/database";
+import { config } from 'dotenv';
+
+config();
+
+interface PaymentPreference {
+    id_cliente: number;
+}
 
 const client = new MercadoPagoConfig({ 
-    accessToken: 'APP_USR-844363715892854-041021-8efdb2d81700ddae2b860944b1a2fd9a-2381703263'
+    accessToken: process.env.MP_ACCESS_TOKEN || ''
 });
 
 const createPreference = async (req: Request, res: Response) => {
@@ -82,4 +89,67 @@ const createPreference = async (req: Request, res: Response) => {
     }
 };
 
-export default createPreference; 
+const handleWebhook = async (req: Request, res: Response) => {
+    try {
+        const { type, data } = req.body;
+
+        if (type === 'payment') {
+            const paymentId = data.id;
+            const payment = new Payment(client);
+            const result = await payment.get({ id: paymentId });
+
+            if (result.status === 'approved') {
+                // Obtener el id_cliente y los items del carrito
+                const [preference] = await pool.query(
+                    'SELECT id_cliente FROM payment_preferences WHERE preference_id = ?',
+                    [data.preference_id]
+                ) as [PaymentPreference[], any];
+
+                if (!Array.isArray(preference) || preference.length === 0) {
+                    console.error('Preferencia no encontrada:', data.preference_id);
+                    return res.status(404).json({ message: 'Preferencia no encontrada' });
+                }
+
+                const { id_cliente } = preference[0];
+
+                // Obtener los items del carrito
+                const [cartItems] = await pool.query(
+                    `SELECT c.id_producto, c.cantidad 
+                     FROM Carrito c 
+                     WHERE c.id_cliente = ?`,
+                    [id_cliente]
+                );
+
+                // Actualizar el inventario y eliminar del carrito
+                for (const item of cartItems as any[]) {
+                    // Actualizar el inventario restando la cantidad comprada
+                    await pool.query(
+                        `UPDATE Inventario 
+                         SET cantidad_disponible = cantidad_disponible - ? 
+                         WHERE id_producto = ?`,
+                        [item.cantidad, item.id_producto]
+                    );
+
+                    // Eliminar el item del carrito
+                    await pool.query(
+                        'DELETE FROM Carrito WHERE id_cliente = ? AND id_producto = ?',
+                        [id_cliente, item.id_producto]
+                    );
+                }
+
+                console.log('Pago aprobado y carrito actualizado:', result);
+            } else if (result.status === 'rejected') {
+                console.log('Pago rechazado:', result);
+            } else if (result.status === 'pending') {
+                console.log('Pago pendiente:', result);
+            }
+        }
+
+        res.status(200).send('OK');
+    } catch (error) {
+        console.error('Error al procesar el webhook:', error);
+        res.status(500).json({ error: 'Error al procesar el webhook' });
+    }
+};
+
+export { createPreference, handleWebhook }; 

@@ -12,10 +12,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.handleWebhook = exports.createPreference = void 0;
 const mercadopago_1 = require("mercadopago");
 const database_1 = __importDefault(require("../../config/database"));
+const dotenv_1 = require("dotenv");
+(0, dotenv_1.config)();
 const client = new mercadopago_1.MercadoPagoConfig({
-    accessToken: 'APP_USR-844363715892854-041021-8efdb2d81700ddae2b860944b1a2fd9a-2381703263'
+    accessToken: process.env.MP_ACCESS_TOKEN || ''
 });
 const createPreference = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -78,4 +81,49 @@ const createPreference = (req, res) => __awaiter(void 0, void 0, void 0, functio
         });
     }
 });
-exports.default = createPreference;
+exports.createPreference = createPreference;
+const handleWebhook = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { type, data } = req.body;
+        if (type === 'payment') {
+            const paymentId = data.id;
+            const payment = new mercadopago_1.Payment(client);
+            const result = yield payment.get({ id: paymentId });
+            if (result.status === 'approved') {
+                // Obtener el id_cliente y los items del carrito
+                const [preference] = yield database_1.default.query('SELECT id_cliente FROM payment_preferences WHERE preference_id = ?', [data.preference_id]);
+                if (!Array.isArray(preference) || preference.length === 0) {
+                    console.error('Preferencia no encontrada:', data.preference_id);
+                    return res.status(404).json({ message: 'Preferencia no encontrada' });
+                }
+                const { id_cliente } = preference[0];
+                // Obtener los items del carrito
+                const [cartItems] = yield database_1.default.query(`SELECT c.id_producto, c.cantidad 
+                     FROM Carrito c 
+                     WHERE c.id_cliente = ?`, [id_cliente]);
+                // Actualizar el inventario y eliminar del carrito
+                for (const item of cartItems) {
+                    // Actualizar el inventario restando la cantidad comprada
+                    yield database_1.default.query(`UPDATE Inventario 
+                         SET cantidad_disponible = cantidad_disponible - ? 
+                         WHERE id_producto = ?`, [item.cantidad, item.id_producto]);
+                    // Eliminar el item del carrito
+                    yield database_1.default.query('DELETE FROM Carrito WHERE id_cliente = ? AND id_producto = ?', [id_cliente, item.id_producto]);
+                }
+                console.log('Pago aprobado y carrito actualizado:', result);
+            }
+            else if (result.status === 'rejected') {
+                console.log('Pago rechazado:', result);
+            }
+            else if (result.status === 'pending') {
+                console.log('Pago pendiente:', result);
+            }
+        }
+        res.status(200).send('OK');
+    }
+    catch (error) {
+        console.error('Error al procesar el webhook:', error);
+        res.status(500).json({ error: 'Error al procesar el webhook' });
+    }
+});
+exports.handleWebhook = handleWebhook;

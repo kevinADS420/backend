@@ -1,7 +1,7 @@
 import express from "express";
 import verifyToken from "../middleware/VerifyToken";
 import verifyRoles from "../middleware/VerifyCustomerRole";
-import createPreference from "../controllers/Payment-controller/payment-controller";
+import { createPreference, handleWebhook } from "../controllers/Payment-controller/payment-controller";
 import { getCart } from '../controllers/Payment-controller/get-cart-controller';
 import { addToCart } from '../controllers/Payment-controller/add-to-cart-controller';
 
@@ -20,10 +20,6 @@ router.get('/cart/:customerId', verifyToken, verifyCustomerRole, getCart);
 router.post('/cart/add', verifyToken, verifyCustomerRole, addToCart);
 
 // Ruta para recibir notificaciones de webhook
-router.post('/webhook', (req, res) => {
-    // Aquí manejaremos las notificaciones de Mercado Pago
-    console.log('Webhook recibido:', req.body);
-    res.status(200).send('OK');
-});
+router.post('/webhook', handleWebhook);
 
 export default router; 
