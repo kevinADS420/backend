@@ -24,7 +24,7 @@ const proveedorProfile = async (req: Request, res: Response) => {
         connection = await db.getConnection();
 
         const [proveedorResult]: any = await connection.execute(
-            'SELECT id_proveedor, Nombres, Apellidos, Email FROM proveedor WHERE id_proveedor = ?',
+            'SELECT * FROM Proveedor WHERE id_proveedor = ?',
             [idUser]
         );
 
@@ -37,36 +37,21 @@ const proveedorProfile = async (req: Request, res: Response) => {
 
         const proveedor = proveedorResult[0];
 
-        const [phoneResult, addressResult]: any = await Promise.all([
-            connection.execute(
-                'SELECT númeroTelefono, tipo FROM Telefono WHERE id_proveedor = ?',
-                [idUser]
-            ),
-            connection.execute(
-                'SELECT barrio, calle, numero FROM Direccion WHERE id_proveedor = ?',
-                [idUser]
-            )
-        ]);
-
+        // Por ahora, retornamos solo la información básica del proveedor
+        // ya que las tablas Telefono y Direccion están diseñadas para clientes
         return res.status(200).json({
             status: 'success',
             data: {
                 id_proveedor: proveedor.id_proveedor,
-                Nombres: proveedor.Nombres,
-                Apellidos: proveedor.Apellidos,
-                Email: proveedor.Email,
-                telefono: phoneResult[0].length > 0 ? {
-                    numero: phoneResult[0][0].númeroTelefono,
-                    tipo: phoneResult[0][0].tipo
-                } : null,
-                direccion: addressResult[0].length > 0 ? {
-                    barrio: addressResult[0][0].barrio,
-                    calle: addressResult[0][0].calle,
-                    numero: addressResult[0][0].numero
-                } : null
+                nombres: proveedor.nombres,
+                apellidos: proveedor.apellidos,
+                email: proveedor.Email,
+                telefono: null, // No hay tabla de teléfonos para proveedores
+                direccion: null // No hay tabla de direcciones para proveedores
             }
         });
     } catch (error: any) {
+        console.error('Error en proveedorProfile:', error);
         return res.status(500).json({
             status: 'error',
             message: 'Error interno del servidor',

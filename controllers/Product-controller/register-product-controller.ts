@@ -54,7 +54,7 @@ const register = async (req: Request, res: Response) => {
                 id_inventario, 
                 id_proveedor
             );
-            
+        
             // 3. Registrar el producto directamente en la base de datos
             const [result] = await connection.execute(
                 'INSERT INTO Producto (nombreP, tipo, Precio, cantidad, imagen, id_inventario, id_proveedor) VALUES (?, ?, ?, ?, ?, ?, ?)',
@@ -64,17 +64,17 @@ const register = async (req: Request, res: Response) => {
 
             await connection.commit();
 
-            return res.status(201).json({ 
-                status: "Producto Registrado",
-                message: "Producto registrado y asociado con inventario correctamente",
-                data: {
-                    producto: nombreP,
+        return res.status(201).json({ 
+            status: "Producto Registrado",
+            message: "Producto registrado y asociado con inventario correctamente",
+            data: {
+                producto: nombreP,
                     productId: productId,
-                    id_inventario: id_inventario,
+                id_inventario: id_inventario,
                     id_proveedor: id_proveedor,
                     cantidad: cantidad
-                }
-            });
+            }
+        });
         } catch (error) {
             if (connection) {
                 await connection.rollback();

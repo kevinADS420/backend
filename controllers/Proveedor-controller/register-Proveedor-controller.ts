@@ -3,7 +3,7 @@ import Proveedor from '../../Dto/Proveedor-Dto/RegisterProveedorDto';
 import ProveedorService from '../../services/ProveedorServices';
 
 let register = async (req: Request, res: Response) => {
-  try {
+    try {
     const { nombres, apellidos, Email, contraseña } = req.body;
     const result = await ProveedorService.register(new Proveedor(nombres, apellidos, Email, contraseña));
 
@@ -15,8 +15,8 @@ let register = async (req: Request, res: Response) => {
     return res.status(400).json({
       status: 'Error en el registro'
     });
-  } catch (error: any) {
-    if (error && error.code == "ER_DUP_ENTRY") {
+    } catch (error: any) {
+        if (error && error.code == "ER_DUP_ENTRY") {  
       return res.status(409).json({ 
         status: 'Error',
         message: error.sqlMessage 
@@ -26,7 +26,7 @@ let register = async (req: Request, res: Response) => {
       status: 'Error',
       message: 'Error interno del servidor'
     });
-  }
-}
+        }
+    }
 
 export default register;
