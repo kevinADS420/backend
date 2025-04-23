@@ -26,10 +26,8 @@ const createPreference = async (req: Request, res: Response) => {
 
         // Obtener los items del carrito con la información del producto
         const [cartItems] = await pool.query(
-            `SELECT c.cantidad, p.id_producto, p.nombreP, p.Precio 
-             FROM Carrito c 
-             JOIN Producto p ON c.id_producto = p.id_producto 
-             WHERE c.id_cliente = ?`,
+            `SELECT cantidad, id_producto, nombreP, Precio FROM Carrito JOIN Producto ON Carrito.id_producto = Producto.id_producto 
+             WHERE id_cliente = ?`,
             [id_cliente]
         );
 
@@ -114,9 +112,7 @@ const handleWebhook = async (req: Request, res: Response) => {
 
                 // Obtener los items del carrito
                 const [cartItems] = await pool.query(
-                    `SELECT c.id_producto, c.cantidad 
-                     FROM Carrito c 
-                     WHERE c.id_cliente = ?`,
+                    `SELECT c.id_producto, c.cantidad FROM Carrito c WHERE c.id_cliente = ?`,
                     [id_cliente]
                 );
 

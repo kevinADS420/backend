@@ -30,10 +30,8 @@ const createPreference = (req, res) => __awaiter(void 0, void 0, void 0, functio
             });
         }
         // Obtener los items del carrito con la información del producto
-        const [cartItems] = yield database_1.default.query(`SELECT c.cantidad, p.id_producto, p.nombreP, p.Precio 
-             FROM Carrito c 
-             JOIN Producto p ON c.id_producto = p.id_producto 
-             WHERE c.id_cliente = ?`, [id_cliente]);
+        const [cartItems] = yield database_1.default.query(`SELECT cantidad, id_producto, nombreP, Precio FROM Carrito JOIN Producto ON Carrito.id_producto = Producto.id_producto 
+             WHERE id_cliente = ?`, [id_cliente]);
         if (cartItems.length === 0) {
             return res.status(400).json({
                 status: 'error',
@@ -98,9 +96,7 @@ const handleWebhook = (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 }
                 const { id_cliente } = preference[0];
                 // Obtener los items del carrito
-                const [cartItems] = yield database_1.default.query(`SELECT c.id_producto, c.cantidad 
-                     FROM Carrito c 
-                     WHERE c.id_cliente = ?`, [id_cliente]);
+                const [cartItems] = yield database_1.default.query(`SELECT c.id_producto, c.cantidad FROM Carrito c WHERE c.id_cliente = ?`, [id_cliente]);
                 // Actualizar el inventario y eliminar del carrito
                 for (const item of cartItems) {
                     // Actualizar el inventario restando la cantidad comprada
