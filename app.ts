@@ -27,7 +27,8 @@ import profile_customer from "./routes/Customer-Routes/Profile_Customer";
 // Rutas de Proveedor
 import register_Proveedor from "./routes/Proveedor-Routes/Register_Proveedor";
 import get_Proveedor_by_email from "./routes/Proveedor-Routes/Get_Proveedor_By_Email"
-import profile_proveedor from "./routes/Proveedor-Routes/Profile_proveedor";
+import profile_proveedor from "./routes/Proveedor-Routes/Profile_proveedor"
+import delete_proveedor from "./routes/Proveedor-Routes/Delete_Proveedor"
 
 // rutas de productos 
 import get_all_products from "./routes/Product-Product/Get_Products";
@@ -150,13 +151,15 @@ app.get('/auth/check', (req, res) => {
 app.use('/customer/email', get_customer_by_email);  // Obtener cliente por email
 app.use('/customer/register', register_customer);   // Registrar cliente
 app.use('/customer/:id', update_customer);          // Actualizar cliente
-app.use('/customer/delete', delete_customer);       // Eliminar cliente
+app.use('/customer', delete_customer);              // Eliminar cliente
 app.use('/customer/profile', profile_customer);     // Perfil de cliente
 
 // Rutas de proveedor
-app.use('/proveedor/email', get_Proveedor_by_email);  // Obtener proveedor por email
-app.use('/proveedor/register', register_Proveedor);   // Registrar proveedor
-app.use('/proveedor/profile', profile_proveedor);     // Perfil de proveedor
+app.use('/proveedor/auth', authProveedor);                    // Autenticación de proveedor
+app.use('/proveedor/register', register_Proveedor);           // Registro de proveedor
+app.use('/proveedor/email', get_Proveedor_by_email);          // Obtener proveedor por email
+app.use('/proveedor/profile', profile_proveedor);             // Perfil de proveedor
+app.use('/proveedor/delete', delete_proveedor);               // Eliminar proveedor
 
 // Rutas de administrador
 app.use('/admin/register', register_Admin);      // Registrar admin

@@ -29,6 +29,7 @@ const Profile_Customer_1 = __importDefault(require("./routes/Customer-Routes/Pro
 const Register_Proveedor_1 = __importDefault(require("./routes/Proveedor-Routes/Register_Proveedor"));
 const Get_Proveedor_By_Email_1 = __importDefault(require("./routes/Proveedor-Routes/Get_Proveedor_By_Email"));
 const Profile_proveedor_1 = __importDefault(require("./routes/Proveedor-Routes/Profile_proveedor"));
+const Delete_Proveedor_1 = __importDefault(require("./routes/Proveedor-Routes/Delete_Proveedor"));
 // rutas de productos 
 const Get_Products_1 = __importDefault(require("./routes/Product-Product/Get_Products"));
 const Register_Product_1 = __importDefault(require("./routes/Product-Product/Register_Product"));
@@ -134,12 +135,14 @@ app.get('/auth/check', (req, res) => {
 app.use('/customer/email', Get_Customer_By_Email_1.default); // Obtener cliente por email
 app.use('/customer/register', Register_Customer_1.default); // Registrar cliente
 app.use('/customer/:id', Update_Customer_1.default); // Actualizar cliente
-app.use('/customer/delete', Delete_Customer_1.default); // Eliminar cliente
+app.use('/customer', Delete_Customer_1.default); // Eliminar cliente
 app.use('/customer/profile', Profile_Customer_1.default); // Perfil de cliente
 // Rutas de proveedor
+app.use('/proveedor/auth', Auth_Proveedor_1.default); // Autenticación de proveedor
+app.use('/proveedor/register', Register_Proveedor_1.default); // Registro de proveedor
 app.use('/proveedor/email', Get_Proveedor_By_Email_1.default); // Obtener proveedor por email
-app.use('/proveedor/register', Register_Proveedor_1.default); // Registrar proveedor
 app.use('/proveedor/profile', Profile_proveedor_1.default); // Perfil de proveedor
+app.use('/proveedor/delete', Delete_Proveedor_1.default); // Eliminar proveedor
 // Rutas de administrador
 app.use('/admin/register', Register_Admin_1.default); // Registrar admin
 app.use('/admin/delete', Delete_Admin_1.default); // Eliminar admin
