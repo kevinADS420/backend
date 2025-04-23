@@ -18,34 +18,36 @@ class ProveedorRepository {
     static login(auth) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const sql = 'SELECT id_proveedor, contraseña FROM Proveedor WHERE Email=?';
+                const sql = 'SELECT id_proveedor, contraseña FROM Proveedor WHERE Email = ?';
                 const values = [auth.Email];
-                const result = yield config_db_1.default.execute(sql, values);
-                if (!result || !result[0] || result[0].length === 0) {
+                const [result] = yield config_db_1.default.execute(sql, values);
+                if (!result || result.length === 0) {
                     return { logged: false, status: "Invalid username or password" };
                 }
-                const storedPassword = result[0][0].contraseña;
+                const storedPassword = result[0].contraseña;
                 const providedPassword = auth.contraseña;
                 if (!storedPassword || !providedPassword) {
                     return { logged: false, status: "Invalid username or password" };
                 }
-                // Asegurarse de que storedPassword sea una cadena
-                const storedPasswordStr = storedPassword.toString();
                 try {
+                    const storedPasswordStr = Buffer.isBuffer(storedPassword) ? storedPassword.toString('utf8') : storedPassword;
                     const isPasswordValid = yield bcryptjs_1.default.compare(providedPassword, storedPasswordStr);
                     if (isPasswordValid) {
                         return {
                             logged: true,
                             status: "Successful authentication",
-                            id: result[0][0].id_proveedor,
+                            id: result[0].id_proveedor,
                             role: "proveedor"
                         };
                     }
+                    else {
+                        return { logged: false, status: "Invalid username or password" };
+                    }
                 }
                 catch (compareError) {
+                    console.error('Error al comparar contraseñas:', compareError);
                     return { logged: false, status: "Error en la autenticación" };
                 }
-                return { logged: false, status: "Invalid username or password" };
             }
             catch (error) {
                 console.error('Error en login:', error);
@@ -56,10 +58,10 @@ class ProveedorRepository {
     static add(proveedor) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const hashedPassword = yield bcryptjs_1.default.hash(proveedor.contraseña, 10);
                 const sql = 'INSERT INTO Proveedor (nombres, apellidos, Email, contraseña) VALUES (?, ?, ?, ?)';
-                const values = [proveedor.nombres, proveedor.apellidos, proveedor.Email, hashedPassword];
-                return config_db_1.default.execute(sql, values);
+                const values = [proveedor.nombres, proveedor.apellidos, proveedor.Email, proveedor.contraseña];
+                const [result] = yield config_db_1.default.execute(sql, values);
+                return result;
             }
             catch (error) {
                 console.error('Error en add:', error);

@@ -7,10 +7,10 @@ import verifyProveedorRole from "../../middleware/VerifyProveedorRole";
 const router = express.Router();
 
 router.delete('/', 
-    verifyToken, 
-    verifyProveedorRole, 
-    deleteValidatorProveedor.validatorParams, 
-    deleteValidatorProveedor.validator, 
+    // verifyToken, 
+    // verifyProveedorRole, 
+    // deleteValidatorProveedor.validatorParams, 
+    // deleteValidatorProveedor.validator, 
     deleteProveedorController
 );
 

@@ -37,8 +37,6 @@ const proveedorProfile = async (req: Request, res: Response) => {
 
         const proveedor = proveedorResult[0];
 
-        // Por ahora, retornamos solo la información básica del proveedor
-        // ya que las tablas Telefono y Direccion están diseñadas para clientes
         return res.status(200).json({
             status: 'success',
             data: {
@@ -46,8 +44,8 @@ const proveedorProfile = async (req: Request, res: Response) => {
                 nombres: proveedor.nombres,
                 apellidos: proveedor.apellidos,
                 email: proveedor.Email,
-                telefono: null, // No hay tabla de teléfonos para proveedores
-                direccion: null // No hay tabla de direcciones para proveedores
+                createdAt: proveedor.createdAt,
+                updatedAt: proveedor.updatedAt
             }
         });
     } catch (error: any) {
